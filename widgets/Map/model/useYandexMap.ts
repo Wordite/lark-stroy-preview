@@ -1,7 +1,8 @@
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, useMemo } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { CRIMEA_CONTOUR, SEVASTOPOL_CONTOUR } from './crimeaContour'
+import type { MapPoint } from '@/services/types'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -59,23 +60,45 @@ interface IMapPoint {
   title: string
   category: string
   description: string
+  color: string
+  iconSvg?: string | null
+  href?: string
+  imageUrl?: string | null
 }
 
-const MAP_POINTS: IMapPoint[] = [
-  { id: '1', coords: [45.3531, 36.4743], title: 'Производственный цех "Севмаш"', category: 'Производственные объекты', description: '3 400 м² — Керчь' },
-  { id: '2', coords: [44.9521, 34.1024], title: 'Складской комплекс "Логистик"', category: 'Складские комплексы', description: '5 200 м² — Симферополь' },
-  { id: '3', coords: [44.6167, 33.5254], title: 'Жилой комплекс "Приморский"', category: 'Жилые комплексы', description: '12 800 м² — Севастополь' },
-  { id: '4', coords: [44.4952, 34.1663], title: 'Торговый центр "Южный"', category: 'Торговые объекты', description: '8 600 м² — Ялта' },
-  { id: '5', coords: [45.1197, 35.3773], title: 'Автосервис "МоторПлюс"', category: 'Автосервисы', description: '1 800 м² — Феодосия' },
-  { id: '6', coords: [44.9481, 33.7767], title: 'Школа "Перспектива"', category: 'Образовательные объекты', description: '7 500 м² — Бахчисарай' },
+const FALLBACK_POINTS: IMapPoint[] = [
+  { id: '1', coords: [45.3531, 36.4743], title: 'Производственный цех "Севмаш"', category: 'Производственные объекты', description: '3 400 м² — Керчь', color: 'rgba(243,188,24,1)' },
+  { id: '2', coords: [44.9521, 34.1024], title: 'Складской комплекс "Логистик"', category: 'Складские комплексы', description: '5 200 м² — Симферополь', color: 'rgba(243,188,24,1)' },
+  { id: '3', coords: [44.6167, 33.5254], title: 'Жилой комплекс "Приморский"', category: 'Жилые комплексы', description: '12 800 м² — Севастополь', color: 'rgba(122,226,174,1)' },
+  { id: '4', coords: [44.4952, 34.1663], title: 'Торговый центр "Южный"', category: 'Торговые объекты', description: '8 600 м² — Ялта', color: 'rgba(255,142,178,1)' },
 ]
 
-export const useYandexMap = () => {
+function adaptPoints(input?: MapPoint[]): IMapPoint[] {
+  if (!input?.length) return FALLBACK_POINTS
+  return input
+    .filter((p) => p.latitude != null && p.longitude != null)
+    .map((p) => ({
+      id: p.id,
+      coords: [p.latitude, p.longitude] as [number, number],
+      title: p.title,
+      category: p.category.name,
+      description: [p.area ? `${p.area.toLocaleString('ru-RU')} м²` : null, p.city]
+        .filter(Boolean)
+        .join(' — ') || p.category.name,
+      color: p.category.color,
+      iconSvg: p.category.iconSvg,
+      href: `/projects/${p.category.slug}/${p.slug}`,
+      imageUrl: p.mainImage,
+    }))
+}
+
+export const useYandexMap = (sourcePoints?: MapPoint[]) => {
   const mapContainerRef = useRef<HTMLDivElement>(null)
   const sectionRef = useRef<HTMLElement>(null)
   const infoRef = useRef<HTMLDivElement>(null)
   const [activePoint, setActivePoint] = useState<IMapPoint | null>(null)
   const mapInstanceRef = useRef<any>(null)
+  const points = useMemo(() => adaptPoints(sourcePoints), [sourcePoints])
 
   useEffect(() => {
     if (sectionRef.current && infoRef.current) {
@@ -150,7 +173,10 @@ export const useYandexMap = () => {
         mapInstanceRef.current = map
 
         // Add points with custom placemarks
-        MAP_POINTS.forEach((point) => {
+        points.forEach((point) => {
+          const inner = point.iconSvg
+            ? `<g transform="translate(8,8) scale(${16 / 24})" fill="rgba(17,21,23,1)">${stripSvgWrapper(point.iconSvg)}</g>`
+            : `<circle cx="16" cy="16" r="5" fill="rgba(17,21,23,1)"/>`
           const placemark = new window.ymaps.Placemark(
             point.coords,
             {
@@ -160,8 +186,8 @@ export const useYandexMap = () => {
               iconLayout: 'default#image',
               iconImageHref: 'data:image/svg+xml,' + encodeURIComponent(`
                 <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="16" cy="16" r="12" fill="rgba(243,188,24,1)" stroke="rgba(17,21,23,1)" stroke-width="3"/>
-                  <circle cx="16" cy="16" r="5" fill="rgba(17,21,23,1)"/>
+                  <circle cx="16" cy="16" r="12" fill="${point.color}" stroke="rgba(17,21,23,1)" stroke-width="3"/>
+                  ${inner}
                 </svg>
               `),
               iconImageSize: [32, 32],
@@ -209,7 +235,7 @@ export const useYandexMap = () => {
         mapInstanceRef.current = null
       }
     }
-  }, [])
+  }, [points])
 
   return {
     mapContainerRef,
@@ -217,6 +243,12 @@ export const useYandexMap = () => {
     infoRef,
     activePoint,
     setActivePoint,
-    points: MAP_POINTS,
+    points,
   }
+}
+
+function stripSvgWrapper(svg: string): string {
+  // Pull contents out of an outer <svg>...</svg> so we can re-embed inside another svg.
+  const m = svg.match(/<svg[^>]*>([\s\S]*?)<\/svg>/i)
+  return m ? m[1] : svg
 }

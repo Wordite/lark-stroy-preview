@@ -1,80 +1,90 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo } from 'react'
 import { SelectDropdown, type ISelectOption } from '@/shared/SelectDropdown'
-
-interface IProjectFiltersValue {
-  year: string
-  type: string
-  city: string
-}
+import {
+  useProjectFiltersUrl,
+  EMPTY_FILTERS,
+  type ProjectFiltersUrlState,
+} from './model/useProjectFiltersUrl'
+import type { ProjectCategory } from '@/services/types'
 
 interface IProjectFiltersProps {
-  value?: IProjectFiltersValue
-  onChange?: (value: IProjectFiltersValue) => void
+  categories?: ProjectCategory[]
+  cities?: string[]
+  years?: number[]
   className?: string
 }
 
-const YEAR_OPTIONS: ISelectOption[] = [
-  { value: '2024', label: '2024' },
-  { value: '2023', label: '2023' },
-  { value: '2022', label: '2022' },
-  { value: '2021', label: '2021' },
-]
+const ProjectFilters = ({
+  categories,
+  cities = [],
+  years,
+  className = '',
+}: IProjectFiltersProps) => {
+  const { value, update } = useProjectFiltersUrl()
 
-const TYPE_OPTIONS: ISelectOption[] = [
-  { value: 'storage', label: 'Складской комплекс' },
-  { value: 'living', label: 'Жилой комплекс' },
-  { value: 'commercial', label: 'Торговый объект' },
-  { value: 'manufacture', label: 'Производственный объект' },
-]
+  const yearOptions: ISelectOption[] = useMemo(() => {
+    const range =
+      years ??
+      Array.from(
+        { length: new Date().getFullYear() - 2017 },
+        (_, i) => new Date().getFullYear() - i,
+      )
+    return range.map((y) => ({ value: String(y), label: String(y) }))
+  }, [years])
 
-const CITY_OPTIONS: ISelectOption[] = [
-  { value: 'simferopol', label: 'Симферополь' },
-  { value: 'sevastopol', label: 'Севастополь' },
-  { value: 'yalta', label: 'Ялта' },
-  { value: 'kerch', label: 'Керчь' },
-  { value: 'evpatoria', label: 'Евпатория' },
-]
+  const typeOptions: ISelectOption[] = useMemo(
+    () => (categories ?? []).map((c) => ({ value: c.slug, label: c.name })),
+    [categories],
+  )
 
-const EMPTY: IProjectFiltersValue = { year: '', type: '', city: '' }
+  const cityOptions: ISelectOption[] = useMemo(
+    () => cities.map((c) => ({ value: c, label: c })),
+    [cities],
+  )
 
-const ProjectFilters = ({ value, onChange, className = '' }: IProjectFiltersProps) => {
-  const [internal, setInternal] = useState<IProjectFiltersValue>(EMPTY)
-  const isControlled = value !== undefined
-  const current = isControlled ? value! : internal
-
-  const update = (next: IProjectFiltersValue) => {
-    if (!isControlled) setInternal(next)
-    onChange?.(next)
-  }
+  const set = (next: Partial<ProjectFiltersUrlState>) => update({ ...value, ...next })
 
   return (
-    <div className={`flex items-center gap-[15px] ${className}`}>
+    <div className={`flex items-center gap-[.938rem] ${className}`}>
       <SelectDropdown
         compact
-        options={YEAR_OPTIONS}
+        options={yearOptions}
         placeholder='Год'
-        value={current.year}
-        onChange={(year) => update({ ...current, year })}
+        value={value.year}
+        onChange={(year) => set({ year })}
       />
-      <SelectDropdown
-        compact
-        options={TYPE_OPTIONS}
-        placeholder='Тип'
-        value={current.type}
-        onChange={(type) => update({ ...current, type })}
-      />
-      <SelectDropdown
-        compact
-        options={CITY_OPTIONS}
-        placeholder='Город'
-        value={current.city}
-        onChange={(city) => update({ ...current, city })}
-      />
+      {categories !== undefined && (
+        <SelectDropdown
+          compact
+          options={typeOptions}
+          placeholder='Тип'
+          value={value.type}
+          onChange={(type) => set({ type })}
+        />
+      )}
+      {cityOptions.length > 0 && (
+        <SelectDropdown
+          compact
+          options={cityOptions}
+          placeholder='Город'
+          value={value.city}
+          onChange={(city) => set({ city })}
+        />
+      )}
+      {(value.year || value.type || value.city) && (
+        <button
+          type='button'
+          onClick={() => update(EMPTY_FILTERS)}
+          className='text-[.875rem] text-subtext hover:text-accent transition-colors'
+        >
+          Сбросить
+        </button>
+      )}
     </div>
   )
 }
 
 export { ProjectFilters }
-export type { IProjectFiltersValue }
+export type { ProjectFiltersUrlState as IProjectFiltersValue }

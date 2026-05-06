@@ -11,6 +11,7 @@ export interface IActivityData {
   color: string
   description: string
   bullets: string[]
+  iconSvg?: string
 }
 
 interface IActivityTabProps {
@@ -39,7 +40,7 @@ const ActivityTab = ({
     <Link
       href={data.href}
       style={colorStyle}
-      className={`group block relative py-[24px] min-h-[285px] transition-colors duration-300 hover:bg-black-light ${isHaveLeftOffset ? 'pl-[110px]' : ''} ${isHaveTopBorder ? 'border-t-[1px] border-light-gray-tranpsparent-40' : ''} ${isHaveBottomBorder ? 'border-b-[1px] border-light-gray-tranpsparent-40' : ''} ${isHaveLeftBorder ? 'border-l-[1px] border-light-gray-tranpsparent-40' : ''} ${isHaveRightBorder ? 'border-r-[1px] border-light-gray-tranpsparent-40' : ''}`}
+      className={`group block relative py-[1.5rem] min-h-[17.813rem] transition-colors duration-300 hover:bg-black-light ${isHaveLeftOffset ? 'pl-[6.875rem]' : ''} ${isHaveTopBorder ? 'border-t-[.063rem] border-light-gray-tranpsparent-40' : ''} ${isHaveBottomBorder ? 'border-b-[.063rem] border-light-gray-tranpsparent-40' : ''} ${isHaveLeftBorder ? 'border-l-[.063rem] border-light-gray-tranpsparent-40' : ''} ${isHaveRightBorder ? 'border-r-[.063rem] border-light-gray-tranpsparent-40' : ''}`}
     >
       {boundaryDirection === 'left' && (
         <div className='h-full w-screen group-hover:bg-black-light transition-colors duration-300 -z-50 absolute top-0 right-full' />
@@ -47,27 +48,35 @@ const ActivityTab = ({
       {boundaryDirection === 'right' && (
         <div className='h-full w-screen group-hover:bg-black-light transition-colors duration-300 -z-50 absolute top-0 left-full' />
       )}
-      <div className='flex items-center gap-[15px]'>
-        <Icon
-          className={`${data.iconClass} [&_path]:fill-current transition-colors duration-300`}
-          style={{ color: data.color }}
-        />
+      <div className='flex items-center gap-[.938rem]'>
+        {data.iconSvg ? (
+          <span
+            className={`${data.iconClass} inline-block [&_svg]:w-full [&_svg]:h-full transition-colors duration-300`}
+            style={{ color: data.color }}
+            dangerouslySetInnerHTML={{ __html: data.iconSvg }}
+          />
+        ) : (
+          <Icon
+            className={`${data.iconClass} [&_path]:fill-current transition-colors duration-300`}
+            style={{ color: data.color }}
+          />
+        )}
         <h5
-          className='text-[18px] font-semibold transition-colors duration-300'
+          className='text-[1.125rem] font-semibold transition-colors duration-300'
           style={{ color: data.color }}
         >
           {data.title}
         </h5>
       </div>
-      <p className='text-[18px] font-medium text-text-white mt-[18px] w-[480px]'>{data.description}</p>
+      <p className='text-[1.125rem] font-medium text-text-white mt-[1.125rem] w-[30rem]'>{data.description}</p>
 
-      <ul className='list-disc marker:text-[12px] text-[18px] font-medium text-subtext ml-[24px] mt-[28px]'>
+      <ul className='list-disc marker:text-[.75rem] text-[1.125rem] font-medium text-subtext ml-[1.5rem] mt-[1.75rem]'>
         {data.bullets.map((b) => (
           <li key={b}>{b}</li>
         ))}
       </ul>
 
-      <DiagonalArrowIcon className='absolute bottom-[24px] right-[24px] w-[36px] h-[36px] [&>path]:fill-dark-gray group-hover:[&>path]:fill-(--cat-color) group-hover:translate-x-[6px] group-hover:-translate-y-[6px] transition-all duration-300 ease-out' />
+      <DiagonalArrowIcon className='absolute bottom-[1.5rem] right-[1.5rem] w-[2.25rem] h-[2.25rem] [&>path]:fill-dark-gray group-hover:[&>path]:fill-(--cat-color) group-hover:translate-x-[.375rem] group-hover:-translate-y-[.375rem] transition-all duration-300 ease-out' />
     </Link>
   )
 }

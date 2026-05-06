@@ -88,10 +88,10 @@ const SelectDropdown = ({
         ref={ref}
         type='button'
         onClick={() => setIsOpen((o) => !o)}
-        className={`group border-[1px] text-left text-[18px] font-medium transition-colors duration-200 cursor-pointer flex items-center ${
+        className={`group border-[.063rem] text-left text-[1.125rem] font-medium transition-colors duration-200 cursor-pointer flex items-center ${
           compact
-            ? 'h-[47px] px-[18px] gap-[23px] w-auto'
-            : 'block w-full px-[20px] py-[15px] justify-between gap-[12px]'
+            ? 'h-[2.938rem] px-[1.125rem] gap-[1.438rem] w-auto'
+            : 'block w-full px-[1.25rem] py-[.938rem] justify-between gap-[.75rem]'
         } ${
           hasError
             ? 'border-red-500'
@@ -101,17 +101,17 @@ const SelectDropdown = ({
         } ${isOpen ? 'border-accent' : ''}`}
       >
         <span
-          className={`flex items-center gap-[12px] ${
+          className={`flex items-center gap-[.75rem] ${
             selected || compact ? 'text-text-white' : 'text-subtext'
           }`}
         >
           {selected?.Icon && (
-            <selected.Icon className={selected.iconClassName ?? 'w-[22px] h-[22px]'} />
+            <selected.Icon className={selected.iconClassName ?? 'w-[1.375rem] h-[1.375rem]'} />
           )}
           <span>{selected?.label ?? placeholder}</span>
         </span>
         <ArrowDownIcon
-          className={`w-[12px] h-[7px] transition-transform duration-300 [&>path]:stroke-text-white ${
+          className={`w-[.75rem] h-[.438rem] transition-transform duration-300 [&>path]:stroke-text-white ${
             isOpen ? 'rotate-180' : ''
           }`}
         />
@@ -120,7 +120,7 @@ const SelectDropdown = ({
       {isOpen && (
         <ul
           role='listbox'
-          className='absolute top-full left-0 mt-[6px] z-[10000] min-w-full w-max max-w-[360px] flex flex-col bg-black-light/85 backdrop-blur-xl border border-light-gray-tranpsparent-40 shadow-[0_15px_40px_rgba(0,0,0,0.6)] py-[6px] max-h-[300px] overflow-y-auto'
+          className='absolute top-full left-0 mt-[.375rem] z-[10000] min-w-full w-max max-w-[22.5rem] flex flex-col bg-black-light/85 backdrop-blur-xl border border-light-gray-tranpsparent-40 shadow-[0_.938rem_2.5rem_rgba(0,0,0,0.6)] py-[.375rem] max-h-[18.75rem] overflow-y-auto'
         >
           {options.map((option) => {
             const isActive = option.value === value
@@ -129,14 +129,14 @@ const SelectDropdown = ({
                 <button
                   type='button'
                   onClick={() => handleSelect(option)}
-                  className={`w-full flex items-center gap-[14px] px-[20px] py-[12px] text-left text-[16px] font-medium whitespace-nowrap transition-colors duration-200 cursor-pointer ${
+                  className={`w-full flex items-center gap-[.875rem] px-[1.25rem] py-[.75rem] text-left text-[1rem] font-medium whitespace-nowrap transition-colors duration-200 cursor-pointer ${
                     isActive
                       ? 'text-accent bg-text-white/5'
                       : 'text-text-white hover:text-accent hover:bg-text-white/5'
                   }`}
                 >
                   {option.Icon && (
-                    <option.Icon className={option.iconClassName ?? 'w-[22px] h-[22px]'} />
+                    <option.Icon className={option.iconClassName ?? 'w-[1.375rem] h-[1.375rem]'} />
                   )}
                   <span>{option.label}</span>
                 </button>

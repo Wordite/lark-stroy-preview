@@ -1,8 +1,10 @@
 import placeHolderImage from '@/assets/images/test_photo.png'
 import Image, { type StaticImageData } from 'next/image'
+import Link from 'next/link'
 import ArrowsLeftIcon from '@/assets/icons/arrows_left.svg'
 import { Tag } from '@/shared/Tag'
 import { Separator } from '@/shared/Separator'
+import type { Project } from '@/services/types'
 
 export interface IProjectCardData {
   id: string
@@ -10,8 +12,28 @@ export interface IProjectCardData {
   city: string
   name: string
   tags: string[]
-  image?: StaticImageData
+  image?: StaticImageData | string
   href: string
+}
+
+export function projectToCardData(p: Project): IProjectCardData {
+  const completedYear = p.completedAt ? new Date(p.completedAt).getFullYear().toString() : null
+  const areaTag = p.area ? `${p.area.toLocaleString('ru-RU')} м²` : null
+  const tagList = [
+    areaTag,
+    p.city,
+    completedYear,
+    ...p.tags.map((t) => t.name),
+  ].filter(Boolean) as string[]
+  return {
+    id: p.id,
+    category: p.category.name,
+    city: p.city ?? '',
+    name: p.title,
+    tags: tagList,
+    image: p.mainImage ?? undefined,
+    href: `/projects/${p.category.slug}/${p.slug}`,
+  }
 }
 
 interface IProjectCardProps {
@@ -42,11 +64,13 @@ const ProjectCard = ({
   withoutTags = false,
   isShort = false,
 }: IProjectCardProps) => {
+  const isExternalImage = typeof data.image === 'string'
   const image = data.image ?? placeHolderImage
 
   return (
-    <figure
-      className={`${isShort ? 'w-[335px] h-[410px]' : 'w-[446px] h-[456px]'} shrink-0 relative cursor-pointer group py-[27px] flex flex-col ${!isOnBoundary ? 'hover:bg-black-light' : ''} transition-colors duration-300 ${className}`}
+    <Link
+      href={data.href}
+      className={`${isShort ? 'w-[20.938rem] h-[25.625rem]' : 'w-[27.875rem] h-[28.5rem]'} shrink-0 relative cursor-pointer group py-[1.688rem] flex flex-col ${!isOnBoundary ? 'hover:bg-black-light' : ''} transition-colors duration-300 ${className}`}
     >
       {isOnBoundary && boundaryDirection === 'left' && (
         <div className='w-screen h-full group-hover:bg-black-light transition-colors duration-300 absolute inset-y-0 right-0' />
@@ -54,43 +78,51 @@ const ProjectCard = ({
       {isOnBoundary && boundaryDirection === 'right' && (
         <div className='w-screen h-full group-hover:bg-black-light transition-colors duration-300 absolute inset-y-0 left-0' />
       )}
-      <div className='px-[35px] flex flex-col flex-1 relative'>
+      <div className='px-[2.188rem] flex flex-col flex-1 relative'>
         <p
-          className={`text-[20px] font-medium text-text-white ${isShort ? 'truncate' : ''}`}
+          className={`text-[1.25rem] font-medium text-text-white ${isShort ? 'truncate' : ''}`}
         >
           {data.category}
         </p>
 
         {isHaveRightBorder && (
           <Separator
-            className={`absolute right-0 -top-[26px] ${isShort ? 'h-[408px]' : 'h-[454px]'}`}
+            className={`absolute right-0 -top-[1.625rem] ${isShort ? 'h-[25.5rem]' : 'h-[28.375rem]'}`}
             isVertical={true}
           />
         )}
 
-        <div className='overflow-hidden mt-[30px] relative'>
-          <Image
-            src={image}
-            className='w-full h-[186px] transition-transform duration-500 ease-out group-hover:scale-[1.06]'
-            alt={data.name}
-          />
+        <div className='overflow-hidden mt-[1.875rem] relative h-[11.625rem]'>
+          {isExternalImage ? (
+            <img
+              src={image as string}
+              className='w-full h-[11.625rem] object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]'
+              alt={data.name}
+            />
+          ) : (
+            <Image
+              src={image as StaticImageData}
+              className='w-full h-[11.625rem] transition-transform duration-500 ease-out group-hover:scale-[1.06]'
+              alt={data.name}
+            />
+          )}
           <div className='absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center'>
-            <span className='px-[18px] py-[8px] border border-accent text-accent text-[13px] font-medium uppercase tracking-wider translate-y-[10px] group-hover:translate-y-0 transition-transform duration-300 ease-out'>
+            <span className='px-[1.125rem] py-[.5rem] border border-accent text-accent text-[.813rem] font-medium uppercase tracking-wider translate-y-[.625rem] group-hover:translate-y-0 transition-transform duration-300 ease-out'>
               Подробнее
             </span>
           </div>
         </div>
 
-        <p className='text-[18px] font-medium text-subtext mt-[30px]'>{data.city}</p>
+        <p className='text-[1.125rem] font-medium text-subtext mt-[1.875rem]'>{data.city}</p>
 
         <p
-          className={`mt-[10px] ${isShort ? 'w-[230px]' : 'w-[260px]'} text-[16px] font-medium text-text-white line-clamp-2`}
+          className={`mt-[.625rem] ${isShort ? 'w-[14.375rem]' : 'w-[16.25rem]'} text-[1rem] font-medium text-text-white line-clamp-2`}
         >
           {data.name}
         </p>
 
         {!withoutTags && (
-          <div className='flex gap-[15px] mt-auto pt-[19px] flex-wrap'>
+          <div className='flex gap-[.938rem] mt-auto pt-[1.188rem] flex-wrap'>
             {data.tags.map((t) => (
               <Tag key={t} text={t} />
             ))}
@@ -99,9 +131,9 @@ const ProjectCard = ({
       </div>
 
       <ArrowsLeftIcon
-        className={`absolute ${isShort ? 'bottom-[35px]' : 'bottom-[85px]'} right-[35px] w-[30px] h-[20px] [&>path]:stroke-accent transition-transform duration-300 group-hover:-translate-x-[6px]`}
+        className={`absolute ${isShort ? 'bottom-[2.188rem]' : 'bottom-[5.313rem]'} right-[2.188rem] w-[1.875rem] h-[1.25rem] [&>path]:stroke-accent transition-transform duration-300 group-hover:-translate-x-[.375rem]`}
       />
-    </figure>
+    </Link>
   )
 }
 

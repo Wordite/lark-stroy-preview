@@ -14,15 +14,15 @@ const ContactIconLink = ({ href, text, Icon, iconClassName, target, rel }: ICont
   return (
     <li>
       <Link
-        className='group text-[16px] flex gap-[15px] items-center font-medium text-subtext transition-colors duration-300 hover:text-text-white'
+        className='group text-[1rem] flex gap-[.938rem] items-center font-medium text-subtext transition-colors duration-300 hover:text-text-white'
         href={href}
         target={target}
         rel={rel}
       >
         <Icon
-          className={`${iconClassName} transition-transform duration-300 group-hover:scale-115 group-hover:-translate-y-[2px]`}
+          className={`${iconClassName} transition-transform duration-300 group-hover:scale-115 group-hover:-translate-y-[.125rem]`}
         />
-        <span className='transition-transform duration-300 group-hover:translate-x-[4px]'>
+        <span className='transition-transform duration-300 group-hover:translate-x-[.25rem]'>
           {text}
         </span>
       </Link>

@@ -54,9 +54,45 @@ body {
   color: var(--foreground);
   font-family: var(--font-montserrat);
 
-  --container-offset: 50px;
+  --container-offset: 3.125rem;
 }
 
 .container {
-  padding: 0 50px;
+  padding: 0 var(--container-offset);
+}
+
+/* :root {
+  font-size: calc(10.6667px + 5.3333 * ((100vw - 1280px) / 640) + 5.3333px);
+} */
+
+:root,
+html {
+  font-size: 1.1111vw;
+}
+/* @media screen and (max-width: 1024px) {
+  :root {
+    font-size: 2.6666vw;
+  }
+} */
+
+@media screen and (max-width: 1024px) {
+  :root {
+    font-size: calc(3px + (16 - 10) * ((100vw - 200px) / (768 - 200)));
+  }
+
+  .container {
+    width: 90% !important;
+    max-width: 90% !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  :root {
+    font-size: calc(7px + (16 - 10) * ((100vw - 200px) / (768 - 200)));
+  }
+
+  .container {
+    width: 90% !important;
+    max-width: 90% !important;
+  }
 }

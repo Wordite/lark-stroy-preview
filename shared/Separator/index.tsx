@@ -16,7 +16,7 @@ const Separator = ({
   return (
     <div
       style={{ width: isVertical ? undefined : width, height: isVertical ? height : undefined }}
-      className={`${isVertical ? 'w-[1px]' : 'h-[1px]'} ${
+      className={`${isVertical ? 'w-[.063rem]' : 'h-[.063rem]'} ${
         isFullscreen && isVertical ? 'h-screen'
         : isFullscreen && !isVertical ? 'w-screen -translate-x-(--container-offset)'
         : ''

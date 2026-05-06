@@ -12,13 +12,13 @@ const HeroProjectSliderControls = ({ className }: IHeroProjectSliderControlsProp
   const { slide, displaySlide, totalSlides, activeSlide, next, prev, yearRef, counterRef } = useControlsAnimation()
 
   return (
-    <div className={`h-[70px] flex flex-col justify-between ${className}`}>
+    <div className={`h-[4.375rem] flex flex-col justify-between ${className}`}>
       <Separator isFullscreen={true} />
       <div className='flex justify-between items-center'>
         <span ref={yearRef}>Реализован в {slide.year} году</span>
 
-        <div className='flex gap-[15px] items-center'>
-          <p ref={counterRef} className='text-[18px] font-medium'>
+        <div className='flex gap-[.938rem] items-center'>
+          <p ref={counterRef} className='text-[1.125rem] font-medium'>
             <span className='text-text-white'>{displaySlide}</span>
             {' '}
             <span className='text-light-gray'>/ {totalSlides}</span>

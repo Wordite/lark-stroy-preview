@@ -1,6 +1,7 @@
 'use client'
 
 import { Controller, useForm, type ControllerRenderProps } from 'react-hook-form'
+import { useContactFormSubmit } from './model/useContactFormSubmit'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { InputWithLabel } from '@/entities/InputWithLabel'
 import { Button } from '@/shared/Button'
@@ -17,10 +18,10 @@ import { SocialContacts } from '@/entities/SocialContacts'
 import { WorkTime } from '@/entities/WorkTime'
 
 const OBJECT_TYPE_OPTIONS: ISelectOption[] = [
-  { value: 'storage', label: 'Складской комплекс', Icon: StorageIcon, iconClassName: 'w-[22px] h-[19px]' },
-  { value: 'living', label: 'Жилой комплекс', Icon: LivingIcon, iconClassName: 'w-[22px] h-[22px]' },
-  { value: 'commercial', label: 'Торговый объект', Icon: CommercialIcon, iconClassName: 'w-[22px] h-[22px]' },
-  { value: 'manufacture', label: 'Производственный объект', Icon: ManufactureIcon, iconClassName: 'w-[22px] h-[22px]' },
+  { value: 'storage', label: 'Складской комплекс', Icon: StorageIcon, iconClassName: 'w-[1.375rem] h-[1.188rem]' },
+  { value: 'living', label: 'Жилой комплекс', Icon: LivingIcon, iconClassName: 'w-[1.375rem] h-[1.375rem]' },
+  { value: 'commercial', label: 'Торговый объект', Icon: CommercialIcon, iconClassName: 'w-[1.375rem] h-[1.375rem]' },
+  { value: 'manufacture', label: 'Производственный объект', Icon: ManufactureIcon, iconClassName: 'w-[1.375rem] h-[1.375rem]' },
 ]
 
 const DEFAULT_VALUES: IContactFormValues = {
@@ -78,29 +79,27 @@ const ContactForm = () => {
     reValidateMode: 'onChange',
   })
 
-  const onSubmit = async (values: IContactFormValues) => {
-    // Stub: integration with the backend goes here.
-    console.log('contact form submit', values)
-    reset(DEFAULT_VALUES)
-  }
+  const { state: submitState, submit } = useContactFormSubmit(() => reset(DEFAULT_VALUES))
+
+  const onSubmit = (values: IContactFormValues) => submit(values)
 
   return (
     <section ref={sectionRef}>
       <h4
         ref={titleRef}
-        className='w-[300px] mt-[70px] text-[36px] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em]'
+        className='w-[18.75rem] mt-[4.375rem] text-[2.25rem] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em]'
       >
         Оставьте заявку
       </h4>
 
-      <Separator isFullscreen={true} className='mt-[40px]' />
+      <Separator isFullscreen={true} className='mt-[2.5rem]' />
 
       <div className='flex'>
         <form
           ref={formRef}
           onSubmit={handleSubmit(onSubmit)}
           noValidate
-          className='flex flex-col gap-[27px] w-[700px] mt-[27px]'
+          className='flex flex-col gap-[1.688rem] w-[43.75rem] mt-[1.688rem]'
         >
           <InputWithLabel
             label='Имя*'
@@ -121,11 +120,11 @@ const ContactForm = () => {
             name='objectType'
             render={({ field }) => (
               <div>
-                <span className='font-semibold text-[16px] block text-accent'>Тип объекта</span>
+                <span className='font-semibold text-[1rem] block text-accent'>Тип объекта</span>
                 <SelectDropdown
                   options={OBJECT_TYPE_OPTIONS}
                   placeholder='Выберите тип объекта'
-                  className='mt-[8px]'
+                  className='mt-[.5rem]'
                   hasError={Boolean(errors.objectType)}
                   name={field.name}
                   value={field.value ?? ''}
@@ -133,7 +132,7 @@ const ContactForm = () => {
                   onBlur={field.onBlur}
                 />
                 {errors.objectType?.message && (
-                  <span className='block mt-[6px] text-[14px] font-medium text-red-500'>
+                  <span className='block mt-[.375rem] text-[.875rem] font-medium text-red-500'>
                     {errors.objectType.message}
                   </span>
                 )}
@@ -153,26 +152,32 @@ const ContactForm = () => {
           <Button style='accent' className='self-start'>
             {isSubmitting ? 'Отправка…' : 'Отправить заявку'}
           </Button>
+          {submitState === 'success' && (
+            <span className='text-green-500 text-[.875rem]'>Спасибо! Мы свяжемся с вами в ближайшее время.</span>
+          )}
+          {submitState === 'error' && (
+            <span className='text-red-500 text-[.875rem]'>Не удалось отправить заявку. Попробуйте позже.</span>
+          )}
         </form>
 
         <div ref={sideRef} className='flex'>
-          <Separator isVertical={true} className='mx-[60px] h-[calc(100%+27px)]' />
+          <Separator isVertical={true} className='mx-[3.75rem] h-[calc(100%+1.688rem)]' />
         </div>
 
         <div className='flex-1'>
           <div ref={socialContactsRef}>
-            <SocialContacts className='mt-[33px]' />
+            <SocialContacts className='mt-[2.063rem]' />
           </div>
           <div ref={sideSeparatorRef}>
-            <Separator className='mt-[89px] -translate-x-[60px] w-[calc(100%+60px+var(--container-offset))]' />
+            <Separator className='mt-[5.563rem] -translate-x-[3.75rem] w-[calc(100%+3.75rem+var(--container-offset))]' />
           </div>
           <div ref={workTimeRef}>
-            <WorkTime className='mt-[88px]' />
+            <WorkTime className='mt-[5.5rem]' />
           </div>
         </div>
       </div>
 
-      <Separator isFullscreen={true} className='mt-[27px]' />
+      <Separator isFullscreen={true} className='mt-[1.688rem]' />
     </section>
   )
 }

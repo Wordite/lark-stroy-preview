@@ -24,24 +24,24 @@ const InputWithLabel = ({
 
   return (
     <div>
-      <span className='font-semibold text-[16px] block text-accent'>{label}</span>
+      <span className='font-semibold text-[1rem] block text-accent'>{label}</span>
       {asTextarea ? (
         <Textarea
           {...(rest as TextareaHTMLAttributes<HTMLTextAreaElement>)}
           ref={ref as Ref<HTMLTextAreaElement>}
           hasError={hasError}
-          className='mt-[8px] min-h-[120px]'
+          className='mt-[.5rem] min-h-[7.5rem]'
         />
       ) : (
         <Input
           {...(rest as InputHTMLAttributes<HTMLInputElement>)}
           ref={ref as Ref<HTMLInputElement>}
           hasError={hasError}
-          className='mt-[8px]'
+          className='mt-[.5rem]'
         />
       )}
       {error && (
-        <span className='block mt-[6px] text-[14px] font-medium text-red-500'>{error}</span>
+        <span className='block mt-[.375rem] text-[.875rem] font-medium text-red-500'>{error}</span>
       )}
     </div>
   )

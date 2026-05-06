@@ -49,27 +49,27 @@ const OurMission = () => {
 
       <h3
         ref={titleRef}
-        className='w-[900px] pt-[97px] leading-[1.2em] text-[64px] font-black text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal)'
+        className='w-[56.25rem] pt-[6.063rem] leading-[1.2em] text-[4rem] font-black text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal)'
       >
         Ларк Строй
       </h3>
 
-      <p ref={subtitleRef} className='text-[18px] mt-[20px] font-medium text-subtext w-[435px]'>
+      <p ref={subtitleRef} className='text-[1.125rem] mt-[1.25rem] font-medium text-subtext w-[27.188rem]'>
         Строительная компания полного цикла в Республике Крым. Возводим современные объекты с 2010 года.
       </p>
 
-      <div ref={missionBlockRef} className='h-[331px] mt-auto flex items-center relative'>
-        <div className='w-screen border-t-[1px] border-light-gray-tranpsparent-40 h-[331px] backdrop-blur-[10px] -z-20 bg-black-transparent absolute top-0 -left-(--container-offset)' />
+      <div ref={missionBlockRef} className='h-[20.688rem] mt-auto flex items-center relative'>
+        <div className='w-screen border-t-[.063rem] border-light-gray-tranpsparent-40 h-[20.688rem] backdrop-blur-[.625rem] -z-20 bg-black-transparent absolute top-0 -left-(--container-offset)' />
 
-        <div className='w-[690px]'>
+        <div className='w-[43.125rem]'>
           <h3
             ref={missionTitleRef}
-            className='font-semibold text-[36px] text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal)'
+            className='font-semibold text-[2.25rem] text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal)'
           >
             Наша миссия
           </h3>
 
-          <p ref={missionTextRef} className='w-[690px] mt-[20px]'>
+          <p ref={missionTextRef} className='w-[43.125rem] mt-[1.25rem]'>
             Мы создаём современные объекты, которые служат развитию Крыма. Каждый проект для нас - это возможность
             построить не просто здание, а пространство для бизнеса, работы и жизни
             <br /><br />
@@ -78,9 +78,9 @@ const OurMission = () => {
           </p>
         </div>
 
-        <Separator className='ml-[35px] translate-y-px' height='331px' isVertical={true} />
+        <Separator className='ml-[2.188rem] translate-y-px' height='20.688rem' isVertical={true} />
 
-        <div ref={statsRef} className='ml-[60px] grid grid-cols-2 gap-y-[24px] gap-x-[74px]'>
+        <div ref={statsRef} className='ml-[3.75rem] grid grid-cols-2 gap-y-[1.5rem] gap-x-[4.625rem]'>
           {stats.map((stat) => (
             <StatBlock key={stat.label} value={stat.value} suffix={stat.suffix} label={stat.label} />
           ))}

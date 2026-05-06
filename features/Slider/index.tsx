@@ -55,7 +55,7 @@ const Slider = ({
       <div ref={headerRef} className='flex justify-between items-end'>
         <div>{title}</div>
 
-        <div className='flex gap-[15px]'>
+        <div className='flex gap-[.938rem]'>
           <SliderButton direction='left' variant='default' onClick={goPrev} disabled={!canPrev} />
           <SliderButton direction='right' variant='accent' onClick={goNext} disabled={!canNext} />
         </div>
@@ -64,7 +64,7 @@ const Slider = ({
       {/* Full-width strip: separators span the viewport, slider track lives inside an
           overflow-hidden wrapper that extends past the section padding so the
           edge-card hover bleed reaches the screen edges. */}
-      <div className='relative mt-[40px] w-screen -translate-x-(--container-offset)'>
+      <div className='relative mt-[2.5rem] w-screen -translate-x-(--container-offset)'>
         {withSeparators && (
           <>
             <Separator isFullscreen={false} className='absolute top-0 z-50 left-0 w-screen' />

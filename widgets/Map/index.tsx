@@ -1,12 +1,17 @@
 'use client'
 
 import Script from 'next/script'
+import Link from 'next/link'
 import { useYandexMap } from './model/useYandexMap'
 import { Separator } from '@/shared/Separator'
 import styles from './Map.module.css'
 
-const Map = () => {
-  const { mapContainerRef, sectionRef, infoRef, activePoint, setActivePoint } = useYandexMap()
+interface MapProps {
+  points?: import('@/services/types').MapPoint[]
+}
+
+const Map = ({ points }: MapProps = {}) => {
+  const { mapContainerRef, sectionRef, infoRef, activePoint, setActivePoint } = useYandexMap(points)
 
   return (
     <section ref={sectionRef} className='w-screen -translate-x-(--container-offset) h-screen max-h-screen overflow-y-clip relative'>
@@ -21,11 +26,11 @@ const Map = () => {
       <div ref={mapContainerRef} className={`absolute inset-0 ${styles.mapContainer}`} />
 
       {/* Info overlay */}
-      <div ref={infoRef} className='absolute top-[80px] right-(--container-offset) z-10 max-w-[320px]'>
-        <h3 className='text-[36px] font-black text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em]'>
+      <div ref={infoRef} className='absolute top-[5rem] right-(--container-offset) z-10 max-w-[20rem]'>
+        <h3 className='text-[2.25rem] font-black text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em]'>
           География объектов
         </h3>
-        <p className='text-[18px] mt-[8px] text-subtext'>
+        <p className='text-[1.125rem] mt-[.5rem] text-subtext'>
           Наши объекты
           <br />в Республике Крым
         </p>
@@ -34,28 +39,37 @@ const Map = () => {
       {/* Active point tooltip */}
       {activePoint && (
         <div
-          className={`absolute bottom-[60px] left-(--container-offset) z-6000 w-[320px] bg-[rgba(15,15,15,0.95)] backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden ${styles.tooltip}`}
+          className={`absolute bottom-[3.75rem] left-(--container-offset) z-6000 w-[20rem] bg-[rgba(15,15,15,0.95)] backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden ${styles.tooltip}`}
         >
-          <div className='h-[160px] bg-black-light flex items-center justify-center'>
-            <span className='text-subtext text-[14px]'>Фото объекта</span>
+          <div className='h-[10rem] bg-black-light flex items-center justify-center'>
+            {activePoint.imageUrl ? (
+              <img src={activePoint.imageUrl} alt={activePoint.title} className='w-full h-full object-cover' />
+            ) : (
+              <span className='text-subtext text-[.875rem]'>Фото объекта</span>
+            )}
           </div>
 
-          <div className='p-[20px]'>
-            <p className='text-[12px] uppercase text-accent font-medium tracking-wider'>{activePoint.category}</p>
-            <h4 className='text-[20px] font-bold text-text-white mt-[6px] leading-[1.3em]'>{activePoint.title}</h4>
-            <p className='text-[14px] text-subtext mt-[4px]'>{activePoint.description}</p>
+          <div className='p-[1.25rem]'>
+            <p className='text-[.75rem] uppercase text-accent font-medium tracking-wider'>{activePoint.category}</p>
+            <h4 className='text-[1.25rem] font-bold text-text-white mt-[.375rem] leading-[1.3em]'>{activePoint.title}</h4>
+            <p className='text-[.875rem] text-subtext mt-[.25rem]'>{activePoint.description}</p>
 
-            <button className='mt-[16px] flex items-center gap-[8px] text-[14px] font-medium text-accent hover:text-text-white transition-colors duration-300 cursor-pointer'>
-              Посмотреть
-              <svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
-                <path d='M7 17L17 7M17 7H7M17 7V17' />
-              </svg>
-            </button>
+            {activePoint.href && (
+              <Link
+                href={activePoint.href}
+                className='mt-[1rem] inline-flex items-center gap-[.5rem] text-[.875rem] font-medium text-accent hover:text-text-white transition-colors duration-300 cursor-pointer'
+              >
+                Посмотреть
+                <svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
+                  <path d='M7 17L17 7M17 7H7M17 7V17' />
+                </svg>
+              </Link>
+            )}
           </div>
 
           <button
             onClick={() => setActivePoint(null)}
-            className='absolute top-[10px] right-[10px] w-[28px] h-[28px] flex items-center justify-center rounded-full bg-black/50 text-white/60 hover:text-white transition-colors cursor-pointer'
+            className='absolute top-[.625rem] right-[.625rem] w-[1.75rem] h-[1.75rem] flex items-center justify-center rounded-full bg-black/50 text-white/60 hover:text-white transition-colors cursor-pointer'
           >
             ✕
           </button>

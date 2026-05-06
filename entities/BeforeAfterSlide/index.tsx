@@ -7,8 +7,8 @@ import { useSliderSlide } from '@/features/Slider'
 
 export interface IBeforeAfterSlideData {
   id: string
-  beforeImage: StaticImageData
-  afterImage: StaticImageData
+  beforeImage: StaticImageData | string
+  afterImage: StaticImageData | string
 }
 
 interface IBeforeAfterSlideProps {
@@ -44,27 +44,39 @@ const BeforeAfterSlide = ({ data }: IBeforeAfterSlideProps) => {
 
   return (
     <div className='flex justify-between w-full'>
-      <div className='relative w-[624px] h-[335px] overflow-hidden'>
-        <Image
-          src={data.beforeImage}
-          alt='before'
-          className='w-full h-full object-cover grayscale'
-        />
+      <div className='relative w-[39rem] h-[20.938rem] overflow-hidden'>
+        {typeof data.beforeImage === 'string' ? (
+          <img
+            src={data.beforeImage}
+            alt='before'
+            className='w-full h-full object-cover grayscale'
+          />
+        ) : (
+          <Image
+            src={data.beforeImage}
+            alt='before'
+            className='w-full h-full object-cover grayscale'
+          />
+        )}
         <span
           ref={beforeLabelRef}
-          className='absolute top-[15px] left-[15px] text-[14px] font-medium uppercase tracking-wider text-text-white bg-black/60 px-[12px] py-[5px]'
+          className='absolute top-[.938rem] left-[.938rem] text-[.875rem] font-medium uppercase tracking-wider text-text-white bg-black/60 px-[.75rem] py-[.313rem]'
         >
           До
         </span>
       </div>
 
-      <div ref={dividerRef} className='w-[4px] h-[335px] bg-text-white' />
+      <div ref={dividerRef} className='w-[.25rem] h-[20.938rem] bg-text-white' />
 
-      <div ref={afterRef} className='relative w-[624px] h-[335px] overflow-hidden'>
-        <Image src={data.afterImage} alt='after' className='w-full h-full object-cover' />
+      <div ref={afterRef} className='relative w-[39rem] h-[20.938rem] overflow-hidden'>
+        {typeof data.afterImage === 'string' ? (
+          <img src={data.afterImage} alt='after' className='w-full h-full object-cover' />
+        ) : (
+          <Image src={data.afterImage} alt='after' className='w-full h-full object-cover' />
+        )}
         <span
           ref={afterLabelRef}
-          className='absolute top-[15px] right-[15px] text-[14px] font-medium uppercase tracking-wider text-text-black bg-accent px-[12px] py-[5px]'
+          className='absolute top-[.938rem] right-[.938rem] text-[.875rem] font-medium uppercase tracking-wider text-text-black bg-accent px-[.75rem] py-[.313rem]'
         >
           После
         </span>

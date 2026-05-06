@@ -1,15 +1,27 @@
+import { notFound } from 'next/navigation'
 import { LongerProjectSlider } from '@/features/LongerProjectSlider'
 import { RealizationRoad } from '@/features/RealizationRoad'
 import { ActivityHead } from '@/widgets/ActivityHead'
 import { Contact } from '@/widgets/Contact'
 import { PROJECT_SLIDES } from '@/widgets/WhatWeBuild/model/projectSlides'
 import { WhatWeBuildActivity } from '@/widgets/WhatWeBuildActivity'
+import { fetchActivityBySlug } from '@/services/entities/activities'
 
-export default function ActivityPage() {
+export const revalidate = 15
+
+export default async function ServiceDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
+  const activity = await fetchActivityBySlug(slug)
+  if (!activity) notFound()
+
   return (
     <div>
-      <ActivityHead />
-      <WhatWeBuildActivity />
+      <ActivityHead activity={activity} />
+      <WhatWeBuildActivity services={activity.services} />
       <RealizationRoad isBorderTopDisabled={true} />
       <LongerProjectSlider
         title={

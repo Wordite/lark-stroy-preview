@@ -3,6 +3,7 @@ import { Montserrat } from 'next/font/google'
 import './globals.css'
 import { Header } from '@/widgets/Header'
 import { Footer } from '@/widgets/Footer'
+import { QueryProvider } from '@/services/QueryProvider'
 
 const montserrat = Montserrat({
   variable: '--font-montserrat',
@@ -22,9 +23,11 @@ export default function RootLayout({
   return (
     <html lang='ru' className={`${montserrat.variable} h-full antialiased`}>
       <body className='min-h-full flex flex-col'>
-        <Header />
-        <main className='px-(--container-offset)'>{children}</main>
-        <Footer />
+        <QueryProvider>
+          <Header />
+          <main className='px-(--container-offset)'>{children}</main>
+          <Footer />
+        </QueryProvider>
       </body>
     </html>
   )

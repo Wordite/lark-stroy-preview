@@ -13,8 +13,8 @@ const StatBlock = ({ value, suffix = '+', label }: IStatBlockProps) => {
 
   return (
     <div className=''>
-      <p ref={valueRef} className='text-accent font-semibold text-[64px] leading-[1em]'>0{suffix}</p>
-      <p className='text-[18px] mt-[5px] uppercase text-subtext leading-[1em]'>{label}</p>
+      <p ref={valueRef} className='text-accent font-semibold text-[4rem] leading-[1em]'>0{suffix}</p>
+      <p className='text-[1.125rem] mt-[.313rem] uppercase text-subtext leading-[1em]'>{label}</p>
     </div>
   )
 }

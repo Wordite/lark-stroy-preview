@@ -7,6 +7,28 @@ import LivingIcon from '@/assets/icons/living.svg'
 import ManufactureIcon from '@/assets/icons/manufacture.svg'
 import CommercialIcon from '@/assets/icons/commercial.svg'
 import { useActivitiesAnimation } from '@/widgets/Activities/model/useActivitiesAnimation'
+import type { Activity } from '@/services/types'
+
+const FALLBACK_COLORS = [
+  'rgba(243, 188, 24, 1)',
+  'rgba(122, 226, 174, 1)',
+  'rgba(116, 185, 255, 1)',
+  'rgba(255, 142, 178, 1)',
+]
+
+function mapActivities(items: Activity[]): IActivityData[] {
+  return items.map((a, i) => ({
+    id: a.slug,
+    href: `/services/${a.slug}`,
+    title: a.title,
+    Icon: StorageIcon, // fallback icon; SVG is rendered via dangerouslySetInnerHTML in ActivityTab if iconSvg
+    iconClass: 'w-[1.625rem] h-[1.625rem]',
+    color: FALLBACK_COLORS[i % FALLBACK_COLORS.length],
+    description: a.description,
+    bullets: a.services.slice(0, 5).map((s) => s.title),
+    iconSvg: a.iconSvg ?? undefined,
+  }))
+}
 
 const ACTIVITIES: IActivityData[] = [
   {
@@ -14,7 +36,7 @@ const ACTIVITIES: IActivityData[] = [
     href: '/services/storage',
     title: 'Складские комплексы',
     Icon: StorageIcon,
-    iconClass: 'w-[26px] h-[22px]',
+    iconClass: 'w-[1.625rem] h-[1.375rem]',
     color: 'rgba(243, 188, 24, 1)',
     description:
       'Проектирование и строительство складов класса А и В. Современные логистические центры с автоматизированными системами управления',
@@ -31,7 +53,7 @@ const ACTIVITIES: IActivityData[] = [
     href: '/services/living',
     title: 'Жилые комплексы',
     Icon: LivingIcon,
-    iconClass: 'w-[26px] h-[26px]',
+    iconClass: 'w-[1.625rem] h-[1.625rem]',
     color: 'rgba(122, 226, 174, 1)',
     description:
       'Многоквартирные жилые дома и коттеджные посёлки под ключ. Современные архитектурные решения и качественные материалы',
@@ -48,7 +70,7 @@ const ACTIVITIES: IActivityData[] = [
     href: '/services/manufacture',
     title: 'Производственные объекты',
     Icon: ManufactureIcon,
-    iconClass: 'w-[26px] h-[24px]',
+    iconClass: 'w-[1.625rem] h-[1.5rem]',
     color: 'rgba(116, 185, 255, 1)',
     description:
       'Цеха, заводы и промышленные комплексы любой сложности. Энергоэффективные решения и современное инженерное оборудование',
@@ -65,7 +87,7 @@ const ACTIVITIES: IActivityData[] = [
     href: '/services/commercial',
     title: 'Коммерческая недвижимость',
     Icon: CommercialIcon,
-    iconClass: 'w-[31px] h-[27px]',
+    iconClass: 'w-[1.938rem] h-[1.688rem]',
     color: 'rgba(255, 142, 178, 1)',
     description:
       'Торговые центры, бизнес-центры и многофункциональные объекты. Комплексные решения для развития бизнеса',
@@ -79,18 +101,25 @@ const ACTIVITIES: IActivityData[] = [
   },
 ]
 
-const ActivitiesGrid = () => {
+interface ActivitiesGridProps {
+  items?: Activity[]
+}
+
+const ActivitiesGrid = ({ items }: ActivitiesGridProps) => {
   const { gridRef } = useActivitiesAnimation()
+  const data = items && items.length > 0 ? mapActivities(items) : ACTIVITIES
+  const slots = data.slice(0, 4)
+  while (slots.length < 4) slots.push(slots[slots.length - 1] ?? ACTIVITIES[0])
 
   return (
     <>
-      <Separator className='mt-[40px]' isFullscreen={true} />
+      <Separator className='mt-[2.5rem]' isFullscreen={true} />
       <div ref={gridRef} className='grid grid-cols-2 relative'>
-        <ActivityTab data={ACTIVITIES[0]} isHaveRightBorder={true} boundaryDirection='left' />
-        <ActivityTab data={ACTIVITIES[1]} isHaveLeftOffset={true} boundaryDirection='right' />
+        <ActivityTab data={slots[0]} isHaveRightBorder={true} boundaryDirection='left' />
+        <ActivityTab data={slots[1]} isHaveLeftOffset={true} boundaryDirection='right' />
         <Separator className='absolute top-1/2 -translate-y-1/2' isFullscreen={true} />
-        <ActivityTab data={ACTIVITIES[2]} isHaveRightBorder={true} boundaryDirection='left' />
-        <ActivityTab data={ACTIVITIES[3]} isHaveLeftOffset={true} boundaryDirection='right' />
+        <ActivityTab data={slots[2]} isHaveRightBorder={true} boundaryDirection='left' />
+        <ActivityTab data={slots[3]} isHaveLeftOffset={true} boundaryDirection='right' />
       </div>
       <Separator className='' isFullscreen={true} />
     </>

@@ -11,7 +11,7 @@ const Input = ({ className = '', hasError = false, ref, ...rest }: IInputProps) 
     <input
       ref={ref}
       {...rest}
-      className={`block w-full px-[20px] py-[15px] border-[1px] text-text-white text-[18px] font-medium transition-colors duration-200 ${
+      className={`block w-full px-[1.25rem] py-[.938rem] border-[.063rem] text-text-white text-[1.125rem] font-medium transition-colors duration-200 ${
         hasError ? 'border-red-500' : 'border-gray-neutral focus:border-accent'
       } outline-none ${className}`}
     />

@@ -1,12 +1,12 @@
 import { useRef, useEffect, useState } from 'react'
 import { useHeroSliderStore } from '@/core/store/heroSliderStore'
-import { slides } from '@/features/HeroProjectSlider'
 import gsap from 'gsap'
 
 export const useControlsAnimation = () => {
   const { activeSlide, totalSlides, next, prev } = useHeroSliderStore()
+  const slides = useHeroSliderStore((s) => s.slides)
   const [displaySlide, setDisplaySlide] = useState(activeSlide)
-  const slide = slides[displaySlide - 1]
+  const slide = slides[displaySlide - 1] ?? slides[0]
 
   const yearRef = useRef<HTMLSpanElement>(null)
   const counterRef = useRef<HTMLParagraphElement>(null)
