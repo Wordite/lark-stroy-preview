@@ -7,10 +7,10 @@ import {
   EMPTY_FILTERS,
   type ProjectFiltersUrlState,
 } from './model/useProjectFiltersUrl'
-import type { ProjectCategory } from '@/services/types'
+import type { Activity } from '@/services/types'
 
 interface IProjectFiltersProps {
-  categories?: ProjectCategory[]
+  categories?: Activity[]
   cities?: string[]
   years?: number[]
   className?: string
@@ -35,7 +35,7 @@ const ProjectFilters = ({
   }, [years])
 
   const typeOptions: ISelectOption[] = useMemo(
-    () => (categories ?? []).map((c) => ({ value: c.slug, label: c.name })),
+    () => (categories ?? []).map((c) => ({ value: c.slug, label: c.title })),
     [categories],
   )
 

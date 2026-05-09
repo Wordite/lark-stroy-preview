@@ -2,30 +2,47 @@ import { notFound } from 'next/navigation'
 import { CategoryHead } from '@/widgets/CategoryHead'
 import { CategoryProjects } from '@/widgets/CategoryProjects'
 import { Contact } from '@/widgets/Contact'
-import { fetchCategoryBySlug } from '@/services/entities/categories'
+import { fetchActivityBySlug } from '@/services/entities/activities'
 import { fetchProjects } from '@/services/entities/projects'
 
 export const revalidate = 15
 
-export default async function ProjectCategoryPage({
+export default async function ActivityPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ categorySlug: string }>
+  searchParams: Promise<{ page?: string; year?: string; city?: string }>
 }) {
-  const { categorySlug } = await params
-  const category = await fetchCategoryBySlug(categorySlug)
-  if (!category) notFound()
+  const { categorySlug: activitySlug } = await params
+  const sp = await searchParams
+  const page = Math.max(1, Number(sp.page ?? '1'))
+  const activity = await fetchActivityBySlug(activitySlug)
+  if (!activity) notFound()
 
-  const projects = await fetchProjects({ categorySlug, page: 1, limit: 12 })
+  const projects = await fetchProjects({
+    activitySlug,
+    page,
+    limit: 6,
+    year: sp.year ? Number(sp.year) : undefined,
+    city: sp.city || undefined,
+  })
   const items = projects?.items ?? []
+  const totalPages = projects?.pagination.totalPages ?? 1
   const cities = Array.from(
     new Set(items.map((p) => p.city).filter((c): c is string => Boolean(c))),
   ).sort()
 
   return (
     <div>
-      <CategoryHead className='mt-[170px]' category={category} cities={cities} />
-      <CategoryProjects projects={items} categorySlug={categorySlug} pageSize={12} />
+      <CategoryHead className='mt-[170px]' activity={activity} cities={cities} />
+      <CategoryProjects
+        projects={items}
+        totalPages={totalPages}
+        initialPage={page}
+        activitySlug={activitySlug}
+        pageSize={6}
+      />
       <Contact isBorderTopDisabled={true} isSimilarProject={true} />
     </div>
   )

@@ -7,6 +7,7 @@ import { useSliderSlide } from '@/features/Slider'
 
 export interface IBeforeAfterSlideData {
   id: string
+  href?: string
   beforeImage: StaticImageData | string
   afterImage: StaticImageData | string
 }
@@ -42,6 +43,20 @@ const BeforeAfterSlide = ({ data }: IBeforeAfterSlideProps) => {
       )
   }, [isVisible, data.id])
 
+  const Overlay = () =>
+    data.href ? (
+      <a
+        href={data.href}
+        target='_blank'
+        rel='noopener noreferrer'
+        className='absolute inset-0 z-20 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center'
+      >
+        <span className='px-[1.125rem] py-[.5rem] border border-accent text-accent text-[.813rem] font-medium uppercase tracking-wider translate-y-[.625rem] hover:translate-y-0 transition-transform duration-300 ease-out'>
+          Подробнее
+        </span>
+      </a>
+    ) : null
+
   return (
     <div className='flex justify-between w-full'>
       <div className='relative w-[39rem] h-[20.938rem] overflow-hidden'>
@@ -60,10 +75,11 @@ const BeforeAfterSlide = ({ data }: IBeforeAfterSlideProps) => {
         )}
         <span
           ref={beforeLabelRef}
-          className='absolute top-[.938rem] left-[.938rem] text-[.875rem] font-medium uppercase tracking-wider text-text-white bg-black/60 px-[.75rem] py-[.313rem]'
+          className='absolute top-[.938rem] left-[.938rem] z-10 text-[.875rem] font-medium uppercase tracking-wider text-text-white bg-black/60 px-[.75rem] py-[.313rem]'
         >
           До
         </span>
+        <Overlay />
       </div>
 
       <div ref={dividerRef} className='w-[.25rem] h-[20.938rem] bg-text-white' />
@@ -76,10 +92,11 @@ const BeforeAfterSlide = ({ data }: IBeforeAfterSlideProps) => {
         )}
         <span
           ref={afterLabelRef}
-          className='absolute top-[.938rem] right-[.938rem] text-[.875rem] font-medium uppercase tracking-wider text-text-black bg-accent px-[.75rem] py-[.313rem]'
+          className='absolute top-[.938rem] right-[.938rem] z-10 text-[.875rem] font-medium uppercase tracking-wider text-text-black bg-accent px-[.75rem] py-[.313rem]'
         >
           После
         </span>
+        <Overlay />
       </div>
     </div>
   )

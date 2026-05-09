@@ -2,13 +2,14 @@
 
 import { WhatWeBuildPoints } from '@/features/WhatWeBuildActivity'
 import { useWhatWeBuildActivityAnimation } from './model/useWhatWeBuildActivityAnimation'
-import type { Service } from '@/services/types'
+import type { ActivityWhatWeBuildPoint, Service } from '@/services/types'
 
 interface IWhatWeBuildActivityProps {
   services?: Service[]
+  points?: ActivityWhatWeBuildPoint[]
 }
 
-const WhatWeBuildActivity = ({ services }: IWhatWeBuildActivityProps) => {
+const WhatWeBuildActivity = ({ services, points }: IWhatWeBuildActivityProps) => {
   const { sectionRef, titleRef, pointsRef } = useWhatWeBuildActivityAnimation()
 
   return (
@@ -20,7 +21,7 @@ const WhatWeBuildActivity = ({ services }: IWhatWeBuildActivityProps) => {
         Что мы строим
       </h4>
       <div ref={pointsRef}>
-        <WhatWeBuildPoints services={services} />
+        <WhatWeBuildPoints services={services} points={points} />
       </div>
     </section>
   )

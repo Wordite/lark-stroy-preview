@@ -3,13 +3,17 @@
 import { SliderButton } from '@/entities/SliderButton'
 import { Separator } from '@/shared/Separator'
 import { useControlsAnimation } from './model/useControlsAnimation'
+import type { IHeroSlide } from '@/core/store/heroSliderStore'
 
 interface IHeroProjectSliderControlsProps {
+  slides: IHeroSlide[]
   className?: string
 }
 
-const HeroProjectSliderControls = ({ className }: IHeroProjectSliderControlsProps) => {
-  const { slide, displaySlide, totalSlides, activeSlide, next, prev, yearRef, counterRef } = useControlsAnimation()
+const HeroProjectSliderControls = ({ slides, className }: IHeroProjectSliderControlsProps) => {
+  const { slide, displaySlide, totalSlides, activeSlide, next, prev, yearRef, counterRef } = useControlsAnimation(slides)
+
+  if (!slide) return null
 
   return (
     <div className={`h-[4.375rem] flex flex-col justify-between ${className}`}>

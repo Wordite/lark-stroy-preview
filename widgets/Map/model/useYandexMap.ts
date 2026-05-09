@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { CRIMEA_CONTOUR, SEVASTOPOL_CONTOUR } from './crimeaContour'
 import type { MapPoint } from '@/services/types'
+import { mediaUrl } from '@/services/mediaUrl'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -58,7 +59,7 @@ interface IMapPoint {
   id: string
   coords: [number, number]
   title: string
-  category: string
+  activity: string
   description: string
   color: string
   iconSvg?: string | null
@@ -66,29 +67,22 @@ interface IMapPoint {
   imageUrl?: string | null
 }
 
-const FALLBACK_POINTS: IMapPoint[] = [
-  { id: '1', coords: [45.3531, 36.4743], title: 'Производственный цех "Севмаш"', category: 'Производственные объекты', description: '3 400 м² — Керчь', color: 'rgba(243,188,24,1)' },
-  { id: '2', coords: [44.9521, 34.1024], title: 'Складской комплекс "Логистик"', category: 'Складские комплексы', description: '5 200 м² — Симферополь', color: 'rgba(243,188,24,1)' },
-  { id: '3', coords: [44.6167, 33.5254], title: 'Жилой комплекс "Приморский"', category: 'Жилые комплексы', description: '12 800 м² — Севастополь', color: 'rgba(122,226,174,1)' },
-  { id: '4', coords: [44.4952, 34.1663], title: 'Торговый центр "Южный"', category: 'Торговые объекты', description: '8 600 м² — Ялта', color: 'rgba(255,142,178,1)' },
-]
-
 function adaptPoints(input?: MapPoint[]): IMapPoint[] {
-  if (!input?.length) return FALLBACK_POINTS
+  if (!input?.length) return []
   return input
     .filter((p) => p.latitude != null && p.longitude != null)
     .map((p) => ({
       id: p.id,
       coords: [p.latitude, p.longitude] as [number, number],
       title: p.title,
-      category: p.category.name,
+      activity: p.activity.title,
       description: [p.area ? `${p.area.toLocaleString('ru-RU')} м²` : null, p.city]
         .filter(Boolean)
-        .join(' — ') || p.category.name,
-      color: p.category.color,
-      iconSvg: p.category.iconSvg,
-      href: `/projects/${p.category.slug}/${p.slug}`,
-      imageUrl: p.mainImage,
+        .join(' — ') || p.activity.title,
+      color: p.activity.color,
+      iconSvg: p.activity.iconSvg,
+      href: `/projects/${p.activity.slug}/${p.slug}`,
+      imageUrl: mediaUrl(p.mainImage),
     }))
 }
 

@@ -1,5 +1,5 @@
 import { serverFetch } from '../api'
-import type { Activity, Service } from '../types'
+import type { Activity, ActivityPage, Service } from '../types'
 
 export function fetchActivities() {
   return serverFetch<Activity[]>('/activities')
@@ -7,6 +7,10 @@ export function fetchActivities() {
 
 export function fetchActivityBySlug(slug: string) {
   return serverFetch<Activity>(`/activities/slug/${slug}`)
+}
+
+export function fetchActivityPage(slug: string) {
+  return serverFetch<ActivityPage>(`/activities/page/${slug}`)
 }
 
 export function fetchServiceBySlugs(activitySlug: string, slug: string) {

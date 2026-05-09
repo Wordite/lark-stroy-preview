@@ -51,7 +51,7 @@ const ActivityTab = ({
       <div className='flex items-center gap-[.938rem]'>
         {data.iconSvg ? (
           <span
-            className={`${data.iconClass} inline-block [&_svg]:w-full [&_svg]:h-full transition-colors duration-300`}
+            className={`${data.iconClass} inline-block [&_svg]:w-full [&_svg]:h-full [&_svg]:fill-current [&_path]:fill-current [&_path]:!fill-current transition-colors duration-300`}
             style={{ color: data.color }}
             dangerouslySetInnerHTML={{ __html: data.iconSvg }}
           />

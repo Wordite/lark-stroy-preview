@@ -29,8 +29,9 @@ const SocialContacts = ({ className = '', contacts }: ISocialContactsProps) => {
   const addressHref = settings.contact_address_href || FALLBACK.addressHref
   const phone = settings.contact_phone || FALLBACK.phone
   const email = settings.contact_email || FALLBACK.email
-
-  const socials = contacts?.socials ?? []
+  const tg = settings.contact_telegram
+  const vk = settings.contact_vk
+  const wa = settings.contact_whatsapp
 
   return (
     <ul
@@ -57,48 +58,43 @@ const SocialContacts = ({ className = '', contacts }: ISocialContactsProps) => {
         text={email}
       />
 
-      <li className='flex gap-[.938rem] items-center'>
-        {socials.length > 0 ? (
-          socials.map((s) =>
-            s.iconSvg ? (
-              <Link
-                key={s.id}
-                href={s.href}
-                target='_blank'
-                rel='noreferrer'
-                className='transition-transform duration-300 hover:scale-115 hover:-translate-y-[.125rem] [&>svg]:w-[1.375rem] [&>svg]:h-[1.375rem] text-accent'
-                aria-label={s.name}
-                dangerouslySetInnerHTML={{ __html: s.iconSvg }}
-              />
-            ) : (
-              <Link
-                key={s.id}
-                href={s.href}
-                target='_blank'
-                rel='noreferrer'
-                className='transition-transform duration-300 hover:scale-115 hover:-translate-y-[.125rem]'
-              >
-                {s.name}
-              </Link>
-            ),
-          )
-        ) : (
-          <>
+      {(tg || vk || wa) && (
+        <li className='flex gap-[.938rem] items-center pt-[.25rem]'>
+          {vk && (
             <Link
+              href={vk}
+              target='_blank'
+              rel='noreferrer'
+              aria-label='ВКонтакте'
               className='transition-transform duration-300 hover:scale-115 hover:-translate-y-[.125rem]'
-              href='/'
             >
               <VKIcon className='w-[1.438rem] h-[1rem]' />
             </Link>
+          )}
+          {tg && (
             <Link
+              href={tg}
+              target='_blank'
+              rel='noreferrer'
+              aria-label='Telegram'
               className='transition-transform duration-300 hover:scale-115 hover:-translate-y-[.125rem]'
-              href='/'
             >
               <TelegramIcon className='w-[1.25rem] h-[1rem]' />
             </Link>
-          </>
-        )}
-      </li>
+          )}
+          {wa && (
+            <Link
+              href={wa}
+              target='_blank'
+              rel='noreferrer'
+              aria-label='WhatsApp'
+              className='transition-transform duration-300 hover:scale-115 hover:-translate-y-[.125rem] text-accent text-[.875rem] uppercase font-semibold'
+            >
+              WA
+            </Link>
+          )}
+        </li>
+      )}
     </ul>
   )
 }

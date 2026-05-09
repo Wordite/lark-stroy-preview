@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger)
 
 // Header (icon + title + diagonal arrow) fades up first, then the row of
 // project cards staggers in beneath it as the section enters the viewport.
-export const useProjectCategoryAnimation = () => {
+export const useActivityAnimation = () => {
   const sectionRef = useRef<HTMLElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
   const cardsRef = useRef<HTMLDivElement>(null)

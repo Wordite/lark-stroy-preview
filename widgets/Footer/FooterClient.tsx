@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { SocialContacts } from '@/entities/SocialContacts'
 import { useFooterAnimation } from './model/useFooterAnimation'
 import type { ContactsPublic, FooterColumn } from '@/services/types'
+import { mediaUrl } from '@/services/mediaUrl'
 
 interface FooterClientProps {
   columns: FooterColumn[]
@@ -26,7 +27,7 @@ const FooterClient = ({ columns, contacts }: FooterClientProps) => {
     settings.site_tagline ||
     'Строительная компания полного цикла в Республике Крым. Возводим современные объекты с 2010 года.'
   const siteTitle = settings.site_title || 'Ларк Строй'
-  const logoUrl = settings.site_logo_url
+  const logoUrl = mediaUrl(settings.site_logo_url)
 
   const visibleColumns = columns.length
     ? columns

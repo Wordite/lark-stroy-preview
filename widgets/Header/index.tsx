@@ -5,11 +5,12 @@ import { HeaderLinks } from './ui/Desktop/HeaderLinks'
 import { buildLinks } from './config'
 import { fetchActivities } from '@/services/entities/activities'
 import { fetchContacts } from '@/services/entities/contacts'
+import { mediaUrl } from '@/services/mediaUrl'
 
 const Header = async () => {
   const [activities, contacts] = await Promise.all([fetchActivities(), fetchContacts()])
   const navLinks = buildLinks(activities ?? [])
-  const logoUrl = contacts?.settings?.site_logo_url
+  const logoUrl = mediaUrl(contacts?.settings?.site_logo_url)
   const siteTitle = contacts?.settings?.site_title || 'Ларк Строй'
 
   return (

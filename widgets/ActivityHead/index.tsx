@@ -6,10 +6,12 @@ import activityHeadBgImage from '@/assets/images/activity_head_bg.webp'
 import Image from 'next/image'
 import StorageIcon from '@/assets/icons/storage.svg'
 import { useActivityHeadAnimation } from './model/useActivityHeadAnimation'
-import type { Activity } from '@/services/types'
-
 interface IActivityHeadProps {
-  activity?: Activity
+  activity?: {
+    title: string
+    description: string
+    iconSvg: string | null
+  }
 }
 
 const ActivityHead = ({ activity }: IActivityHeadProps) => {

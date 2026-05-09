@@ -7,9 +7,12 @@ import { useHeroSliderStore, type IHeroSlide } from '@/core/store/heroSliderStor
 
 export type { IHeroSlide }
 
-const HeroProjectSlider = () => {
+interface IHeroProjectSliderProps {
+  slides: IHeroSlide[]
+}
+
+const HeroProjectSlider = ({ slides }: IHeroProjectSliderProps) => {
   const activeSlide = useHeroSliderStore((s) => s.activeSlide)
-  const slides = useHeroSliderStore((s) => s.slides)
 
   return (
     <div className='absolute -left-(--container-offset) w-screen h-screen -z-50 overflow-hidden'>

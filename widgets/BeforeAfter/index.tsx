@@ -1,35 +1,29 @@
 'use client'
 
-import testImage from '@/assets/images/test_photo.png'
 import { BeforeAfterSlide, type IBeforeAfterSlideData } from '@/entities/BeforeAfterSlide'
 import { Slider } from '@/features/Slider'
 import { Separator } from '@/shared/Separator'
 import type { HomeBlockPublic } from '@/services/types'
+import { mediaUrl } from '@/services/mediaUrl'
 
 const VISIBLE_COUNT = 1
-
-const FALLBACK_SLIDES: IBeforeAfterSlideData[] = [
-  { id: 'ba-1', beforeImage: testImage, afterImage: testImage },
-  { id: 'ba-2', beforeImage: testImage, afterImage: testImage },
-]
 
 interface IBeforeAfterProps {
   block?: HomeBlockPublic | null
 }
 
 const BeforeAfter = ({ block }: IBeforeAfterProps = {}) => {
-  // Only projects that have BOTH a previousImage (до) and a mainImage (после)
-  // can be shown as a before/after pair.
   const slides: IBeforeAfterSlideData[] = (block?.projects ?? [])
     .filter((p) => p.previousImage?.url && p.mainImage)
     .slice(0, 6)
     .map((p) => ({
       id: p.id,
-      beforeImage: p.previousImage!.url,
-      afterImage: p.mainImage!,
+      href: `/projects/${p.activity.slug}/${p.slug}`,
+      beforeImage: mediaUrl(p.previousImage!.url)!,
+      afterImage: mediaUrl(p.mainImage)!,
     }))
 
-  const finalSlides = slides.length > 0 ? slides : FALLBACK_SLIDES
+  if (slides.length === 0) return null
 
   return (
     <>
@@ -44,7 +38,7 @@ const BeforeAfter = ({ block }: IBeforeAfterProps = {}) => {
           </h4>
         }
       >
-        {finalSlides.map((slide) => (
+        {slides.map((slide) => (
           <BeforeAfterSlide key={slide.id} data={slide} />
         ))}
       </Slider>

@@ -1,17 +1,15 @@
 interface IRealizationStepProps {
-    title:string
-    number: string
-    desc: string
+  title: string
+  number: string
+  description: string
 }
 
-const RealizationStep = () => {
+const RealizationStep = ({ number, title, description }: IRealizationStepProps) => {
   return (
     <div className='w-[15rem]'>
-      <p className='text-[3.5rem] font-semibold text-accent leading-[1em]'>01</p>
-      <p className='text-[1rem] text-text-white font-semibold mt-[.375rem]'>Проектирование</p>
-      <p className='text-[1rem] font-medium text-subtext mt-[.75rem]'>
-        Разработка проектной документации с учётом всех требований
-      </p>
+      <p className='text-[3.5rem] font-semibold text-accent leading-[1em]'>{number}</p>
+      <p className='text-[1rem] text-text-white font-semibold mt-[.375rem]'>{title}</p>
+      <p className='text-[1rem] font-medium text-subtext mt-[.75rem]'>{description}</p>
     </div>
   )
 }

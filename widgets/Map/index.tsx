@@ -50,7 +50,7 @@ const Map = ({ points }: MapProps = {}) => {
           </div>
 
           <div className='p-[1.25rem]'>
-            <p className='text-[.75rem] uppercase text-accent font-medium tracking-wider'>{activePoint.category}</p>
+            <p className='text-[.75rem] uppercase text-accent font-medium tracking-wider'>{activePoint.activity}</p>
             <h4 className='text-[1.25rem] font-bold text-text-white mt-[.375rem] leading-[1.3em]'>{activePoint.title}</h4>
             <p className='text-[.875rem] text-subtext mt-[.25rem]'>{activePoint.description}</p>
 

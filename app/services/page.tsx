@@ -1,19 +1,20 @@
 import { LongerProjectSlider } from '@/features/LongerProjectSlider'
 import { Activities } from '@/widgets/Activities'
 import { Contact } from '@/widgets/Contact'
-import { PROJECT_SLIDES } from '@/widgets/WhatWeBuild/model/projectSlides'
 import { fetchActivities } from '@/services/entities/activities'
 import { fetchProjects } from '@/services/entities/projects'
+import { projectToCardData } from '@/entities/ProjectCard'
 
 export const revalidate = 15
 
 export default async function ServicesPage() {
-  const [activities, projects] = await Promise.all([
+  const [activities, projectsPage] = await Promise.all([
     fetchActivities(),
     fetchProjects({ page: 1, limit: 8 }),
   ])
 
-  // TODO(next-agent): map projects.items to LongerProjectSlider's slides shape (PROJECT_SLIDES type)
+  const slides = (projectsPage?.items ?? []).map(projectToCardData)
+
   return (
     <div className='pt-[6.875rem]'>
       <Activities activities={activities ?? []} />
@@ -24,7 +25,7 @@ export default async function ServicesPage() {
             Последние проекты
           </h4>
         }
-        slides={PROJECT_SLIDES}
+        slides={slides}
       />
 
       <Contact isUnderLongerSlider={true} />

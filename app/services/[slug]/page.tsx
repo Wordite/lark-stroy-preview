@@ -3,9 +3,9 @@ import { LongerProjectSlider } from '@/features/LongerProjectSlider'
 import { RealizationRoad } from '@/features/RealizationRoad'
 import { ActivityHead } from '@/widgets/ActivityHead'
 import { Contact } from '@/widgets/Contact'
-import { PROJECT_SLIDES } from '@/widgets/WhatWeBuild/model/projectSlides'
 import { WhatWeBuildActivity } from '@/widgets/WhatWeBuildActivity'
-import { fetchActivityBySlug } from '@/services/entities/activities'
+import { fetchActivityPage } from '@/services/entities/activities'
+import { projectToCardData } from '@/entities/ProjectCard'
 
 export const revalidate = 15
 
@@ -15,22 +15,24 @@ export default async function ServiceDetailPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const activity = await fetchActivityBySlug(slug)
-  if (!activity) notFound()
+  const page = await fetchActivityPage(slug)
+  if (!page) notFound()
+
+  const slides = (page.sliderProjects ?? []).map(projectToCardData)
 
   return (
     <div>
-      <ActivityHead activity={activity} />
-      <WhatWeBuildActivity services={activity.services} />
-      <RealizationRoad isBorderTopDisabled={true} />
+      <ActivityHead activity={page} />
+      <WhatWeBuildActivity services={page.services} points={page.whatWeBuildPoints} />
+      <RealizationRoad isBorderTopDisabled={true} steps={page.realizationSteps} />
       <LongerProjectSlider
         title={
-          <h4 className='w-[300px] mt-[70px] text-[36px] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em]'>
+          <h4 className='w-[18.75rem] mt-[4.375rem] text-[2.25rem] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em]'>
             Реализованные
             проекты
           </h4>
         }
-        slides={PROJECT_SLIDES}
+        slides={slides}
       />
       <Contact isUnderLongerSlider={true} />
     </div>

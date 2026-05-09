@@ -22,12 +22,12 @@ export default async function Home() {
   return (
     <div>
       <Hero block={home?.hero} />
-      <OurMission />
+      <OurMission block={home?.our_mission} />
       <Map points={mapPoints ?? []} />
       <Activities activities={activities ?? []} />
       <WhatWeBuild block={home?.what_we_build} />
       <BeforeAfter block={home?.before_after} />
-      <Realization block={home?.realization} />
+      <Realization block={home?.realization} roadBlock={home?.realization_road} />
       <Contact />
     </div>
   )

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Contact } from '@/widgets/Contact'
 import { Separator } from '@/shared/Separator'
 import { fetchNewsBySlug } from '@/services/entities/news'
+import { mediaUrl } from '@/services/mediaUrl'
 
 export const revalidate = 15
 
@@ -42,7 +43,7 @@ export default async function NewsDetailPage({
 
       {news.image?.url && (
         <div className='mt-[30px] mb-[30px] w-screen -translate-x-(--container-offset) overflow-hidden max-h-[480px]'>
-          <img src={news.image.url} alt={news.title} className='w-full max-h-[480px] object-cover' />
+          <img src={mediaUrl(news.image.url)} alt={news.title} className='w-full max-h-[480px] object-cover' />
         </div>
       )}
 

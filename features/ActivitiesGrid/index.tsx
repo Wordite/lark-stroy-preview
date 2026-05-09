@@ -23,7 +23,7 @@ function mapActivities(items: Activity[]): IActivityData[] {
     title: a.title,
     Icon: StorageIcon, // fallback icon; SVG is rendered via dangerouslySetInnerHTML in ActivityTab if iconSvg
     iconClass: 'w-[1.625rem] h-[1.625rem]',
-    color: FALLBACK_COLORS[i % FALLBACK_COLORS.length],
+    color: a.color || FALLBACK_COLORS[i % FALLBACK_COLORS.length],
     description: a.description,
     bullets: a.services.slice(0, 5).map((s) => s.title),
     iconSvg: a.iconSvg ?? undefined,
@@ -107,19 +107,19 @@ interface ActivitiesGridProps {
 
 const ActivitiesGrid = ({ items }: ActivitiesGridProps) => {
   const { gridRef } = useActivitiesAnimation()
-  const data = items && items.length > 0 ? mapActivities(items) : ACTIVITIES
+  if (!items || items.length === 0) return null
+  const data = mapActivities(items)
   const slots = data.slice(0, 4)
-  while (slots.length < 4) slots.push(slots[slots.length - 1] ?? ACTIVITIES[0])
 
   return (
     <>
       <Separator className='mt-[2.5rem]' isFullscreen={true} />
       <div ref={gridRef} className='grid grid-cols-2 relative'>
-        <ActivityTab data={slots[0]} isHaveRightBorder={true} boundaryDirection='left' />
-        <ActivityTab data={slots[1]} isHaveLeftOffset={true} boundaryDirection='right' />
-        <Separator className='absolute top-1/2 -translate-y-1/2' isFullscreen={true} />
-        <ActivityTab data={slots[2]} isHaveRightBorder={true} boundaryDirection='left' />
-        <ActivityTab data={slots[3]} isHaveLeftOffset={true} boundaryDirection='right' />
+        {slots[0] && <ActivityTab data={slots[0]} isHaveRightBorder={true} boundaryDirection='left' />}
+        {slots[1] && <ActivityTab data={slots[1]} isHaveLeftOffset={true} boundaryDirection='right' />}
+        {slots.length > 2 && <Separator className='absolute top-1/2 -translate-y-1/2' isFullscreen={true} />}
+        {slots[2] && <ActivityTab data={slots[2]} isHaveRightBorder={true} boundaryDirection='left' />}
+        {slots[3] && <ActivityTab data={slots[3]} isHaveLeftOffset={true} boundaryDirection='right' />}
       </div>
       <Separator className='' isFullscreen={true} />
     </>

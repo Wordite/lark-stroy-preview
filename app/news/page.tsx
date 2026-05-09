@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Contact } from '@/widgets/Contact'
 import { Separator } from '@/shared/Separator'
 import { fetchNews } from '@/services/entities/news'
+import { mediaUrl } from '@/services/mediaUrl'
 
 export const revalidate = 15
 
@@ -30,7 +31,7 @@ export default async function NewsListPage() {
               <div className='aspect-[4/3] bg-muted overflow-hidden'>
                 {n.image?.url ? (
                   <img
-                    src={n.image.url}
+                    src={mediaUrl(n.image.url)}
                     alt={n.title}
                     className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]'
                   />

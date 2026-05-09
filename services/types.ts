@@ -5,25 +5,6 @@ export interface Media {
   url: string
 }
 
-export interface ProjectCategory {
-  id: string
-  name: string
-  slug: string
-  color: string
-  iconSvg: string | null
-  iconWidth: number
-  iconHeight: number
-  order: number
-  description: string | null
-  _count?: { projects: number }
-}
-
-export interface Tag {
-  id: string
-  name: string
-  slug: string
-}
-
 export interface ProjectImage {
   id: string
   mediaId: string
@@ -43,8 +24,8 @@ export interface Project {
   slug: string
   description: string
   shortDescription: string | null
-  categoryId: string
-  category: ProjectCategory
+  activityId: string
+  activity: Activity
   area: number | null
   city: string | null
   address: string | null
@@ -57,7 +38,6 @@ export interface Project {
   previousImage: Media | null
   createdAt: string
   images: ProjectImage[]
-  tags: Tag[]
   mainImage: string | null
 }
 
@@ -73,14 +53,48 @@ export interface Paginated<T> {
   pagination: Pagination
 }
 
+export interface ActivityWhatWeBuildPoint {
+  id: string
+  text: string
+  iconId: string | null
+  iconUrl: string | null
+  order: number
+}
+
+export interface RealizationStep {
+  number: string
+  title: string
+  description: string
+}
+
 export interface Activity {
   id: string
   title: string
   slug: string
   description: string
+  color: string
   iconSvg: string | null
+  iconWidth: number
+  iconHeight: number
   order: number
   services: Service[]
+  whatWeBuildPoints?: ActivityWhatWeBuildPoint[]
+  realizationSteps?: RealizationStep[]
+}
+
+export interface ActivityPage {
+  id: string
+  title: string
+  slug: string
+  description: string
+  color: string
+  iconSvg: string | null
+  iconWidth: number
+  iconHeight: number
+  services: Service[]
+  whatWeBuildPoints: ActivityWhatWeBuildPoint[]
+  realizationSteps: RealizationStep[]
+  sliderProjects: Project[]
 }
 
 export interface Service {
@@ -111,12 +125,12 @@ export interface HomeBlockPublic {
   key: string
   title: string | null
   subtitle: string | null
-  mode: HomeBlockMode
-  categoryId: string | null
-  newsId: string | null
-  news: News | null
+  mode?: HomeBlockMode
+  activityId?: string | null
+  newsId?: string | null
+  news?: News | null
   config: Record<string, unknown>
-  projects: Project[]
+  projects?: Project[]
 }
 
 export type HomeContent = Record<string, HomeBlockPublic>
@@ -130,10 +144,10 @@ export interface MapPoint {
   latitude: number
   longitude: number
   mainImage: string | null
-  category: {
+  activity: {
     id: string
     slug: string
-    name: string
+    title: string
     color: string
     iconSvg: string | null
     iconWidth: number

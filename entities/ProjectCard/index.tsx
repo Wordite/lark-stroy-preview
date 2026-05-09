@@ -5,10 +5,11 @@ import ArrowsLeftIcon from '@/assets/icons/arrows_left.svg'
 import { Tag } from '@/shared/Tag'
 import { Separator } from '@/shared/Separator'
 import type { Project } from '@/services/types'
+import { mediaUrl } from '@/services/mediaUrl'
 
 export interface IProjectCardData {
   id: string
-  category: string
+  activity: string
   city: string
   name: string
   tags: string[]
@@ -19,25 +20,20 @@ export interface IProjectCardData {
 export function projectToCardData(p: Project): IProjectCardData {
   const completedYear = p.completedAt ? new Date(p.completedAt).getFullYear().toString() : null
   const areaTag = p.area ? `${p.area.toLocaleString('ru-RU')} м²` : null
-  const tagList = [
-    areaTag,
-    p.city,
-    completedYear,
-    ...p.tags.map((t) => t.name),
-  ].filter(Boolean) as string[]
+  const tagList = [areaTag, p.city, completedYear].filter(Boolean) as string[]
   return {
     id: p.id,
-    category: p.category.name,
+    activity: p.activity.title,
     city: p.city ?? '',
     name: p.title,
     tags: tagList,
-    image: p.mainImage ?? undefined,
-    href: `/projects/${p.category.slug}/${p.slug}`,
+    image: mediaUrl(p.mainImage),
+    href: `/projects/${p.activity.slug}/${p.slug}`,
   }
 }
 
 interface IProjectCardProps {
-  data?: IProjectCardData
+  data: IProjectCardData
   className?: string
   isHaveRightBorder?: boolean
   isOnBoundary?: boolean
@@ -46,17 +42,8 @@ interface IProjectCardProps {
   isShort?: boolean
 }
 
-const DEFAULT_PROJECT: IProjectCardData = {
-  id: 'project-default',
-  category: 'Складской комплекс',
-  city: 'Евпатория',
-  name: 'Складское помещение «Бураш»',
-  tags: ['1 200 м²', 'Симферополь', '2023'],
-  href: '/projects/default',
-}
-
 const ProjectCard = ({
-  data = DEFAULT_PROJECT,
+  data,
   className = '',
   isHaveRightBorder = false,
   isOnBoundary = false,
@@ -82,7 +69,7 @@ const ProjectCard = ({
         <p
           className={`text-[1.25rem] font-medium text-text-white ${isShort ? 'truncate' : ''}`}
         >
-          {data.category}
+          {data.activity}
         </p>
 
         {isHaveRightBorder && (

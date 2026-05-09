@@ -1,10 +1,9 @@
 import { useRef, useEffect, useState } from 'react'
-import { useHeroSliderStore } from '@/core/store/heroSliderStore'
+import { useHeroSliderStore, type IHeroSlide } from '@/core/store/heroSliderStore'
 import gsap from 'gsap'
 
-export const useHeroAnimation = () => {
+export const useHeroAnimation = (slides: IHeroSlide[]) => {
   const activeSlide = useHeroSliderStore((s) => s.activeSlide)
-  const slides = useHeroSliderStore((s) => s.slides)
   const [displaySlide, setDisplaySlide] = useState(activeSlide)
   const slide = slides[displaySlide - 1] ?? slides[0]
 

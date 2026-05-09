@@ -3,19 +3,10 @@
 import { NewsCard, type INewsCardData } from '@/entities/NewsCard'
 import { ProjectCard, type IProjectCardData, projectToCardData } from '@/entities/ProjectCard'
 import { Slider, useSliderSlide } from '@/features/Slider'
-import { PROJECT_SLIDES } from './model/projectSlides'
 import type { HomeBlockPublic, News } from '@/services/types'
 
 const CARD_WIDTH = 446
 const VISIBLE_COUNT = 3
-
-const FALLBACK_NEWS: INewsCardData = {
-  id: 'news-2024',
-  title: 'Сделано в этом году',
-  description: 'В 2024 году ввели в эксплуатацию более 25 000 м²',
-  buttonLabel: 'Читать',
-  href: '/news/2024-summary',
-}
 
 function newsToCardData(n: News): INewsCardData {
   return {
@@ -56,11 +47,11 @@ interface IWhatWeBuildProps {
 }
 
 const WhatWeBuild = ({ block }: IWhatWeBuildProps = {}) => {
-  const newsData = block?.news ? newsToCardData(block.news) : FALLBACK_NEWS
-  const projects = block?.projects ?? []
-  const projectSlides: IProjectCardData[] =
-    projects.length > 0 ? projects.map(projectToCardData) : PROJECT_SLIDES
+  const newsData = block?.news ? newsToCardData(block.news) : null
+  const projectSlides: IProjectCardData[] = (block?.projects ?? []).map(projectToCardData)
   const title = block?.title || 'Что мы строим'
+
+  if (!newsData && projectSlides.length === 0) return null
 
   return (
     <Slider
@@ -73,7 +64,7 @@ const WhatWeBuild = ({ block }: IWhatWeBuildProps = {}) => {
         </h4>
       }
     >
-      <NewsSlide key={newsData.id} data={newsData} />
+      {newsData ? <NewsSlide key={newsData.id} data={newsData} /> : null}
       {projectSlides.map((project) => (
         <ProjectSlide key={project.id} data={project} />
       ))}

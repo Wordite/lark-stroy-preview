@@ -1,35 +1,32 @@
 'use client'
 
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import ArrowIcon from '@/assets/icons/arrow.svg'
-import testImage from '@/assets/images/test_photo.png'
 import { useProjectHeadAnimation } from './model/useProjectHeadAnimation'
 import { Separator } from '@/shared/Separator'
 import type { Project } from '@/services/types'
+import { mediaUrl } from '@/services/mediaUrl'
 
 interface IProjectHeadProps {
-  project?: Project
+  project: Project
 }
 
 const ProjectHead = ({ project }: IProjectHeadProps) => {
   const router = useRouter()
   const { rootRef, backRef, titleRef, tagsRef, imageRef } = useProjectHeadAnimation()
 
-  const title = project?.title ?? 'Складной комплекс А-7'
-  const completedYear = project?.completedAt
+  const title = project.title
+  const completedYear = project.completedAt
     ? new Date(project.completedAt).getFullYear().toString()
     : null
-  const tags = project
-    ? ([
-        project.category.name,
-        project.area ? `${project.area.toLocaleString('ru-RU')} м²` : null,
-        project.city,
-        completedYear,
-      ].filter(Boolean) as string[])
-    : ['Складские комплексы', '1, 200 м²', 'Симферополь', '2023']
+  const tags = [
+    project.activity.title,
+    project.area ? `${project.area.toLocaleString('ru-RU')} м²` : null,
+    project.city,
+    completedYear,
+  ].filter(Boolean) as string[]
 
-  const heroImage = project?.mainImage ?? null
+  const heroImage = mediaUrl(project.mainImage) ?? null
 
   return (
     <section ref={rootRef} className='mt-[10.625rem]'>
@@ -62,13 +59,11 @@ const ProjectHead = ({ project }: IProjectHeadProps) => {
         ))}
       </div>
 
-      <div ref={imageRef} className='mt-[.938rem] mb-[1.375rem] w-screen -translate-x-(--container-offset) overflow-hidden'>
-        {heroImage ? (
+      {heroImage && (
+        <div ref={imageRef} className='mt-[.938rem] mb-[1.375rem] w-screen -translate-x-(--container-offset) overflow-hidden'>
           <img src={heroImage} alt={title} className='w-full h-[11.625rem] object-cover' />
-        ) : (
-          <Image src={testImage} alt={title} className='w-full h-[11.625rem] object-cover' />
-        )}
-      </div>
+        </div>
+      )}
 
       <Separator isFullscreen={true} />
     </section>

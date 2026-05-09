@@ -1,26 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
 import gsap from 'gsap'
-import testImage from '@/assets/images/test_photo.png'
 import { Button } from '@/shared/Button'
 import { Separator } from '@/shared/Separator'
 import { useProjectDescriptionAnimation } from './model/useProjectDescriptionAnimation'
 import type { Project } from '@/services/types'
+import { mediaUrl } from '@/services/mediaUrl'
 
 interface IProjectDescriptionProps {
-  project?: Project
+  project: Project
 }
-
-const FALLBACK_DESCRIPTION =
-  'Современный складской комплекс класса А, оснащённый автоматизированной системой управления, погрузочными доками с гидравлическими уравнительными платформами и современной системой пожаротушения.'
-
-const FALLBACK_SPECS = [
-  { key: 'Класс', value: 'А' },
-  { key: 'Этажность', value: '1' },
-  { key: 'Высота потолков', value: '12 м' },
-]
 
 const INITIAL_GALLERY = 4
 const LOAD_STEP = 4
@@ -36,17 +26,14 @@ const ProjectDescription = ({ project }: IProjectDescriptionProps) => {
     specsRef,
   } = useProjectDescriptionAnimation()
 
-  const description = project?.description || FALLBACK_DESCRIPTION
-  const specs =
-    project?.characteristics && project.characteristics.length > 0
-      ? project.characteristics
-      : FALLBACK_SPECS
+  const description = project.description
+  const specs = project.characteristics ?? []
 
-  const galleryImages = project?.images?.length
-    ? project.images.map((i) => i.url)
+  const galleryImages = project.images?.length
+    ? project.images.map((i) => mediaUrl(i.url)!)
     : null
 
-  const totalGallery = galleryImages?.length ?? 12
+  const totalGallery = galleryImages?.length ?? 0
   const canLoadMore = visibleCount < totalGallery
 
   const handleLoadMore = () => {
@@ -73,7 +60,7 @@ const ProjectDescription = ({ project }: IProjectDescriptionProps) => {
     })
   }
 
-  const galleryItems = Array.from({ length: visibleCount }, (_, i) => i)
+  const galleryItems = Array.from({ length: Math.min(visibleCount, totalGallery) }, (_, i) => i)
 
   return (
     <section ref={sectionRef} className='pt-[1.688rem] pb-[8.125rem] relative flex'>
@@ -85,31 +72,26 @@ const ProjectDescription = ({ project }: IProjectDescriptionProps) => {
           </p>
         </div>
 
-        <h3
-          ref={galleryTitleRef}
-          className='mt-[2.063rem] text-[1.125rem] font-medium text-text-white'
-        >
-          Галерея
-        </h3>
+        {totalGallery > 0 && (
+          <h3
+            ref={galleryTitleRef}
+            className='mt-[2.063rem] text-[1.125rem] font-medium text-text-white'
+          >
+            Галерея
+          </h3>
+        )}
 
         <div ref={galleryRef} className='mt-[.438rem] grid grid-cols-2 gap-[.938rem]'>
           {galleryItems.map((i) => {
             const url = galleryImages?.[i]
+            if (!url) return null
             return (
               <div key={i} className='overflow-hidden h-[12.5rem]'>
-                {url ? (
-                  <img
-                    src={url}
-                    alt={`Фото ${i + 1}`}
-                    className='w-full h-[12.5rem] object-cover transition-transform duration-500 ease-out hover:scale-[1.04]'
-                  />
-                ) : (
-                  <Image
-                    src={testImage}
-                    alt={`Фото ${i + 1}`}
-                    className='w-full h-[12.5rem] object-cover transition-transform duration-500 ease-out hover:scale-[1.04]'
-                  />
-                )}
+                <img
+                  src={url}
+                  alt={`Фото ${i + 1}`}
+                  className='w-full h-[12.5rem] object-cover transition-transform duration-500 ease-out hover:scale-[1.04]'
+                />
               </div>
             )
           })}

@@ -8,13 +8,17 @@ import type { HomeBlockPublic } from '@/services/types'
 
 interface IRealizationProps {
   block?: HomeBlockPublic | null
+  roadBlock?: HomeBlockPublic | null
 }
 
-const Realization = ({ block }: IRealizationProps) => {
+const Realization = ({ block, roadBlock }: IRealizationProps) => {
   const { sectionRef, titleRef, roadRef, cardsRef } = useRealizationAnimation()
   const projects = block?.projects ?? []
-  const cards = projects.length > 0 ? projects.slice(0, 3).map(projectToCardData) : null
+  const cards = projects.slice(0, 3).map(projectToCardData)
   const title = block?.title || 'Реализация объектов'
+  const steps = (roadBlock?.config as { steps?: { number: string; title: string; description: string }[] } | undefined)?.steps
+
+  if (cards.length === 0) return null
 
   return (
     <section ref={sectionRef} className='mt-[4.375rem]'>
@@ -26,31 +30,23 @@ const Realization = ({ block }: IRealizationProps) => {
       </h4>
 
       <div ref={roadRef} className='relative z-[100]'>
-        <RealizationRoad className='mt-[2.5rem]' />
+        <RealizationRoad className='mt-[2.5rem]' steps={steps} />
       </div>
 
       <div ref={cardsRef} className='flex'>
-        {cards ? (
-          cards.map((c, i) => {
-            const isFirst = i === 0
-            const isLast = i === cards.length - 1
-            return (
-              <ProjectCard
-                key={c.id}
-                data={c}
-                isHaveRightBorder={!isLast}
-                isOnBoundary={isFirst || isLast}
-                boundaryDirection={isFirst ? 'left' : isLast ? 'right' : undefined}
-              />
-            )
-          })
-        ) : (
-          <>
-            <ProjectCard isHaveRightBorder={true} isOnBoundary={true} boundaryDirection='left' />
-            <ProjectCard isHaveRightBorder={true} />
-            <ProjectCard isOnBoundary={true} boundaryDirection='right' />
-          </>
-        )}
+        {cards.map((c, i) => {
+          const isFirst = i === 0
+          const isLast = i === cards.length - 1
+          return (
+            <ProjectCard
+              key={c.id}
+              data={c}
+              isHaveRightBorder={!isLast}
+              isOnBoundary={isFirst || isLast}
+              boundaryDirection={isFirst ? 'left' : isLast ? 'right' : undefined}
+            />
+          )
+        })}
       </div>
 
       <Separator isFullscreen={true} className='-translate-y-[.063rem]' />
