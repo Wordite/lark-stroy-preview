@@ -24,9 +24,6 @@ const Activity = ({ className, activity, projects = [] }: IActivityProps) => {
 
   return (
     <section ref={sectionRef} className={`${className}`}>
-      <Separator isFullscreen={true} className='-translate-y-[.063rem] absolute z-[1000]' />
-      <div className='pb-[.063rem]' />
-
       <Link href={href} ref={headerRef as any} className='flex justify-between items-center my-[2.25rem] group'>
         <div className='flex items-center gap-[1.188rem]'>
           {activity?.iconSvg ? (
@@ -45,24 +42,29 @@ const Activity = ({ className, activity, projects = [] }: IActivityProps) => {
 
         <ArrowDiagonalIcon className='w-[2.125rem] h-[2.125rem] [&>path]:fill-white group-hover:[&>path]:fill-accent transition-colors duration-300' />
       </Link>
-      <Separator isFullscreen={true} className='translate-y-[.063rem] relative z-[1000]' />
+      <Separator isFullscreen={true} className='relative z-[1000]' />
 
-      <div ref={cardsRef} className='flex'>
-        {cards.map((c, i) => {
+      <div ref={cardsRef} className='grid grid-cols-3'>
+        {Array.from({ length: 3 }).map((_, i) => {
+          const c = cards[i]
           const isFirst = i === 0
-          const isLast = i === cards.length - 1
-          const isFullRow = cards.length === 3
+          const isLast = i === 2
+          const nextHasCard = Boolean(cards[i + 1])
+          const hasRight = Boolean(c) && nextHasCard && i < 2
+          const cellCls = `relative ${hasRight ? 'border-r border-light-gray-tranpsparent-40' : ''}`
+          if (!c) return <div key={`empty-${i}`} className={cellCls} />
           return (
-            <ProjectCard
-              key={c.id}
-              data={c}
-              isHaveRightBorder={!isLast}
-              isOnBoundary={isFirst || (isLast && isFullRow)}
-              boundaryDirection={isFirst ? 'left' : (isLast && isFullRow) ? 'right' : undefined}
-            />
+            <div key={c.id} className={cellCls}>
+              <ProjectCard
+                data={c}
+                isOnBoundary={isFirst || isLast}
+                boundaryDirection={isFirst ? 'left' : isLast ? 'right' : undefined}
+              />
+            </div>
           )
         })}
       </div>
+      <Separator isFullscreen={true} className='relative z-[1000]' />
     </section>
   )
 }

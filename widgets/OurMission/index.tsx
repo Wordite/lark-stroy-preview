@@ -14,7 +14,7 @@ interface OurMissionConfig {
   subtitle?: string
   missionTitle?: string
   missionText?: string
-  metrics?: { value: number; suffix?: string; label?: string; mode?: string }[]
+  metrics?: { value: string | number; suffix?: string; label?: string; mode?: string }[]
 }
 
 interface IOurMissionProps {
@@ -34,10 +34,10 @@ const FALLBACK = {
   missionText:
     'Мы создаём современные объекты, которые служат развитию Крыма. Каждый проект для нас - это возможность построить не просто здание, а пространство для бизнеса, работы и жизни',
   metrics: [
-    { value: 120, suffix: '+', label: 'объектов' },
-    { value: 85, suffix: 'K м²', label: 'построено' },
-    { value: 14, suffix: ' лет', label: 'на рынке' },
-    { value: 50, suffix: '+', label: 'специалистов' },
+    { value: '120+', label: 'объектов' },
+    { value: '85K м²', label: 'построено' },
+    { value: '14 лет', label: 'на рынке' },
+    { value: '50+', label: 'специалистов' },
   ],
 }
 
@@ -48,8 +48,7 @@ const OurMission = ({ block }: IOurMissionProps) => {
   const missionTitle = cfg.missionTitle || FALLBACK.missionTitle
   const missionText = cfg.missionText || FALLBACK.missionText
   const stats = (cfg.metrics && cfg.metrics.length ? cfg.metrics : FALLBACK.metrics).map((m) => ({
-    value: m.value,
-    suffix: m.suffix ?? '',
+    value: typeof m.value === 'number' ? `${m.value}${m.suffix ?? ''}` : (m.value ?? ''),
     label: m.label ?? '',
   }))
 
@@ -109,7 +108,7 @@ const OurMission = ({ block }: IOurMissionProps) => {
 
         <div ref={statsRef} className='ml-[3.75rem] grid grid-cols-2 gap-y-[1.5rem] gap-x-[4.625rem]'>
           {stats.map((stat, i) => (
-            <StatBlock key={i} value={stat.value} suffix={stat.suffix} label={stat.label} />
+            <StatBlock key={i} value={stat.value} label={stat.label} />
           ))}
         </div>
       </div>

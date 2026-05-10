@@ -51,7 +51,15 @@ const Hero = ({ block }: HeroProps = {}) => {
       </p>
 
       <div ref={buttonsRef} className='mt-[1.375rem] flex gap-[.938rem] max-md:flex-col max-md:mt-[4rem]'>
-        <Button style='accent' isHaveLinkIcon={true} href='/contacts'>Обсудить похожий проект</Button>
+        <Button
+          style='accent'
+          isHaveLinkIcon={true}
+          href={`/contacts?message=${encodeURIComponent(
+            `Здравствуйте! Меня заинтересовал проект «${slide.title}» — хотелось бы обсудить похожий.`,
+          )}`}
+        >
+          Обсудить похожий проект
+        </Button>
         <Button style='stroke' href={slide.href ?? '/projects'}>Подробнее о проекте</Button>
       </div>
 

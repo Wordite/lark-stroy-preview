@@ -40,7 +40,7 @@ const Pagination = ({ totalPages, currentPage, onChange, className = '' }: IPagi
                   type='button'
                   onClick={() => onChange(page)}
                   className={`cursor-pointer transition-colors duration-200 ${
-                    isActive ? 'text-text-white' : 'text-subtext hover:text-text-white'
+                    isActive ? 'text-accent' : 'text-subtext hover:text-text-white'
                   }`}
                 >
                   {page}

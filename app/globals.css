@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @source not inline("container");
 
+.PhotoView-Portal { z-index: 99999 !important; }
+.PhotoView-Slider__BannerWrap { z-index: 99999 !important; }
+
 html {
   overflow-x: hidden;
 }
@@ -11,7 +14,7 @@ body {
 
 input:focus {
   outline: none;
-  border: none;
+  /* border: none; */
 }
 
 :root {

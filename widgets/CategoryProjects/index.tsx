@@ -8,9 +8,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 import { ProjectCard, projectToCardData } from '@/entities/ProjectCard'
 import { Separator } from '@/shared/Separator'
+import { EmptyState } from '@/shared/EmptyState'
 import { Pagination } from '@/features/Pagination'
 import { useCategoryProjectsAnimation } from './model/useCategoryProjectsAnimation'
-import { useProjects } from '@/services/entities/projects'
+import { useProjects, parseAreaRange } from '@/services/entities/projects'
 import { useProjectFiltersUrl } from '@/features/ProjectFilters/model/useProjectFiltersUrl'
 import type { Project } from '@/services/types'
 
@@ -44,6 +45,7 @@ const CategoryProjects = ({
     page: currentPage,
     year: filters.year ? Number(filters.year) : undefined,
     city: filters.city || undefined,
+    ...parseAreaRange(filters.area),
   })
 
   const goToPage = (page: number) => {
@@ -69,8 +71,9 @@ const CategoryProjects = ({
   if (!useInitial && query.isLoading) {
     return (
       <section ref={sectionRef}>
-        <Separator className='translate-y-[2px] relative z-[1000]' isFullscreen={true} />
-        <div className='py-[40px] text-center text-subtext text-[18px]'>Загрузка…</div>
+        <Separator className='relative z-[1000]' isFullscreen={true} />
+        <EmptyState message='Загрузка…' />
+        <Separator className='relative z-[1000]' isFullscreen={true} />
       </section>
     )
   }
@@ -78,10 +81,15 @@ const CategoryProjects = ({
   if (!items.length) {
     return (
       <section ref={sectionRef}>
-        <Separator className='translate-y-[2px] relative z-[1000]' isFullscreen={true} />
-        <div className='py-[40px] text-center text-subtext text-[18px]'>
-          {(filters.year || filters.city) ? 'По заданным фильтрам ничего не найдено.' : 'В этой категории пока нет проектов.'}
-        </div>
+        <Separator className='relative z-[1000]' isFullscreen={true} />
+        <EmptyState
+          message={
+            filters.year || filters.city
+              ? 'По заданным фильтрам ничего не найдено.'
+              : 'В этой категории пока нет проектов.'
+          }
+        />
+        <Separator className='relative z-[1000]' isFullscreen={true} />
       </section>
     )
   }
@@ -90,33 +98,43 @@ const CategoryProjects = ({
 
   return (
     <section ref={sectionRef}>
-      <Separator className='translate-y-[2px] relative z-[1000]' isFullscreen={true} />
+      <Separator className='relative z-[1000]' isFullscreen={true} />
       <div ref={gridRef} className='grid grid-cols-3 relative'>
         {cards.map((c, i) => {
           const colInRow = i % 3
           const isFirstCol = colInRow === 0
           const isLastCol = colInRow === 2
+          const hasRight = !isLastCol
+          const isNewRowStart = i >= 3 && isFirstCol
           return (
-            <ProjectCard
+            <div
               key={c.id}
-              data={c}
-              className='translate-y-[1px]'
-              isHaveRightBorder={!isLastCol}
-              isOnBoundary={isFirstCol || isLastCol}
-              boundaryDirection={isFirstCol ? 'left' : isLastCol ? 'right' : undefined}
-            />
+              className={`relative ${hasRight ? 'border-r border-light-gray-tranpsparent-40' : ''}`}
+            >
+              {isNewRowStart && (
+                <div
+                  className='absolute top-0 w-screen h-px bg-light-gray-tranpsparent-40 -translate-y-px z-[1] pointer-events-none'
+                  style={{ left: 'calc(-1 * var(--container-offset))' }}
+                />
+              )}
+              <ProjectCard
+                data={c}
+                isOnBoundary={isFirstCol || isLastCol}
+                boundaryDirection={isFirstCol ? 'left' : isLastCol ? 'right' : undefined}
+              />
+            </div>
           )
         })}
       </div>
-      <Separator className='translate-y-[1px] relative z-[1000]' isFullscreen={true} />
 
-      {totalPages > 1 && (
+      {totalPages > 1 ? (
         <Pagination
           totalPages={totalPages}
           currentPage={currentPage}
           onChange={goToPage}
-          className='mt-[40px]'
         />
+      ) : (
+        <Separator className='relative z-[1000]' isFullscreen={true} />
       )}
     </section>
   )

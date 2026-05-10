@@ -40,7 +40,7 @@ const ActivityTab = ({
     <Link
       href={data.href}
       style={colorStyle}
-      className={`group block relative py-[1.5rem] min-h-[17.813rem] transition-colors duration-300 hover:bg-black-light ${isHaveLeftOffset ? 'pl-[6.875rem]' : ''} ${isHaveTopBorder ? 'border-t-[.063rem] border-light-gray-tranpsparent-40' : ''} ${isHaveBottomBorder ? 'border-b-[.063rem] border-light-gray-tranpsparent-40' : ''} ${isHaveLeftBorder ? 'border-l-[.063rem] border-light-gray-tranpsparent-40' : ''} ${isHaveRightBorder ? 'border-r-[.063rem] border-light-gray-tranpsparent-40' : ''}`}
+      className={`group block relative py-[1.5rem] transition-colors duration-300 hover:bg-black-light ${isHaveLeftOffset ? 'pl-[6.875rem]' : ''} ${isHaveTopBorder ? 'border-t-[.063rem] border-light-gray-tranpsparent-40' : ''} ${isHaveBottomBorder ? 'border-b-[.063rem] border-light-gray-tranpsparent-40' : ''} ${isHaveLeftBorder ? 'border-l-[.063rem] border-light-gray-tranpsparent-40' : ''} ${isHaveRightBorder ? 'border-r-[.063rem] border-light-gray-tranpsparent-40' : ''}`}
     >
       {boundaryDirection === 'left' && (
         <div className='h-full w-screen group-hover:bg-black-light transition-colors duration-300 -z-50 absolute top-0 right-full' />
@@ -70,13 +70,14 @@ const ActivityTab = ({
       </div>
       <p className='text-[1.125rem] font-medium text-text-white mt-[1.125rem] w-[30rem]'>{data.description}</p>
 
-      <ul className='list-disc marker:text-[.75rem] text-[1.125rem] font-medium text-subtext ml-[1.5rem] mt-[1.75rem]'>
-        {data.bullets.map((b) => (
-          <li key={b}>{b}</li>
-        ))}
-      </ul>
-
-      <DiagonalArrowIcon className='absolute bottom-[1.5rem] right-[1.5rem] w-[2.25rem] h-[2.25rem] [&>path]:fill-dark-gray group-hover:[&>path]:fill-(--cat-color) group-hover:translate-x-[.375rem] group-hover:-translate-y-[.375rem] transition-all duration-300 ease-out' />
+      <div className='mt-[1.75rem] flex items-end justify-between gap-[1.5rem] pr-[1.5rem]'>
+        <ul className='list-disc marker:text-[.75rem] text-[1.125rem] font-medium text-subtext ml-[1.5rem]'>
+          {data.bullets.map((b) => (
+            <li key={b}>{b}</li>
+          ))}
+        </ul>
+        <DiagonalArrowIcon className='shrink-0 w-[2.25rem] h-[2.25rem] [&>path]:fill-dark-gray group-hover:[&>path]:fill-(--cat-color) group-hover:translate-x-[.375rem] group-hover:-translate-y-[.375rem] transition-all duration-300 ease-out' />
+      </div>
     </Link>
   )
 }

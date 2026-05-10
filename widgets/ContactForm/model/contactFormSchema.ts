@@ -19,6 +19,10 @@ export const contactFormSchema = yup.object({
     .trim()
     .required('Напишите сообщение')
     .min(10, 'Сообщение должно содержать минимум 10 символов'),
+  consent: yup
+    .boolean()
+    .oneOf([true], 'Необходимо согласиться с политикой конфиденциальности')
+    .required(),
 })
 
 export type IContactFormValues = yup.InferType<typeof contactFormSchema>

@@ -57,6 +57,8 @@ const ProjectCard = ({
   return (
     <Link
       href={data.href}
+      target='_blank'
+      rel='noopener noreferrer'
       className={`${isShort ? 'w-[20.938rem] h-[25.625rem]' : 'w-[27.875rem] h-[28.5rem]'} shrink-0 relative cursor-pointer group py-[1.688rem] flex flex-col ${!isOnBoundary ? 'hover:bg-black-light' : ''} transition-colors duration-300 ${className}`}
     >
       {isOnBoundary && boundaryDirection === 'left' && (
@@ -118,7 +120,7 @@ const ProjectCard = ({
       </div>
 
       <ArrowsLeftIcon
-        className={`absolute ${isShort ? 'bottom-[2.188rem]' : 'bottom-[5.313rem]'} right-[2.188rem] w-[1.875rem] h-[1.25rem] [&>path]:stroke-accent transition-transform duration-300 group-hover:-translate-x-[.375rem]`}
+        className={`absolute ${isShort ? 'bottom-[2.188rem]' : 'bottom-[5.313rem]'} right-[2.188rem] w-[1.875rem] h-[1.25rem] [&>path]:stroke-accent group-hover:-translate-x-[.375rem]`}
       />
     </Link>
   )

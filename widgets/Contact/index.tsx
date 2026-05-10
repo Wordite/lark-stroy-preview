@@ -13,6 +13,7 @@ interface IContactProps {
   isUnderLongerSlider?: boolean
   isBorderTopDisabled?: boolean
   isMarginTopDisabled?: boolean
+  prefillMessage?: string
 }
 
 const Contact = ({
@@ -20,6 +21,7 @@ const Contact = ({
   isUnderLongerSlider = false,
   isBorderTopDisabled = false,
   isMarginTopDisabled = false,
+  prefillMessage,
 }: IContactProps) => {
   const { sectionRef, labelRef, titleRef, subtitleRef, buttonsRef, arrowRef, linksRef } = useContactAnimation()
 
@@ -45,8 +47,17 @@ const Contact = ({
           </p>
 
           <div ref={buttonsRef} className='flex gap-[.938rem] mt-[1.75rem]'>
-            <Button style='accent'>{isSimilarProject ? 'Обсудить похожий проект' : 'Обсудить проект'}</Button>
-            <Button style='stroke'>ПОСМОТРЕТЬ ПРОЕКТЫ</Button>
+            <Button
+              style='accent'
+              href={
+                prefillMessage
+                  ? `/contacts?message=${encodeURIComponent(prefillMessage)}`
+                  : '/contacts'
+              }
+            >
+              {isSimilarProject ? 'Обсудить похожий проект' : 'Обсудить проект'}
+            </Button>
+            <Button style='stroke' href='/projects'>ПОСМОТРЕТЬ ПРОЕКТЫ</Button>
           </div>
         </div>
 
@@ -77,7 +88,7 @@ const Contact = ({
           isVertical={true}
           isFullscreen={true}
           height='29.625rem'
-          className={`absolute ${isUnderLongerSlider ? 'right-[20.875rem]' : 'right-[28rem]'} translate-y-[.063rem]`}
+          className={`absolute ${isUnderLongerSlider ? 'right-[20.875rem]' : 'right-[33.333%]'} translate-y-[.063rem]`}
         />
       </div>
 

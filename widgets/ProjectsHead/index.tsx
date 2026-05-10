@@ -1,6 +1,6 @@
 'use client'
 
-import { ProjectFilters } from '@/features/ProjectFilters'
+import { ProjectFilters, type AreaBucketOption } from '@/features/ProjectFilters'
 import { useProjectsHeadAnimation } from './model/useProjectsHeadAnimation'
 import type { Activity } from '@/services/types'
 
@@ -8,9 +8,10 @@ interface IProjectsHeadProps {
   className?: string
   categories?: Activity[]
   cities?: string[]
+  areaBuckets?: AreaBucketOption[]
 }
 
-const ProjectsHead = ({ className, categories = [], cities = [] }: IProjectsHeadProps) => {
+const ProjectsHead = ({ className, categories = [], cities = [], areaBuckets }: IProjectsHeadProps) => {
   const { rootRef, titleRef, filtersRef } = useProjectsHeadAnimation()
 
   return (
@@ -23,7 +24,7 @@ const ProjectsHead = ({ className, categories = [], cities = [] }: IProjectsHead
       </h4>
 
       <div ref={filtersRef}>
-        <ProjectFilters categories={categories} cities={cities} />
+        <ProjectFilters categories={categories} cities={cities} areaBuckets={areaBuckets} />
       </div>
     </div>
   )

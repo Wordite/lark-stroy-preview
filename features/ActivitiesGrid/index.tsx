@@ -114,12 +114,18 @@ const ActivitiesGrid = ({ items }: ActivitiesGridProps) => {
   return (
     <>
       <Separator className='mt-[2.5rem]' isFullscreen={true} />
-      <div ref={gridRef} className='grid grid-cols-2 relative'>
-        {slots[0] && <ActivityTab data={slots[0]} isHaveRightBorder={true} boundaryDirection='left' />}
-        {slots[1] && <ActivityTab data={slots[1]} isHaveLeftOffset={true} boundaryDirection='right' />}
-        {slots.length > 2 && <Separator className='absolute top-1/2 -translate-y-1/2' isFullscreen={true} />}
-        {slots[2] && <ActivityTab data={slots[2]} isHaveRightBorder={true} boundaryDirection='left' />}
-        {slots[3] && <ActivityTab data={slots[3]} isHaveLeftOffset={true} boundaryDirection='right' />}
+      <div ref={gridRef}>
+        <div className='grid grid-cols-2 relative'>
+          {slots[0] && <ActivityTab data={slots[0]} isHaveRightBorder={true} boundaryDirection='left' />}
+          {slots[1] && <ActivityTab data={slots[1]} isHaveLeftOffset={true} boundaryDirection='right' />}
+        </div>
+        {slots.length > 2 && <Separator isFullscreen={true} />}
+        {(slots[2] || slots[3]) && (
+          <div className='grid grid-cols-2 relative'>
+            {slots[2] && <ActivityTab data={slots[2]} isHaveRightBorder={true} boundaryDirection='left' />}
+            {slots[3] && <ActivityTab data={slots[3]} isHaveLeftOffset={true} boundaryDirection='right' />}
+          </div>
+        )}
       </div>
       <Separator className='' isFullscreen={true} />
     </>

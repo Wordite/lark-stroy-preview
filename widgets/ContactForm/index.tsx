@@ -1,10 +1,13 @@
 'use client'
 
+import { useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Controller, useForm, type ControllerRenderProps } from 'react-hook-form'
 import { useContactFormSubmit } from './model/useContactFormSubmit'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { InputWithLabel } from '@/entities/InputWithLabel'
 import { Button } from '@/shared/Button'
+import { Checkbox } from '@/shared/Checkbox'
 import { Separator } from '@/shared/Separator'
 import { SelectDropdown, type ISelectOption } from '@/shared/SelectDropdown'
 import StorageIcon from '@/assets/icons/storage.svg'
@@ -29,6 +32,7 @@ const DEFAULT_VALUES: IContactFormValues = {
   phone: '',
   objectType: '',
   message: '',
+  consent: false,
 }
 
 interface IPhoneFieldProps {
@@ -66,18 +70,26 @@ const ContactForm = () => {
     workTimeRef,
   } = useContactFormAnimation()
 
+  const searchParams = useSearchParams()
+  const prefillMessage = searchParams.get('message') ?? ''
+
   const {
     register,
     handleSubmit,
     control,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<IContactFormValues>({
     resolver: yupResolver(contactFormSchema),
-    defaultValues: DEFAULT_VALUES,
+    defaultValues: { ...DEFAULT_VALUES, message: prefillMessage },
     mode: 'onSubmit',
     reValidateMode: 'onChange',
   })
+
+  useEffect(() => {
+    if (prefillMessage) setValue('message', prefillMessage)
+  }, [prefillMessage, setValue])
 
   const { state: submitState, submit } = useContactFormSubmit(() => reset(DEFAULT_VALUES))
 
@@ -147,6 +159,34 @@ const ContactForm = () => {
             rows={5}
             error={errors.message?.message}
             {...register('message')}
+          />
+
+          <Controller
+            control={control}
+            name='consent'
+            render={({ field }) => (
+              <Checkbox
+                checked={!!field.value}
+                onChange={(e) => field.onChange(e.target.checked)}
+                onBlur={field.onBlur}
+                name={field.name}
+                error={errors.consent?.message as string | undefined}
+                label={
+                  <>
+                    Я ознакомлен(а) и согласен(а) с{' '}
+                    <a
+                      href='/privacy'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='text-accent underline underline-offset-2'
+                    >
+                      политикой конфиденциальности
+                    </a>{' '}
+                    и обработкой персональных данных.
+                  </>
+                }
+              />
+            )}
           />
 
           <Button style='accent' className='self-start'>

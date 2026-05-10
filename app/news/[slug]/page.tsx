@@ -1,7 +1,9 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import ArrowIcon from '@/assets/icons/arrow.svg'
 import { Contact } from '@/widgets/Contact'
 import { Separator } from '@/shared/Separator'
+import { Markdown } from '@/shared/Markdown'
 import { fetchNewsBySlug } from '@/services/entities/news'
 import { mediaUrl } from '@/services/mediaUrl'
 
@@ -17,41 +19,44 @@ export default async function NewsDetailPage({
   if (!news) notFound()
 
   return (
-    <article className='mt-[170px]'>
-      <Link
-        href='/news'
-        className='inline-block text-[16px] text-subtext hover:text-accent transition-colors duration-200'
-      >
-        ← Все новости
-      </Link>
+    <article className='mt-[10.625rem]'>
+      <div className='flex items-start gap-[1.563rem]'>
+        <Link
+          href='/news'
+          aria-label='Все новости'
+          className='group w-[3.375rem] h-[3.375rem] bg-accent flex justify-center items-center cursor-pointer transition-[filter,transform] duration-300 hover:brightness-110 hover:-translate-x-[.25rem] shrink-0'
+        >
+          <ArrowIcon className='w-[1.5rem] h-[1.5rem] [&>path]:stroke-black-light transition-transform duration-300 group-hover:-translate-x-[.188rem]' />
+        </Link>
+        <div className='flex-1'>
+          <h1 className='text-[2.813rem] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em] max-w-[56.25rem]'>
+            {news.title}
+          </h1>
+          {news.publishedAt && (
+            <p className='mt-[1rem] text-[1rem] text-subtext'>
+              {new Date(news.publishedAt).toLocaleDateString('ru-RU', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+              })}
+            </p>
+          )}
+        </div>
+      </div>
 
-      <h1 className='mt-[20px] text-[45px] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em] max-w-[900px]'>
-        {news.title}
-      </h1>
-
-      {news.publishedAt && (
-        <p className='mt-[16px] text-[16px] text-subtext'>
-          {new Date(news.publishedAt).toLocaleDateString('ru-RU', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-          })}
-        </p>
-      )}
-
-      <Separator isFullscreen={true} className='mt-[30px]' />
+      <Separator isFullscreen={true} className='mt-[2.5rem]' />
 
       {news.image?.url && (
-        <div className='mt-[30px] mb-[30px] w-screen -translate-x-(--container-offset) overflow-hidden max-h-[480px]'>
-          <img src={mediaUrl(news.image.url)} alt={news.title} className='w-full max-h-[480px] object-cover' />
+        <div className='mt-[2rem] mb-[2rem] w-screen -translate-x-(--container-offset) overflow-hidden max-h-[30rem]'>
+          <img src={mediaUrl(news.image.url)} alt={news.title} className='w-full max-h-[30rem] object-cover' />
         </div>
       )}
 
-      <div className='mt-[30px] max-w-[900px] text-[18px] text-text-white leading-[1.6em] whitespace-pre-wrap pb-[60px]'>
-        {news.content}
+      <div className='mt-[2rem] max-w-[56.25rem] pb-[3.75rem]'>
+        <Markdown content={news.content} />
       </div>
 
-      <Contact isBorderTopDisabled={true} />
+      <Contact />
     </article>
   )
 }

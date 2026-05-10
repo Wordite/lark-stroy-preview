@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import placeHolderImage from '@/assets/images/test_photo.png'
 import Image, { type StaticImageData } from 'next/image'
 import { Button, STYLES } from '@/shared/Button'
@@ -8,7 +9,7 @@ export interface INewsCardData {
   title: string
   description: string
   buttonLabel: string
-  image?: StaticImageData
+  image?: StaticImageData | string
   href: string
 }
 
@@ -36,10 +37,14 @@ const NewsCard = ({
   boundaryDirection,
 }: INewsCardProps) => {
   const image = data.image ?? placeHolderImage
+  const isExternalImage = typeof image === 'string'
 
   return (
-    <figure
-      className={`w-[27.875rem] h-[28.5rem] shrink-0 relative cursor-pointer group py-[1.688rem] ${!isOnBoundary ? 'hover:bg-black-light' : ''} transition-colors duration-300 ${className}`}
+    <Link
+      href={data.href}
+      target='_blank'
+      rel='noopener noreferrer'
+      className={`w-[27.875rem] h-[28.5rem] shrink-0 relative cursor-pointer group py-[1.688rem] block ${!isOnBoundary ? 'hover:bg-black-light' : ''} transition-colors duration-300 ${className}`}
     >
       {isOnBoundary && boundaryDirection === 'left' && (
         <div className='w-screen group-hover:bg-black-light transition-colors duration-300 absolute inset-y-0 right-0' />
@@ -48,25 +53,33 @@ const NewsCard = ({
         <div className='w-screen group-hover:bg-black-light transition-colors duration-300 absolute inset-y-0 left-0' />
       )}
       <div className='px-[2.188rem] relative'>
-        <p className='text-[1.25rem] font-medium text-text-white'>{data.title}</p>
+        <p className='text-[1.25rem] font-medium text-text-white line-clamp-1'>{data.title}</p>
 
         {isHaveRightBorder && <Separator className='absolute right-0 -top-[1.625rem] h-[28.375rem]' isVertical={true} />}
 
-        <div className='overflow-hidden mt-[1.875rem]'>
-          <Image
-            src={image}
-            className='w-full h-[11.625rem] transition-transform duration-500 ease-out group-hover:scale-[1.04]'
-            alt='news image'
-          />
+        <div className='overflow-hidden mt-[1.875rem] h-[11.625rem]'>
+          {isExternalImage ? (
+            <img
+              src={image as string}
+              className='w-full h-[11.625rem] object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]'
+              alt={data.title}
+            />
+          ) : (
+            <Image
+              src={image as StaticImageData}
+              className='w-full h-[11.625rem] object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]'
+              alt={data.title}
+            />
+          )}
         </div>
 
-        <p className='text-[.938rem] font-medium text-subtext mt-[1.938rem]'>{data.description}</p>
+        <p className='text-[.938rem] font-medium text-subtext mt-[1.938rem] line-clamp-3'>{data.description}</p>
 
         <Button style={STYLES.STROKE} className='w-full mt-[1.75rem]'>
           {data.buttonLabel}
         </Button>
       </div>
-    </figure>
+    </Link>
   )
 }
 

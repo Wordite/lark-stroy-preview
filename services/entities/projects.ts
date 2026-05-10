@@ -9,6 +9,8 @@ export interface ProjectQuery {
   search?: string
   city?: string
   year?: number
+  areaMin?: number
+  areaMax?: number
 }
 
 function qs(params: ProjectQuery) {
@@ -19,7 +21,20 @@ function qs(params: ProjectQuery) {
   if (params.search) s.set('search', params.search)
   if (params.city) s.set('city', params.city)
   if (params.year) s.set('year', String(params.year))
+  if (params.areaMin != null) s.set('areaMin', String(params.areaMin))
+  if (params.areaMax != null) s.set('areaMax', String(params.areaMax))
   return s.toString()
+}
+
+export function parseAreaRange(area: string | undefined | null): { areaMin?: number; areaMax?: number } {
+  if (!area) return {}
+  const [a, b] = area.split('-')
+  const min = a ? Number(a) : undefined
+  const max = b ? Number(b) : undefined
+  return {
+    ...(Number.isFinite(min) ? { areaMin: min } : {}),
+    ...(Number.isFinite(max) ? { areaMax: max } : {}),
+  }
 }
 
 export function fetchProjects(params: ProjectQuery = {}) {

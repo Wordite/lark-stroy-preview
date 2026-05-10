@@ -24,11 +24,11 @@ const ActivityHead = ({ activity }: IActivityHeadProps) => {
     'Проектирование и строительство современных складов класса А и В. Логистические центры с автоматизированными системами управления.'
 
   return (
-    <div ref={rootRef} className='mt-[169px] h-[128px] py-[15px] flex gap-[25px]'>
+    <div ref={rootRef} className='mt-[169px] min-h-[128px] py-[15px] flex gap-[25px] relative'>
       <Image
         alt='bg'
         src={activityHeadBgImage}
-        className='w-[1004px] h-[128px] absolute -z-50 -translate-y-[15px] -translate-x-(--container-offset)'
+        className='w-[1004px] h-full absolute inset-y-0 left-0 -z-50 -translate-x-(--container-offset) object-cover'
       />
 
       <button

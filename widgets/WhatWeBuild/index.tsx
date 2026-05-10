@@ -3,9 +3,11 @@
 import { NewsCard, type INewsCardData } from '@/entities/NewsCard'
 import { ProjectCard, type IProjectCardData, projectToCardData } from '@/entities/ProjectCard'
 import { Slider, useSliderSlide } from '@/features/Slider'
+import { useRem } from '@/shared/hooks/useRem'
+import { mediaUrl } from '@/services/mediaUrl'
 import type { HomeBlockPublic, News } from '@/services/types'
 
-const CARD_WIDTH = 446
+const CARD_REM = 27.875
 const VISIBLE_COUNT = 3
 
 function newsToCardData(n: News): INewsCardData {
@@ -15,6 +17,7 @@ function newsToCardData(n: News): INewsCardData {
     description: n.excerpt ?? '',
     buttonLabel: 'Читать',
     href: `/news/${n.slug}`,
+    image: mediaUrl(n.image?.url),
   }
 }
 
@@ -47,6 +50,7 @@ interface IWhatWeBuildProps {
 }
 
 const WhatWeBuild = ({ block }: IWhatWeBuildProps = {}) => {
+  const rem = useRem()
   const newsData = block?.news ? newsToCardData(block.news) : null
   const projectSlides: IProjectCardData[] = (block?.projects ?? []).map(projectToCardData)
   const title = block?.title || 'Что мы строим'
@@ -55,7 +59,7 @@ const WhatWeBuild = ({ block }: IWhatWeBuildProps = {}) => {
 
   return (
     <Slider
-      cardWidth={CARD_WIDTH}
+      cardWidth={rem(CARD_REM)}
       visibleCount={VISIBLE_COUNT}
       className='mt-[4.375rem]'
       title={

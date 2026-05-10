@@ -2,8 +2,11 @@
 
 import { useState } from 'react'
 import gsap from 'gsap'
+import { PhotoProvider, PhotoView } from 'react-photo-view'
+import 'react-photo-view/dist/react-photo-view.css'
 import { Button } from '@/shared/Button'
 import { Separator } from '@/shared/Separator'
+import { Markdown } from '@/shared/Markdown'
 import { useProjectDescriptionAnimation } from './model/useProjectDescriptionAnimation'
 import type { Project } from '@/services/types'
 import { mediaUrl } from '@/services/mediaUrl'
@@ -67,9 +70,7 @@ const ProjectDescription = ({ project }: IProjectDescriptionProps) => {
       <div className='w-[55.75rem] pr-[3.75rem]'>
         <div ref={aboutRef}>
           <p className='text-[1.125rem] font-medium text-text-white'>О проекте</p>
-          <p className='mt-[.625rem] text-[1.125rem] text-subtext leading-[1.5em] font-medium whitespace-pre-wrap'>
-            {description}
-          </p>
+          <Markdown content={description} className='mt-[.625rem]' />
         </div>
 
         {totalGallery > 0 && (
@@ -81,21 +82,25 @@ const ProjectDescription = ({ project }: IProjectDescriptionProps) => {
           </h3>
         )}
 
-        <div ref={galleryRef} className='mt-[.438rem] grid grid-cols-2 gap-[.938rem]'>
-          {galleryItems.map((i) => {
-            const url = galleryImages?.[i]
-            if (!url) return null
-            return (
-              <div key={i} className='overflow-hidden h-[12.5rem]'>
-                <img
-                  src={url}
-                  alt={`Фото ${i + 1}`}
-                  className='w-full h-[12.5rem] object-cover transition-transform duration-500 ease-out hover:scale-[1.04]'
-                />
-              </div>
-            )
-          })}
-        </div>
+        <PhotoProvider>
+          <div ref={galleryRef} className='mt-[.438rem] grid grid-cols-2 gap-[.938rem]'>
+            {galleryItems.map((i) => {
+              const url = galleryImages?.[i]
+              if (!url) return null
+              return (
+                <div key={i} className='overflow-hidden h-[12.5rem]'>
+                  <PhotoView src={url}>
+                    <img
+                      src={url}
+                      alt={`Фото ${i + 1}`}
+                      className='w-full h-[12.5rem] object-cover cursor-pointer transition-transform duration-500 ease-out hover:scale-[1.04]'
+                    />
+                  </PhotoView>
+                </div>
+              )
+            })}
+          </div>
+        </PhotoProvider>
 
         {canLoadMore && (
           <Button
@@ -113,7 +118,7 @@ const ProjectDescription = ({ project }: IProjectDescriptionProps) => {
         isVertical={true}
         isFullscreen={true}
         height='100%'
-        className='absolute right-[28rem] top-0'
+        className='absolute right-[33.333%] top-0'
       />
 
       <div ref={specsRef} className='flex-1'>

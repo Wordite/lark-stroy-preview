@@ -169,7 +169,10 @@ export const useYandexMap = (sourcePoints?: MapPoint[]) => {
         // Add points with custom placemarks
         points.forEach((point) => {
           const inner = point.iconSvg
-            ? `<g transform="translate(8,8) scale(${16 / 24})" fill="rgba(17,21,23,1)">${stripSvgWrapper(point.iconSvg)}</g>`
+            ? (() => {
+                const { content, viewBox } = parseSvg(point.iconSvg)
+                return `<svg x="8" y="8" width="16" height="16" viewBox="${viewBox}" fill="rgba(17,21,23,1)" stroke="rgba(17,21,23,1)" preserveAspectRatio="xMidYMid meet">${content}</svg>`
+              })()
             : `<circle cx="16" cy="16" r="5" fill="rgba(17,21,23,1)"/>`
           const placemark = new window.ymaps.Placemark(
             point.coords,
@@ -245,4 +248,17 @@ function stripSvgWrapper(svg: string): string {
   // Pull contents out of an outer <svg>...</svg> so we can re-embed inside another svg.
   const m = svg.match(/<svg[^>]*>([\s\S]*?)<\/svg>/i)
   return m ? m[1] : svg
+}
+
+function parseSvg(svg: string): { content: string; viewBox: string } {
+  const viewBoxMatch = svg.match(/viewBox\s*=\s*["']([^"']+)["']/i)
+  let viewBox = viewBoxMatch?.[1]
+  if (!viewBox) {
+    const widthMatch = svg.match(/<svg[^>]*\swidth\s*=\s*["']?(\d+(?:\.\d+)?)/i)
+    const heightMatch = svg.match(/<svg[^>]*\sheight\s*=\s*["']?(\d+(?:\.\d+)?)/i)
+    const w = Number(widthMatch?.[1]) || 24
+    const h = Number(heightMatch?.[1]) || 24
+    viewBox = `0 0 ${w} ${h}`
+  }
+  return { content: stripSvgWrapper(svg), viewBox }
 }
