@@ -44,7 +44,6 @@ export default function RootLayout({
           <Header />
           <main className='px-(--container-offset)'>{children}</main>
           <Footer />
-          <ThemeToggle />
         </QueryProvider>
       </body>
     </html>

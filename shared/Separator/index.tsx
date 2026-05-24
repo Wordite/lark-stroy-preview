@@ -4,6 +4,9 @@ interface ISeparatorProps {
   height?: string
   className?: string
   isFullscreen?: boolean
+  // Блоки поверх тёмного фона (hero, our mission): фиксированно светлая линия
+  // в обеих темах, как в тёмной теме.
+  onDark?: boolean
 }
 
 const Separator = ({
@@ -12,6 +15,7 @@ const Separator = ({
   height = 'h-screen',
   className = '',
   isFullscreen = false,
+  onDark = false,
 }: ISeparatorProps) => {
   return (
     <div
@@ -20,7 +24,7 @@ const Separator = ({
         isFullscreen && isVertical ? 'h-screen'
         : isFullscreen && !isVertical ? 'w-screen -translate-x-(--container-offset)'
         : ''
-      } bg-light-gray-tranpsparent-40 ${className}`}
+      } ${onDark ? 'bg-[rgba(197,199,202,0.4)]' : 'bg-light-gray-tranpsparent-40'} ${className}`}
     />
   )
 }

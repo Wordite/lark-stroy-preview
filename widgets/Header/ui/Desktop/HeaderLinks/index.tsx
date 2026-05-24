@@ -19,7 +19,7 @@ const HeaderLinks = ({ links = defaultLinks }: HeaderLinksProps) => {
             {link.label}
 
             {link.nestedLinks && (
-              <ArrowDownIcon className='w-[.75rem] h-[.438rem] transition-transform duration-300 group-hover:rotate-180' />
+              <ArrowDownIcon className='w-[.75rem] h-[.438rem] [&>path]:stroke-current transition-transform duration-300 group-hover:rotate-180' />
             )}
           </Link>
 

@@ -17,10 +17,12 @@ const HeroProjectSlider = ({ slides }: IHeroProjectSliderProps) => {
   return (
     <div className='absolute -left-(--container-offset) w-screen h-screen -z-50 overflow-hidden'>
       <Image
-        className='absolute w-screen h-screen z-10 max-md:rotate-180'
+        className='absolute w-screen h-screen z-10 max-md:hidden'
         src={slideMaskImage}
         alt='mask'
       />
+      {/* На мобильных вместо картинки-маски — простое затемнение фона слайда */}
+      <div className='hidden max-md:block absolute inset-0 z-10 bg-[rgba(17,21,23,0.6)]' />
       {slides.map((slide) => (
         <div
           key={slide.id}

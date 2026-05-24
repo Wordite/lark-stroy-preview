@@ -27,6 +27,16 @@ const readMaskFill = (): string => {
   return v || 'rgba(17, 21, 23, 1)'
 }
 
+// Раздуваем контуры маски на 20% от общего центра, чтобы «окно» в маске
+// захватывало больше пространства вокруг полуострова.
+const GEO_EXPAND = 1.2
+const scaleRing = (
+  ring: [number, number][],
+  [cLat, cLng]: [number, number],
+  k: number,
+): [number, number][] =>
+  ring.map(([lat, lng]) => [cLat + (lat - cLat) * k, cLng + (lng - cLng) * k])
+
 // Combined bbox for Crimea + Sevastopol — limits panning and drives the
 // adaptive zoom calculation below. Padded ~0.4° on each side so the
 // peninsula has visible margin around it.
@@ -41,10 +51,10 @@ const CRIMEA_BOUNDS: [[number, number], [number, number]] = [
 // MAX_ZOOM caps the result on wide screens (≥1580px tend to over-zoom
 // because both width and height grow); above the cap the peninsula stays
 // fixed in pixels and just occupies a smaller fraction of the viewport.
-// Отдалено на ~20% относительно прежних значений (0.85 / 7.8), чтобы у
-// полуострова было больше воздуха по краям.
-const FILL_RATIO = 0.71
-const MAX_ZOOM = 6.5
+// Отдалено относительно прежних значений (0.85 / 7.8): полуостров занимает
+// меньшую долю экрана, восточные объекты (Керчь) не уходят под правый UI.
+const FILL_RATIO = 0.58
+const MAX_ZOOM = 5.7
 const computeFitZoom = (w: number, h: number): number => {
   const [[swLat, swLng], [neLat, neLng]] = CRIMEA_BOUNDS
   const lngSpan = neLng - swLng
@@ -70,11 +80,17 @@ interface IMapPoint {
   coords: [number, number]
   title: string
   activity: string
+  activitySlug: string
   description: string
   color: string
   iconSvg?: string | null
   href?: string
   imageUrl?: string | null
+}
+
+export interface IMapActivity {
+  slug: string
+  title: string
 }
 
 function adaptPoints(input?: MapPoint[]): IMapPoint[] {
@@ -86,6 +102,7 @@ function adaptPoints(input?: MapPoint[]): IMapPoint[] {
       coords: [p.latitude, p.longitude] as [number, number],
       title: p.title,
       activity: p.activity.title,
+      activitySlug: p.activity.slug,
       description: [p.area ? `${p.area.toLocaleString('ru-RU')} м²` : null, p.city]
         .filter(Boolean)
         .join(' — ') || p.activity.title,
@@ -103,6 +120,41 @@ export const useYandexMap = (sourcePoints?: MapPoint[]) => {
   const [activePoint, setActivePoint] = useState<IMapPoint | null>(null)
   const mapInstanceRef = useRef<any>(null)
   const points = useMemo(() => adaptPoints(sourcePoints), [sourcePoints])
+
+  // Уникальные категории объектов для селекта-фильтра.
+  const activities = useMemo<IMapActivity[]>(() => {
+    const seen = new Map<string, string>()
+    points.forEach((p) => {
+      if (!seen.has(p.activitySlug)) seen.set(p.activitySlug, p.activity)
+    })
+    return Array.from(seen, ([slug, title]) => ({ slug, title }))
+  }, [points])
+
+  // По умолчанию показываем только первую категорию.
+  const [selectedActivity, setSelectedActivity] = useState('')
+  useEffect(() => {
+    if (activities.length && !activities.some((a) => a.slug === selectedActivity)) {
+      setSelectedActivity(activities[0].slug)
+    }
+  }, [activities, selectedActivity])
+
+  const selectedActivityRef = useRef(selectedActivity)
+  selectedActivityRef.current = selectedActivity
+  const renderPlacemarksRef = useRef<((slug: string) => void) | null>(null)
+
+  const zoomIn = () => {
+    const m = mapInstanceRef.current
+    if (m) m.setZoom(m.getZoom() + 1, { duration: 200 })
+  }
+  const zoomOut = () => {
+    const m = mapInstanceRef.current
+    if (m) m.setZoom(m.getZoom() - 1, { duration: 200 })
+  }
+
+  // Перерисовываем точки при смене категории.
+  useEffect(() => {
+    renderPlacemarksRef.current?.(selectedActivity)
+  }, [selectedActivity])
 
   useEffect(() => {
     if (sectionRef.current && infoRef.current) {
@@ -151,7 +203,11 @@ export const useYandexMap = (sourcePoints?: MapPoint[]) => {
         // Inverse polygon mask: outer rectangle + two holes (Crimea + Sevastopol).
         // Yandex Polygon uses evenOdd fill rule — each inner ring punches a hole.
         const maskPolygon = new window.ymaps.Polygon(
-          [MASK_OUTER_RING, CRIMEA_CONTOUR, SEVASTOPOL_CONTOUR],
+          [
+            MASK_OUTER_RING,
+            scaleRing(CRIMEA_CONTOUR, CRIMEA_CENTER, GEO_EXPAND),
+            scaleRing(SEVASTOPOL_CONTOUR, CRIMEA_CENTER, GEO_EXPAND),
+          ],
           {},
           {
             fillColor: readMaskFill(),
@@ -174,8 +230,8 @@ export const useYandexMap = (sourcePoints?: MapPoint[]) => {
         map.__themeObserver = themeObserver
 
         map.behaviors.enable(['drag', 'multiTouch'])
-        // map.behaviors.disable(['scrollZoom', 'dblClickZoom'])
-        map.behaviors.disable(['dblClickZoom'])
+        map.behaviors.disable(['scrollZoom', 'dblClickZoom'])
+        // map.behaviors.disable(['dblClickZoom'])
 
         // Re-fit on resize: recompute zoom from current container size so
         // the peninsula keeps the same visual proportions across viewports.
@@ -189,8 +245,11 @@ export const useYandexMap = (sourcePoints?: MapPoint[]) => {
 
         mapInstanceRef.current = map
 
-        // Add points with custom placemarks
-        points.forEach((point) => {
+        // Отдельная коллекция для меток — её очищаем/заполняем при смене фильтра.
+        const placemarks = new window.ymaps.GeoObjectCollection()
+        map.geoObjects.add(placemarks)
+
+        const buildPlacemark = (point: IMapPoint) => {
           const inner = point.iconSvg
             ? (() => {
                 const { content, viewBox } = parseSvg(point.iconSvg)
@@ -229,8 +288,18 @@ export const useYandexMap = (sourcePoints?: MapPoint[]) => {
             placemark.options.set('iconImageOffset', [-16, -16])
           })
 
-          map.geoObjects.add(placemark)
-        })
+          return placemark
+        }
+
+        const renderPlacemarks = (slug: string) => {
+          placemarks.removeAll()
+          setActivePoint(null)
+          points
+            .filter((p) => !slug || p.activitySlug === slug)
+            .forEach((p) => placemarks.add(buildPlacemark(p)))
+        }
+        renderPlacemarksRef.current = renderPlacemarks
+        renderPlacemarks(selectedActivityRef.current)
       })
     }
 
@@ -257,6 +326,7 @@ export const useYandexMap = (sourcePoints?: MapPoint[]) => {
         mapInstanceRef.current.destroy()
         mapInstanceRef.current = null
       }
+      renderPlacemarksRef.current = null
     }
   }, [points])
 
@@ -267,6 +337,11 @@ export const useYandexMap = (sourcePoints?: MapPoint[]) => {
     activePoint,
     setActivePoint,
     points,
+    activities,
+    selectedActivity,
+    setSelectedActivity,
+    zoomIn,
+    zoomOut,
   }
 }
 

@@ -12,7 +12,7 @@ const MarqueeStrip = ({ items, className }: IMarqueeStripProps) => {
   const { trackRef } = useMarqueeAnimation()
 
   const content = items.map((item, i) => (
-    <p key={i} className='font-medium text-[1.125rem] text-text-black whitespace-nowrap'>{item}</p>
+    <p key={i} className='font-medium text-[1.125rem] text-on-accent whitespace-nowrap'>{item}</p>
   ))
 
   return (

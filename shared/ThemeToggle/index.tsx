@@ -39,7 +39,7 @@ const ThemeToggle = () => {
       onClick={toggle}
       aria-label={isDark ? 'Включить светлую тему' : 'Включить тёмную тему'}
       aria-pressed={isDark}
-      className='group flex h-[3.25rem] w-[3.25rem] shrink-0 items-center justify-center overflow-hidden border-[.063rem] border-light-gray-tranpsparent-40 bg-background text-foreground transition duration-300 ease-out will-change-transform hover:scale-105 hover:border-accent active:scale-95'
+      className='group flex w-[4.5rem] self-stretch shrink-0 cursor-pointer items-center justify-center overflow-hidden border-[.063rem] border-light-gray-tranpsparent-40 bg-background text-foreground transition duration-300 ease-out will-change-transform hover:scale-105 hover:border-accent active:scale-95'
     >
       <span className='relative block h-[1.5rem] w-[1.5rem]'>
         {/* Солнце */}

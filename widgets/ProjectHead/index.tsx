@@ -36,14 +36,14 @@ const ProjectHead = ({ project }: IProjectHeadProps) => {
           type='button'
           onClick={() => router.back()}
           aria-label='Назад'
-          className='group w-[3.375rem] h-[3.375rem] max-md:w-[3rem] max-md:h-[3rem] bg-accent flex justify-center items-center cursor-pointer transition-[filter,transform] duration-300 hover:brightness-110 hover:-translate-x-[.25rem] shrink-0'
+          className='group w-[3.375rem] h-[3.375rem] max-md:w-[3rem] max-md:h-[3rem] bg-accent flex justify-center items-center cursor-pointer transition duration-300 ease-out hover:brightness-110 hover:-translate-x-[.25rem] shrink-0'
         >
-          <ArrowIcon className='w-[1.5rem] h-[1.5rem] [&>path]:stroke-black-light transition-transform duration-300 group-hover:-translate-x-[.188rem]' />
+          <ArrowIcon className='w-[1.5rem] h-[1.5rem] [&>path]:stroke-on-accent transition-transform duration-300 ease-out group-hover:-translate-x-[.188rem]' />
         </button>
 
         <h1
           ref={titleRef}
-          className='w-[37.5rem] max-md:w-full max-md:text-[1.75rem] pt-[.063rem] text-[2.813rem] leading-[1.1em] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-on-dark) break-words'
+          className='w-[37.5rem] max-md:w-full max-md:text-[1.75rem] pt-[.063rem] text-[2.813rem] leading-[1.1em] font-semibold text-foreground break-words'
         >
           {title}
         </h1>

@@ -4,6 +4,8 @@ import Script from 'next/script'
 import Link from 'next/link'
 import { useYandexMap } from './model/useYandexMap'
 import { Separator } from '@/shared/Separator'
+import { SelectDropdown } from '@/shared/SelectDropdown'
+import DiagonalArrowIcon from '@/assets/icons/arrow_diagonal.svg'
 import styles from './Map.module.css'
 
 interface MapProps {
@@ -11,7 +13,20 @@ interface MapProps {
 }
 
 const Map = ({ points }: MapProps = {}) => {
-  const { mapContainerRef, sectionRef, infoRef, activePoint, setActivePoint } = useYandexMap(points)
+  const {
+    mapContainerRef,
+    sectionRef,
+    infoRef,
+    activePoint,
+    setActivePoint,
+    activities,
+    selectedActivity,
+    setSelectedActivity,
+    zoomIn,
+    zoomOut,
+  } = useYandexMap(points)
+
+  const activityOptions = activities.map((a) => ({ value: a.slug, label: a.title }))
 
   return (
     <section ref={sectionRef} className='w-screen -translate-x-(--container-offset) h-screen max-h-screen overflow-y-clip relative'>
@@ -26,20 +41,30 @@ const Map = ({ points }: MapProps = {}) => {
       <div ref={mapContainerRef} className={`absolute inset-0 ${styles.mapContainer}`} />
 
       {/* Info overlay */}
-      <div ref={infoRef} className='absolute top-[5rem] right-(--container-offset) z-10 max-w-[20rem]'>
-        <h3 className='text-[2.25rem] font-black text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em]'>
+      <div ref={infoRef} className='absolute top-[5rem] right-(--container-offset) z-10 flex flex-col items-end text-right max-md:left-0 max-md:right-0 max-md:items-center max-md:text-center'>
+        <h3 className='text-[2.75rem] font-black text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em] whitespace-nowrap max-md:whitespace-normal'>
           География объектов
         </h3>
         <p className='text-[1.125rem] mt-[.5rem] text-subtext'>
           Наши объекты
           <br />в Республике Крым
         </p>
+
+        {activityOptions.length > 0 && (
+          <SelectDropdown
+            compact
+            options={activityOptions}
+            value={selectedActivity}
+            onChange={setSelectedActivity}
+            className='mt-[1.25rem] bg-background/90 backdrop-blur-md'
+          />
+        )}
       </div>
 
       {/* Active point tooltip */}
       {activePoint && (
         <div
-          className={`absolute bottom-[3.75rem] left-(--container-offset) z-6000 w-[20rem] bg-[rgba(15,15,15,0.95)] backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden ${styles.tooltip}`}
+          className={`absolute bottom-[3.75rem] left-(--container-offset) z-6000 w-[20rem] bg-background/95 backdrop-blur-xl border border-light-gray-tranpsparent-40 rounded-xl overflow-hidden ${styles.tooltip}`}
         >
           <div className='h-[10rem] bg-black-light flex items-center justify-center'>
             {activePoint.imageUrl ? (
@@ -60,21 +85,39 @@ const Map = ({ points }: MapProps = {}) => {
                 className='mt-[1rem] inline-flex items-center gap-[.5rem] text-[.875rem] font-medium text-accent hover:text-text-white transition-colors duration-300 cursor-pointer'
               >
                 Посмотреть
-                <svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
-                  <path d='M7 17L17 7M17 7H7M17 7V17' />
-                </svg>
+                <DiagonalArrowIcon className='w-[.875rem] h-[.875rem] [&_path]:fill-accent [&_rect]:fill-accent' />
               </Link>
             )}
           </div>
 
           <button
             onClick={() => setActivePoint(null)}
-            className='absolute top-[.625rem] right-[.625rem] w-[1.75rem] h-[1.75rem] flex items-center justify-center rounded-full bg-black/50 text-white/60 hover:text-white transition-colors cursor-pointer'
+            className='absolute top-[.625rem] right-[.625rem] w-[1.75rem] h-[1.75rem] flex items-center justify-center rounded-full bg-foreground/10 text-foreground/60 hover:text-foreground transition-colors cursor-pointer'
           >
             ✕
           </button>
         </div>
       )}
+
+      {/* Zoom controls */}
+      <div className='absolute bottom-[3.75rem] right-(--container-offset) z-10 flex flex-col gap-[.5rem]'>
+        <button
+          type='button'
+          onClick={zoomIn}
+          aria-label='Приблизить'
+          className='w-[3rem] h-[3rem] flex items-center justify-center border-[.063rem] border-light-gray-tranpsparent-40 bg-background/90 backdrop-blur-md text-foreground text-[1.5rem] leading-none transition-colors duration-200 hover:border-accent hover:text-accent cursor-pointer'
+        >
+          +
+        </button>
+        <button
+          type='button'
+          onClick={zoomOut}
+          aria-label='Отдалить'
+          className='w-[3rem] h-[3rem] flex items-center justify-center border-[.063rem] border-light-gray-tranpsparent-40 bg-background/90 backdrop-blur-md text-foreground text-[1.5rem] leading-none transition-colors duration-200 hover:border-accent hover:text-accent cursor-pointer'
+        >
+          −
+        </button>
+      </div>
 
       <Separator className='absolute bottom-0 left-0 translate-x-0' isFullscreen={true} />
       <Separator className='absolute top-0 left-0 translate-x-0' isFullscreen={true} />

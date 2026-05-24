@@ -17,7 +17,7 @@ const HeroProjectSliderControls = ({ slides, className }: IHeroProjectSliderCont
 
   return (
     <div className={`h-[4.375rem] flex flex-col justify-between text-[var(--color-on-dark)] ${className}`}>
-      <Separator isFullscreen={true} />
+      <Separator isFullscreen={true} onDark={true} />
       <div className='flex justify-between items-center'>
         <span ref={yearRef}>Реализован в {slide.year} году</span>
 
@@ -25,14 +25,14 @@ const HeroProjectSliderControls = ({ slides, className }: IHeroProjectSliderCont
           <p ref={counterRef} className='text-[1.125rem] font-medium'>
             <span className='text-[var(--color-on-dark)]'>{displaySlide}</span>
             {' '}
-            <span className='text-light-gray'>/ {totalSlides}</span>
+            <span className='text-[var(--color-on-dark-muted)]'>/ {totalSlides}</span>
           </p>
-          <SliderButton onClick={prev} disabled={activeSlide <= 1} />
+          <SliderButton variant='onDark' onClick={prev} disabled={activeSlide <= 1} />
           <SliderButton direction='right' variant='accent' onClick={next} disabled={activeSlide >= totalSlides} />
         </div>
       </div>
 
-      <Separator isFullscreen={true} />
+      <Separator isFullscreen={true} onDark={true} />
     </div>
   )
 }

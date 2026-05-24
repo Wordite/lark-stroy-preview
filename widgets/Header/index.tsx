@@ -3,6 +3,7 @@ import Image from 'next/image'
 import LogoImage from '@/assets/images/logo.png'
 import { HeaderLinks } from './ui/Desktop/HeaderLinks'
 import { MobileMenu } from './ui/Mobile/MobileMenu'
+import { ThemeToggle } from '@/shared/ThemeToggle'
 import { buildLinks } from './config'
 import { fetchActivities } from '@/services/entities/activities'
 import { fetchContacts } from '@/services/entities/contacts'
@@ -32,13 +33,14 @@ const Header = async () => {
           <HeaderLinks links={navLinks} />
         </div>
 
-        <div className='flex items-center ml-[2.5rem] max-lg:hidden'>
+        <div className='flex items-center gap-[.75rem] ml-[2.5rem] max-lg:hidden'>
           <Link
             href='/contacts'
-            className='uppercase text-[1rem] text-on-accent px-[1.563rem] py-[1.563rem] bg-accent transition-[filter,background-color] duration-300 ease-out hover:brightness-110'
+            className='uppercase text-[1rem] text-on-accent px-[1.563rem] py-[1.563rem] bg-accent transition duration-300 ease-out hover:brightness-110'
           >
             Обсудить проект
           </Link>
+          <ThemeToggle />
         </div>
 
         <div className='hidden max-lg:block'>

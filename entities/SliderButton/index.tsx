@@ -3,21 +3,26 @@ import ArrowIcon from '@/assets/icons/arrow.svg'
 interface ISliderButtonProps {
   className?: string
   direction?: 'left' | 'right'
-  variant?: 'default' | 'accent'
+  variant?: 'default' | 'accent' | 'onDark'
   disabled?: boolean
   onClick?: () => void
 }
 
 const variantStyles = {
   default: 'border-text-white hover:bg-text-white group',
-  accent: 'border-accent bg-accent hover:brightness-110 group'
+  accent: 'border-accent bg-accent hover:brightness-110 group',
+  // всегда поверх тёмного фона (hero) — светлая обводка/стрелка независимо от темы
+  onDark: 'border-on-dark hover:bg-on-dark group',
 }
 
 const iconVariantStyles = {
   default:
-    '[&>path]:stroke-text-white group-hover:[&>path]:stroke-text-black [&>path]:transition-[stroke,fill] [&>path]:duration-300',
+    '[&>path]:stroke-text-white group-hover:[&>path]:stroke-text-black [&>path]:transition [&>path]:duration-300',
+  // на жёлтой кнопке стрелка всегда тёмная
   accent:
-    '[&>path]:stroke-text-black group-hover:[&>path]:stroke-text-white [&>path]:transition-[stroke,fill] [&>path]:duration-300',
+    '[&>path]:stroke-on-accent [&>path]:transition [&>path]:duration-300',
+  onDark:
+    '[&>path]:stroke-on-dark group-hover:[&>path]:stroke-on-accent [&>path]:transition [&>path]:duration-300',
 }
 
 const SliderButton = ({ className, direction = 'left', variant = 'default', disabled = false, onClick }: ISliderButtonProps) => {
