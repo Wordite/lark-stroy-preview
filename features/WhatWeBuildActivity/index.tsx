@@ -26,8 +26,8 @@ const WhatWeBuildPoints = ({ services = [], points = [] }: IWhatWeBuildPointsPro
 
   return (
     <>
-      <Separator isFullscreen={true} className='mt-[17px] mb-[53px]' />
-      <div className='flex justify-between items-center'>
+      <Separator isFullscreen={true} className='mt-[1.063rem] mb-[3.313rem]' />
+      <div className='flex justify-between items-center gap-[1.5rem] max-md:flex-col max-md:items-start max-md:gap-[1.75rem]'>
         {items.map((item, i) => (
           <WhatWeBuildPoint
             key={`${item.text}-${i}`}
@@ -37,7 +37,7 @@ const WhatWeBuildPoints = ({ services = [], points = [] }: IWhatWeBuildPointsPro
           />
         ))}
       </div>
-      <Separator isFullscreen={true} className='mt-[70px]' />
+      <Separator isFullscreen={true} className='mt-[4.375rem]' />
     </>
   )
 }

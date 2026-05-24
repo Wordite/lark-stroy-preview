@@ -4,11 +4,11 @@ import { NewsCard, type INewsCardData } from '@/entities/NewsCard'
 import { ProjectCard, type IProjectCardData, projectToCardData } from '@/entities/ProjectCard'
 import { Slider, useSliderSlide } from '@/features/Slider'
 import { useRem } from '@/shared/hooks/useRem'
+import { useIsMobile } from '@/shared/hooks/useMediaQuery'
 import { mediaUrl } from '@/services/mediaUrl'
 import type { HomeBlockPublic, News } from '@/services/types'
 
 const CARD_REM = 27.875
-const VISIBLE_COUNT = 3
 
 function newsToCardData(n: News): INewsCardData {
   return {
@@ -51,6 +51,7 @@ interface IWhatWeBuildProps {
 
 const WhatWeBuild = ({ block }: IWhatWeBuildProps = {}) => {
   const rem = useRem()
+  const isMobile = useIsMobile()
   const newsData = block?.news ? newsToCardData(block.news) : null
   const projectSlides: IProjectCardData[] = (block?.projects ?? []).map(projectToCardData)
   const title = block?.title || 'Что мы строим'
@@ -59,8 +60,8 @@ const WhatWeBuild = ({ block }: IWhatWeBuildProps = {}) => {
 
   return (
     <Slider
-      cardWidth={rem(CARD_REM)}
-      visibleCount={VISIBLE_COUNT}
+      cardWidth={isMobile ? 'container' : rem(CARD_REM)}
+      visibleCount={isMobile ? 1 : 3}
       className='mt-[4.375rem]'
       title={
         <h4 className='w-[18.75rem] text-[2.25rem] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em]'>

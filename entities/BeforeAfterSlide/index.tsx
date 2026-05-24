@@ -58,8 +58,8 @@ const BeforeAfterSlide = ({ data }: IBeforeAfterSlideProps) => {
     ) : null
 
   return (
-    <div className='flex justify-between w-full'>
-      <div className='relative w-[39rem] h-[20.938rem] overflow-hidden'>
+    <div className='flex max-md:flex-col justify-between w-full max-md:gap-[1rem]'>
+      <div className='relative w-[39rem] h-[20.938rem] overflow-hidden max-md:w-full max-md:h-[18rem]'>
         {typeof data.beforeImage === 'string' ? (
           <img
             src={data.beforeImage}
@@ -82,9 +82,12 @@ const BeforeAfterSlide = ({ data }: IBeforeAfterSlideProps) => {
         <Overlay />
       </div>
 
-      <div ref={dividerRef} className='w-[.25rem] h-[20.938rem] bg-text-white' />
+      <div
+        ref={dividerRef}
+        className='w-[.25rem] h-[20.938rem] bg-text-white max-md:w-full max-md:h-[.25rem]'
+      />
 
-      <div ref={afterRef} className='relative w-[39rem] h-[20.938rem] overflow-hidden'>
+      <div className='relative w-[39rem] h-[20.938rem] overflow-hidden max-md:w-full max-md:h-[18rem]' ref={afterRef}>
         {typeof data.afterImage === 'string' ? (
           <img src={data.afterImage} alt='after' className='w-full h-full object-cover' />
         ) : (
@@ -92,7 +95,7 @@ const BeforeAfterSlide = ({ data }: IBeforeAfterSlideProps) => {
         )}
         <span
           ref={afterLabelRef}
-          className='absolute top-[.938rem] right-[.938rem] z-10 text-[.875rem] font-medium uppercase tracking-wider text-text-black bg-accent px-[.75rem] py-[.313rem]'
+          className='absolute top-[.938rem] right-[.938rem] max-md:right-auto max-md:left-[.938rem] z-10 text-[.875rem] font-medium uppercase tracking-wider text-text-black bg-accent px-[.75rem] py-[.313rem]'
         >
           После
         </span>

@@ -3,6 +3,7 @@
 import { ProjectCard, type IProjectCardData } from '@/entities/ProjectCard'
 import { Slider, useSliderSlide } from '@/features/Slider'
 import { useRem } from '@/shared/hooks/useRem'
+import { useIsMobile } from '@/shared/hooks/useMediaQuery'
 import type { ReactNode } from 'react'
 
 interface ILongerProjectSliderProps {
@@ -12,7 +13,6 @@ interface ILongerProjectSliderProps {
 }
 
 const CARD_REM = 20.938
-const VISIBLE_COUNT = 4
 
 const ShortProjectSlide = ({ data }: { data: IProjectCardData }) => {
   const { isOnBoundary, boundaryDirection, isHaveRightBorder } = useSliderSlide()
@@ -30,10 +30,11 @@ const ShortProjectSlide = ({ data }: { data: IProjectCardData }) => {
 
 const LongerProjectSlider = ({ title, slides, className }: ILongerProjectSliderProps) => {
   const rem = useRem()
+  const isMobile = useIsMobile()
   return (
     <Slider
-      cardWidth={rem(CARD_REM)}
-      visibleCount={VISIBLE_COUNT}
+      cardWidth={isMobile ? 'container' : rem(CARD_REM)}
+      visibleCount={isMobile ? 1 : 4}
       className={className}
       title={title}
     >

@@ -1,6 +1,8 @@
-/* Dark theme — invert only map tiles, not overlays */
+/* Фильтр тайлов задаётся темой через --map-tiles-filter: в тёмной теме
+   инверсия превращает светлые тайлы Яндекса в тёмные, в светлой —
+   лёгкая коррекция без инверсии, чтобы карта оставалась светлой. */
 .mapContainer :global([class*="ground-pane"]) {
-  filter: invert(0.95) hue-rotate(180deg) saturate(0.2) brightness(0.8) contrast(1.3);
+  filter: var(--map-tiles-filter);
 }
 
 /* Yandex chrome (©, ToS, "Яндекс.Карты", "Открыть в Яндекс.Картах",
@@ -12,7 +14,7 @@
 .mapContainer :global([class*="map-copyrights-promo"]) {
   right: auto !important;
   left: 8px !important;
-  filter: invert(0.88) hue-rotate(180deg) saturate(0.4) brightness(0.95);
+  filter: var(--map-chrome-filter);
   opacity: 0.55;
   pointer-events: auto;
   transition: opacity 0.2s ease;

@@ -44,30 +44,30 @@ const NewsCard = ({
       href={data.href}
       target='_blank'
       rel='noopener noreferrer'
-      className={`w-[27.875rem] h-[28.5rem] shrink-0 relative cursor-pointer group py-[1.688rem] block ${!isOnBoundary ? 'hover:bg-black-light' : ''} transition-colors duration-300 ${className}`}
+      className={`w-[27.875rem] h-[28.5rem] max-md:w-full max-md:h-auto max-md:py-[1.5rem] shrink-0 relative cursor-pointer group py-[1.688rem] block ${!isOnBoundary ? 'hover:bg-black-light' : ''} transition-colors duration-300 ${className}`}
     >
       {isOnBoundary && boundaryDirection === 'left' && (
-        <div className='w-screen group-hover:bg-black-light transition-colors duration-300 absolute inset-y-0 right-0' />
+        <div className='max-md:hidden w-screen group-hover:bg-black-light transition-colors duration-300 absolute inset-y-0 right-0' />
       )}
       {isOnBoundary && boundaryDirection === 'right' && (
-        <div className='w-screen group-hover:bg-black-light transition-colors duration-300 absolute inset-y-0 left-0' />
+        <div className='max-md:hidden w-screen group-hover:bg-black-light transition-colors duration-300 absolute inset-y-0 left-0' />
       )}
       <div className='px-[2.188rem] relative'>
         <p className='text-[1.25rem] font-medium text-text-white line-clamp-1'>{data.title}</p>
 
-        {isHaveRightBorder && <Separator className='absolute right-0 -top-[1.625rem] h-[28.375rem]' isVertical={true} />}
+        {isHaveRightBorder && <Separator className='max-md:hidden absolute right-0 -top-[1.625rem] h-[28.375rem]' isVertical={true} />}
 
-        <div className='overflow-hidden mt-[1.875rem] h-[11.625rem]'>
+        <div className='overflow-hidden mt-[1.875rem] h-[11.625rem] max-md:h-[16rem]'>
           {isExternalImage ? (
             <img
               src={image as string}
-              className='w-full h-[11.625rem] object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]'
+              className='w-full h-[11.625rem] max-md:h-[16rem] object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]'
               alt={data.title}
             />
           ) : (
             <Image
               src={image as StaticImageData}
-              className='w-full h-[11.625rem] object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]'
+              className='w-full h-[11.625rem] max-md:h-[16rem] object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]'
               alt={data.title}
             />
           )}

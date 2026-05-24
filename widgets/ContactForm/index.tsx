@@ -99,19 +99,19 @@ const ContactForm = () => {
     <section ref={sectionRef}>
       <h4
         ref={titleRef}
-        className='w-[18.75rem] mt-[4.375rem] text-[2.25rem] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em]'
+        className='w-[18.75rem] max-md:w-full mt-[4.375rem] max-md:mt-[2.5rem] text-[2.25rem] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em]'
       >
         Оставьте заявку
       </h4>
 
       <Separator isFullscreen={true} className='mt-[2.5rem]' />
 
-      <div className='flex'>
+      <div className='flex max-md:flex-col'>
         <form
           ref={formRef}
           onSubmit={handleSubmit(onSubmit)}
           noValidate
-          className='flex flex-col gap-[1.688rem] w-[43.75rem] mt-[1.688rem]'
+          className='flex flex-col gap-[1.688rem] w-[43.75rem] max-md:w-full mt-[1.688rem]'
         >
           <InputWithLabel
             label='Имя*'
@@ -200,19 +200,21 @@ const ContactForm = () => {
           )}
         </form>
 
-        <div ref={sideRef} className='flex'>
+        <div ref={sideRef} className='flex max-md:hidden'>
           <Separator isVertical={true} className='mx-[3.75rem] h-[calc(100%+1.688rem)]' />
         </div>
 
-        <div className='flex-1'>
+        <Separator isFullscreen={true} className='hidden max-md:block max-md:mt-[2.5rem]' />
+
+        <div className='flex-1 max-md:mt-[2rem]'>
           <div ref={socialContactsRef}>
-            <SocialContacts className='mt-[2.063rem]' />
+            <SocialContacts className='mt-[2.063rem] max-md:mt-0' />
           </div>
           <div ref={sideSeparatorRef}>
-            <Separator className='mt-[5.563rem] -translate-x-[3.75rem] w-[calc(100%+3.75rem+var(--container-offset))]' />
+            <Separator className='mt-[5.563rem] max-md:mt-[2.5rem] -translate-x-[3.75rem] max-md:-translate-x-(--container-offset) w-[calc(100%+3.75rem+var(--container-offset))] max-md:w-screen' />
           </div>
           <div ref={workTimeRef}>
-            <WorkTime className='mt-[5.5rem]' />
+            <WorkTime className='mt-[5.5rem] max-md:mt-[2.5rem]' />
           </div>
         </div>
       </div>

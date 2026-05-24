@@ -2,12 +2,23 @@
 
 import { useState } from 'react'
 
-const BurgerButton = ({ className = '' }: { className?: string }) => {
-  const [isOpen, setIsOpen] = useState(false)
+interface IBurgerButtonProps {
+  className?: string
+  isOpen?: boolean
+  onToggle?: () => void
+}
+
+const BurgerButton = ({ className = '', isOpen: controlledOpen, onToggle }: IBurgerButtonProps) => {
+  const [internalOpen, setInternalOpen] = useState(false)
+  const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen
+  const handleClick = () => {
+    if (onToggle) onToggle()
+    else setInternalOpen((v) => !v)
+  }
   return (
     <button
       className={`relative w-[39px] h-[23px] flex flex-col justify-between cursor-pointer ${className}`}
-      onClick={() => setIsOpen(!isOpen)}
+      onClick={handleClick}
       aria-label='Меню'
     >
       <span

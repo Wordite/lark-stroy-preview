@@ -99,7 +99,7 @@ const CategoryProjects = ({
   return (
     <section ref={sectionRef}>
       <Separator className='relative z-[1000]' isFullscreen={true} />
-      <div ref={gridRef} className='grid grid-cols-3 relative'>
+      <div ref={gridRef} className='grid grid-cols-3 max-md:flex max-md:flex-col relative'>
         {cards.map((c, i) => {
           const colInRow = i % 3
           const isFirstCol = colInRow === 0
@@ -107,21 +107,23 @@ const CategoryProjects = ({
           const hasRight = !isLastCol
           const isNewRowStart = i >= 3 && isFirstCol
           return (
-            <div
-              key={c.id}
-              className={`relative ${hasRight ? 'border-r border-light-gray-tranpsparent-40' : ''}`}
-            >
-              {isNewRowStart && (
-                <div
-                  className='absolute top-0 w-screen h-px bg-light-gray-tranpsparent-40 -translate-y-px z-[1] pointer-events-none'
-                  style={{ left: 'calc(-1 * var(--container-offset))' }}
+            <div key={c.id} className='max-md:contents'>
+              {i > 0 && <Separator isFullscreen={true} className='hidden max-md:block' />}
+              <div
+                className={`relative ${hasRight ? 'border-r max-md:border-r-0 border-light-gray-tranpsparent-40' : ''}`}
+              >
+                {isNewRowStart && (
+                  <div
+                    className='absolute top-0 w-screen h-px bg-light-gray-tranpsparent-40 -translate-y-px z-[1] pointer-events-none max-md:hidden'
+                    style={{ left: 'calc(-1 * var(--container-offset))' }}
+                  />
+                )}
+                <ProjectCard
+                  data={c}
+                  isOnBoundary={isFirstCol || isLastCol}
+                  boundaryDirection={isFirstCol ? 'left' : isLastCol ? 'right' : undefined}
                 />
-              )}
-              <ProjectCard
-                data={c}
-                isOnBoundary={isFirstCol || isLastCol}
-                boundaryDirection={isFirstCol ? 'left' : isLastCol ? 'right' : undefined}
-              />
+              </div>
             </div>
           )
         })}

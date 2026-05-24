@@ -32,11 +32,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='ru' className={`${montserrat.variable} h-full antialiased`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem('theme')==='dark'){document.documentElement.dataset.theme='dark'}}catch(e){}`,
+          }}
+        />
+      </head>
       <body className='min-h-full flex flex-col'>
         <QueryProvider>
           <Header />
           <main className='px-(--container-offset)'>{children}</main>
           <Footer />
+          <ThemeToggle />
         </QueryProvider>
       </body>
     </html>

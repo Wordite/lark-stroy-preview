@@ -66,8 +66,8 @@ const ProjectDescription = ({ project }: IProjectDescriptionProps) => {
   const galleryItems = Array.from({ length: Math.min(visibleCount, totalGallery) }, (_, i) => i)
 
   return (
-    <section ref={sectionRef} className='pt-[1.688rem] pb-[8.125rem] relative flex'>
-      <div className='w-[55.75rem] pr-[3.75rem]'>
+    <section ref={sectionRef} className='pt-[1.688rem] pb-[8.125rem] max-md:pb-[3rem] relative flex max-md:flex-col max-md:gap-[2rem]'>
+      <div className='w-[55.75rem] max-md:w-full pr-[3.75rem] max-md:pr-0'>
         <div ref={aboutRef}>
           <p className='text-[1.125rem] font-medium text-text-white'>О проекте</p>
           <Markdown content={description} className='mt-[.625rem]' />
@@ -118,17 +118,19 @@ const ProjectDescription = ({ project }: IProjectDescriptionProps) => {
         isVertical={true}
         isFullscreen={true}
         height='100%'
-        className='absolute right-[33.333%] top-0'
+        className='absolute right-[33.333%] top-0 max-md:hidden'
       />
 
+      <Separator isFullscreen={true} className='hidden max-md:block' />
+
       <div ref={specsRef} className='flex-1'>
-        <p className='text-[1.125rem] font-medium text-accent ml-[1.25rem]'>Характеристики</p>
+        <p className='text-[1.125rem] font-medium text-accent ml-[1.25rem] max-md:ml-0 max-md:mt-[1.5rem]'>Характеристики</p>
 
         <ul className='mt-[1.875rem]'>
           {specs.map((spec) => (
             <li
               key={spec.key}
-              className='flex pl-[1.25rem] justify-between items-center py-[.875rem] border-b-[.063rem] border-light-gray-tranpsparent-40 text-[1rem] font-medium'
+              className='flex pl-[1.25rem] max-md:pl-0 justify-between items-center py-[.875rem] border-b-[.063rem] border-light-gray-tranpsparent-40 text-[1rem] font-medium'
             >
               <span className='text-text-white text-[1rem]'>{spec.key}</span>
               <span className='text-subtext text-[1rem] text-right'>{spec.value}</span>

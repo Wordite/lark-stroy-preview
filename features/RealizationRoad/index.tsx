@@ -20,7 +20,7 @@ const RealizationRoad = ({ className, isBorderTopDisabled = false, steps }: IRea
   const items = (steps && steps.length > 0 ? steps : FALLBACK_STEPS).slice(0, 5)
 
   return (
-    <div className={`flex justify-between py-[1.5rem] relative ${className}`}>
+    <div className={`flex justify-between py-[1.5rem] relative max-md:flex-col max-md:items-center max-md:gap-[2.75rem] max-md:py-[2.5rem] ${className}`}>
       {!isBorderTopDisabled && <Separator isFullscreen={true} className='absolute z-10000! top-0 left-0' />}
       <Separator isFullscreen={true} className='absolute z-5000 bottom-[-0.063rem] left-0' />
 

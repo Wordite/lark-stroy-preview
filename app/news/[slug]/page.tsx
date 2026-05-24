@@ -24,9 +24,9 @@ export default async function NewsDetailPage({
         <Link
           href='/news'
           aria-label='Все новости'
-          className='group w-[3.375rem] h-[3.375rem] bg-accent flex justify-center items-center cursor-pointer transition-[filter,transform] duration-300 hover:brightness-110 hover:-translate-x-[.25rem] shrink-0'
+          className='group w-[3.375rem] h-[3.375rem] bg-accent flex justify-center items-center cursor-pointer transition-[filter,transform] duration-300 ease-out hover:brightness-110 hover:-translate-x-[.25rem] shrink-0'
         >
-          <ArrowIcon className='w-[1.5rem] h-[1.5rem] [&>path]:stroke-black-light transition-transform duration-300 group-hover:-translate-x-[.188rem]' />
+          <ArrowIcon className='w-[1.5rem] h-[1.5rem] [&>path]:stroke-black-light transition-transform duration-300 ease-out group-hover:-translate-x-[.188rem]' />
         </Link>
         <div className='flex-1'>
           <h1 className='text-[2.813rem] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em] max-w-[56.25rem]'>

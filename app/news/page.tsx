@@ -2,14 +2,24 @@ import Link from 'next/link'
 import { Contact } from '@/widgets/Contact'
 import { Separator } from '@/shared/Separator'
 import { EmptyState } from '@/shared/EmptyState'
+import { NewsPagination } from '@/features/NewsPagination'
 import { fetchNews } from '@/services/entities/news'
 import { mediaUrl } from '@/services/mediaUrl'
 
 export const revalidate = 15
 
-export default async function NewsListPage() {
-  const data = await fetchNews(1, 24)
+const PAGE_SIZE = 12
+
+export default async function NewsListPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>
+}) {
+  const sp = await searchParams
+  const page = Math.max(1, Number(sp.page ?? '1'))
+  const data = await fetchNews(page, PAGE_SIZE)
   const items = data?.items ?? []
+  const totalPages = data?.pagination.totalPages ?? 1
 
   return (
     <div className='mt-[10.625rem]'>
@@ -26,7 +36,7 @@ export default async function NewsListPage() {
       ) : (
         <>
           <Separator isFullscreen={true} className='relative z-[1000]' />
-          <div className='grid grid-cols-3 relative'>
+          <div className='grid grid-cols-3 max-md:flex max-md:flex-col relative'>
             {items.map((n, i) => {
               const colInRow = i % 3
               const isFirstCol = colInRow === 0
@@ -34,30 +44,31 @@ export default async function NewsListPage() {
               const hasRight = !isLastCol
               const isNewRowStart = i >= 3 && isFirstCol
               return (
-                <div
-                  key={n.id}
-                  className={`relative ${hasRight ? 'border-r border-light-gray-tranpsparent-40' : ''}`}
-                >
+                <div key={n.id} className='max-md:contents'>
+                  {i > 0 && <Separator isFullscreen={true} className='hidden max-md:block' />}
+                  <div
+                    className={`relative ${hasRight ? 'border-r max-md:border-r-0 border-light-gray-tranpsparent-40' : ''}`}
+                  >
                   {isNewRowStart && (
                     <div
-                      className='absolute top-0 w-screen h-px bg-light-gray-tranpsparent-40 -translate-y-px z-[1] pointer-events-none'
+                      className='absolute top-0 w-screen h-px bg-light-gray-tranpsparent-40 -translate-y-px z-[1] pointer-events-none max-md:hidden'
                       style={{ left: 'calc(-1 * var(--container-offset))' }}
                     />
                   )}
                   <Link
                     href={`/news/${n.slug}`}
-                    className={`group block relative py-[1.688rem] px-[2.188rem] h-full transition-colors duration-300 ${
+                    className={`group block relative py-[1.688rem] px-[2.188rem] max-md:px-0 h-full transition-colors duration-300 ${
                       !isFirstCol && !isLastCol ? 'hover:bg-black-light' : ''
                     }`}
                   >
                     {isFirstCol && (
-                      <div className='w-screen h-full group-hover:bg-black-light transition-colors duration-300 absolute inset-y-0 right-0 -z-10' />
+                      <div className='max-md:hidden w-screen h-full group-hover:bg-black-light transition-colors duration-300 absolute inset-y-0 right-0 -z-10' />
                     )}
                     {isLastCol && (
-                      <div className='w-screen h-full group-hover:bg-black-light transition-colors duration-300 absolute inset-y-0 left-0 -z-10' />
+                      <div className='max-md:hidden w-screen h-full group-hover:bg-black-light transition-colors duration-300 absolute inset-y-0 left-0 -z-10' />
                     )}
                     <div className='relative'>
-                      <div className='overflow-hidden h-[11.625rem] relative'>
+                      <div className='overflow-hidden h-[11.625rem] max-md:h-[16rem] relative'>
                         {n.image?.url ? (
                           <img
                             src={mediaUrl(n.image.url)}
@@ -86,11 +97,13 @@ export default async function NewsListPage() {
                       )}
                     </div>
                   </Link>
+                  </div>
                 </div>
               )
             })}
           </div>
           <Separator isFullscreen={true} className='relative z-[1000]' />
+          <NewsPagination totalPages={totalPages} currentPage={page} />
         </>
       )}
 

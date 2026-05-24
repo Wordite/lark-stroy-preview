@@ -15,7 +15,7 @@ const ProjectsHead = ({ className, categories = [], cities = [], areaBuckets }: 
   const { rootRef, titleRef, filtersRef } = useProjectsHeadAnimation()
 
   return (
-    <div ref={rootRef} className='flex mb-[2.5rem] justify-between items-end'>
+    <div ref={rootRef} className='flex mb-[2.5rem] justify-between items-end max-md:flex-col max-md:items-stretch max-md:gap-[1.5rem]'>
       <h4
         ref={titleRef}
         className={`w-[18.75rem] mt-[4.375rem] text-[2.813rem] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em] ${className}`}

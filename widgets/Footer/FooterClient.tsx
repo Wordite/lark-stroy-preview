@@ -43,9 +43,9 @@ const FooterClient = ({ columns, contacts }: FooterClientProps) => {
   return (
     <footer
       ref={footerRef}
-      className='mt-[5.625rem] px-(--container-offset) pb-[5rem] flex justify-between'
+      className='mt-[5.625rem] px-(--container-offset) pb-[5rem] flex justify-between max-md:flex-col max-md:gap-[2.5rem]'
     >
-      <div className='w-[14.375rem]'>
+      <div className='w-[14.375rem] max-md:w-full'>
         <div className='flex items-center gap-[.938rem]'>
           {logoUrl ? (
             <img src={logoUrl} alt={siteTitle} className='w-[1.5rem] h-[1.938rem] object-contain' />

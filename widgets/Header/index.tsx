@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import LogoImage from '@/assets/images/logo.png'
 import { HeaderLinks } from './ui/Desktop/HeaderLinks'
+import { MobileMenu } from './ui/Mobile/MobileMenu'
 import { buildLinks } from './config'
 import { fetchActivities } from '@/services/entities/activities'
 import { fetchContacts } from '@/services/entities/contacts'
@@ -15,9 +16,9 @@ const Header = async () => {
 
   return (
     <header className='fixed bg-background w-full top-0 left-0 right-0 z-[20000] h-[6.25rem] border-b-[.063rem] border-light-gray-tranpsparent-40'>
-      <div className='container px-[3.125rem] flex justify-between items-center w-full h-full'>
+      <div className='container px-[3.125rem] max-lg:!w-full max-lg:!max-w-full max-md:!px-[1.25rem] flex justify-between items-center w-full h-full'>
         <div className='flex items-center justify-between'>
-          <Link className='flex items-center gap-[.938rem]' href='/'>
+          <Link className='flex items-center gap-[.938rem] max-lg:scale-115 max-lg:origin-left' href='/'>
             {logoUrl ? (
               <img className='w-[1.5rem] h-[1.938rem] object-contain' src={logoUrl} alt={siteTitle} />
             ) : (
@@ -27,15 +28,21 @@ const Header = async () => {
           </Link>
         </div>
 
-        <HeaderLinks links={navLinks} />
+        <div className='max-lg:hidden contents'>
+          <HeaderLinks links={navLinks} />
+        </div>
 
-        <div className='flex items-center ml-[2.5rem]'>
+        <div className='flex items-center ml-[2.5rem] max-lg:hidden'>
           <Link
             href='/contacts'
-            className='uppercase text-[1rem] text-text-black px-[1.563rem] py-[1.563rem] bg-accent transition-[filter,background-color] duration-300 ease-out hover:brightness-110'
+            className='uppercase text-[1rem] text-on-accent px-[1.563rem] py-[1.563rem] bg-accent transition-[filter,background-color] duration-300 ease-out hover:brightness-110'
           >
             Обсудить проект
           </Link>
+        </div>
+
+        <div className='hidden max-lg:block'>
+          <MobileMenu links={navLinks} logoUrl={logoUrl} siteTitle={siteTitle} />
         </div>
       </div>
     </header>

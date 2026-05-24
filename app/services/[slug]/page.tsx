@@ -34,7 +34,7 @@ export default async function ServiceDetailPage({
         }
         slides={slides}
       />
-      <Contact isUnderLongerSlider={true} />
+      <Contact isUnderLongerSlider={true} isBorderTopDisabled={true} />
     </div>
   )
 }

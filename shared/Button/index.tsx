@@ -21,7 +21,7 @@ interface IButtonProps
 const baseStyles =
   'h-[3.25rem] px-[1.25rem] flex items-center justify-center gap-[.625rem] cursor-pointer font-medium text-[1.125rem] uppercase transition-colors duration-300 ease-out disabled:opacity-30 disabled:pointer-events-none'
 const styles = {
-  accent: 'bg-accent text-text-black hover:brightness-110',
+  accent: 'bg-accent text-on-accent hover:brightness-110',
   stroke: 'border-[.063rem] border-text-white text-text-white hover:bg-text-white hover:text-text-black',
 }
 

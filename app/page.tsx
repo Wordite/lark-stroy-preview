@@ -28,7 +28,9 @@ export default async function Home() {
       <WhatWeBuild block={home?.what_we_build} />
       <BeforeAfter block={home?.before_after} />
       <Realization block={home?.realization} roadBlock={home?.realization_road} />
-      <Contact />
+      <div className='md:-mt-[0.063rem]'>
+        <Contact isBorderTopDisabled={true} />
+      </div>
     </div>
   )
 }

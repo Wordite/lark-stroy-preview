@@ -35,7 +35,7 @@ export default async function ActivityPage({
 
   return (
     <div>
-      <CategoryHead className='mt-[170px]' activity={activity} cities={cities} />
+      <CategoryHead className='mt-[170px] max-md:!mt-[7rem]' activity={activity} cities={cities} />
       <CategoryProjects
         projects={items}
         totalPages={totalPages}

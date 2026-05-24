@@ -33,18 +33,20 @@ const Realization = ({ block, roadBlock }: IRealizationProps) => {
         <RealizationRoad className='mt-[2.5rem]' steps={steps} />
       </div>
 
-      <div ref={cardsRef} className='flex'>
+      <div ref={cardsRef} className='flex max-md:flex-col'>
         {cards.map((c, i) => {
           const isFirst = i === 0
           const isLast = i === cards.length - 1
           return (
-            <ProjectCard
-              key={c.id}
-              data={c}
-              isHaveRightBorder={!isLast}
-              isOnBoundary={isFirst || isLast}
-              boundaryDirection={isFirst ? 'left' : isLast ? 'right' : undefined}
-            />
+            <div key={c.id} className='max-md:contents'>
+              {i > 0 && <Separator isFullscreen={true} className='hidden max-md:block' />}
+              <ProjectCard
+                data={c}
+                isHaveRightBorder={!isLast}
+                isOnBoundary={isFirst || isLast}
+                boundaryDirection={isFirst ? 'left' : isLast ? 'right' : undefined}
+              />
+            </div>
           )
         })}
       </div>

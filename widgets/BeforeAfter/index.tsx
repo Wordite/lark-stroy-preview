@@ -33,7 +33,7 @@ const BeforeAfter = ({ block }: IBeforeAfterProps = {}) => {
         withSeparators={false}
         className='mt-[4.375rem]'
         title={
-          <h4 className='w-[32.5rem] text-[2.25rem] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em]'>
+          <h4 className='w-[32.5rem] max-md:w-full max-md:text-[1.75rem] text-[2.25rem] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em]'>
             {block?.title || 'До / после нашей работы'}
           </h4>
         }

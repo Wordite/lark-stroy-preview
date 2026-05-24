@@ -16,7 +16,11 @@ const HeroProjectSlider = ({ slides }: IHeroProjectSliderProps) => {
 
   return (
     <div className='absolute -left-(--container-offset) w-screen h-screen -z-50 overflow-hidden'>
-      <Image className='absolute w-screen h-screen z-10' src={slideMaskImage} alt='mask' />
+      <Image
+        className='absolute w-screen h-screen z-10 max-md:rotate-180'
+        src={slideMaskImage}
+        alt='mask'
+      />
       {slides.map((slide) => (
         <div
           key={slide.id}

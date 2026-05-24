@@ -17,7 +17,15 @@ const MASK_OUTER_RING: [number, number][] = [
   [35.0, 20.0],
 ]
 
-const MASK_FILL = 'rgba(17, 21, 23, 1)'
+// Заливка инверсной маски читается из CSS-переменной --map-mask, чтобы
+// совпадать с фоном текущей темы (тёмный в dark, светлый в light).
+const readMaskFill = (): string => {
+  if (typeof window === 'undefined') return 'rgba(17, 21, 23, 1)'
+  const v = getComputedStyle(document.documentElement)
+    .getPropertyValue('--map-mask')
+    .trim()
+  return v || 'rgba(17, 21, 23, 1)'
+}
 
 // Combined bbox for Crimea + Sevastopol — limits panning and drives the
 // adaptive zoom calculation below. Padded ~0.4° on each side so the
@@ -33,8 +41,10 @@ const CRIMEA_BOUNDS: [[number, number], [number, number]] = [
 // MAX_ZOOM caps the result on wide screens (≥1580px tend to over-zoom
 // because both width and height grow); above the cap the peninsula stays
 // fixed in pixels and just occupies a smaller fraction of the viewport.
-const FILL_RATIO = 0.85
-const MAX_ZOOM = 7.8
+// Отдалено на ~20% относительно прежних значений (0.85 / 7.8), чтобы у
+// полуострова было больше воздуха по краям.
+const FILL_RATIO = 0.71
+const MAX_ZOOM = 6.5
 const computeFitZoom = (w: number, h: number): number => {
   const [[swLat, swLng], [neLat, neLng]] = CRIMEA_BOUNDS
   const lngSpan = neLng - swLng
@@ -144,15 +154,28 @@ export const useYandexMap = (sourcePoints?: MapPoint[]) => {
           [MASK_OUTER_RING, CRIMEA_CONTOUR, SEVASTOPOL_CONTOUR],
           {},
           {
-            fillColor: MASK_FILL,
+            fillColor: readMaskFill(),
             strokeWidth: 0,
             interactivityModel: 'default#transparent',
           }
         )
         map.geoObjects.add(maskPolygon)
 
+        // Перекрашиваем маску под фон при переключении темы (data-theme
+        // на <html>), чтобы тёмный прямоугольник не оставался поверх
+        // светлой карты и наоборот.
+        const themeObserver = new MutationObserver(() => {
+          maskPolygon.options.set('fillColor', readMaskFill())
+        })
+        themeObserver.observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme'],
+        })
+        map.__themeObserver = themeObserver
+
         map.behaviors.enable(['drag', 'multiTouch'])
-        map.behaviors.disable(['scrollZoom', 'dblClickZoom'])
+        // map.behaviors.disable(['scrollZoom', 'dblClickZoom'])
+        map.behaviors.disable(['dblClickZoom'])
 
         // Re-fit on resize: recompute zoom from current container size so
         // the peninsula keeps the same visual proportions across viewports.
@@ -227,6 +250,9 @@ export const useYandexMap = (sourcePoints?: MapPoint[]) => {
       if (mapInstanceRef.current) {
         if (mapInstanceRef.current.__resizeHandler) {
           window.removeEventListener('resize', mapInstanceRef.current.__resizeHandler)
+        }
+        if (mapInstanceRef.current.__themeObserver) {
+          mapInstanceRef.current.__themeObserver.disconnect()
         }
         mapInstanceRef.current.destroy()
         mapInstanceRef.current = null

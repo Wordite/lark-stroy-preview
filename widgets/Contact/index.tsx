@@ -31,14 +31,14 @@ const Contact = ({
       className={`${isBorderTopDisabled || isMarginTopDisabled ? '' : 'pt-[3.438rem]'} pb-[4.813rem] relative  flex flex-col`}
     >
       {!isBorderTopDisabled && <Separator className='absolute' isFullscreen={true} />}
-      <div className='flex relative'>
-        <div className='mt-[6.063rem]'>
+      <div className='flex max-md:flex-col relative'>
+        <div className='mt-[6.063rem] max-md:mt-[3rem]'>
           <p ref={labelRef} className='text-[1.125rem] leading-[1em] font-medium text-accent'>
             Готовы обсудить Ваш проект?
           </p>
           <h4
             ref={titleRef}
-            className='w-[43.75rem] leading-[1.2em] text-[4rem] font-black text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal)'
+            className='w-[43.75rem] max-md:w-full max-md:text-[2.5rem] leading-[1.2em] text-[4rem] font-black text-foreground break-words'
           >
             Свяжитесь с нами сегодня!
           </h4>
@@ -46,7 +46,7 @@ const Contact = ({
             Ответим в течение двух часов, в рабочее время.
           </p>
 
-          <div ref={buttonsRef} className='flex gap-[.938rem] mt-[1.75rem]'>
+          <div ref={buttonsRef} className='flex max-md:flex-col gap-[.938rem] mt-[1.75rem]'>
             <Button
               style='accent'
               href={
@@ -61,10 +61,12 @@ const Contact = ({
           </div>
         </div>
 
-        <div className='mt-[6.063rem] ml-auto flex flex-col'>
-          <DiagonalArrowIcon ref={arrowRef} className='w-[152p] h-[9.5rem] self-end [&>path]:fill-black-light' />
+        <Separator isFullscreen={true} className='hidden max-md:block max-md:mt-[2.5rem] relative z-[5]' />
 
-          <div ref={linksRef} className='mt-[5.625rem]'>
+        <div className='mt-[6.063rem] ml-auto flex flex-col max-md:mt-[2.5rem] max-md:ml-0 max-md:w-full'>
+          <DiagonalArrowIcon ref={arrowRef} className='w-[152p] h-[9.5rem] self-end [&_path]:fill-contact-arrow [&_rect]:fill-contact-arrow max-md:hidden' />
+
+          <div ref={linksRef} className='mt-[5.625rem] max-md:mt-0 flex flex-col gap-[.875rem]'>
             <Link
               className='group text-[1.125rem] flex gap-[.938rem] items-center font-medium text-text-white transition-colors duration-300 hover:text-accent'
               href='tel:+79781234567'
@@ -84,13 +86,21 @@ const Contact = ({
           </div>
         </div>
 
-        <Separator
-          isVertical={true}
-          isFullscreen={true}
-          height='29.625rem'
-          className={`absolute ${isUnderLongerSlider ? 'right-[20.875rem]' : 'right-[33.333%]'} translate-y-[.063rem]`}
-        />
       </div>
+
+      <Separator
+        isVertical={true}
+        height={
+          isBorderTopDisabled || isMarginTopDisabled
+            ? 'calc(100% + 0.313rem)'
+            : 'calc(100% - 3.125rem)'
+        }
+        className={`absolute max-md:hidden ${
+          isBorderTopDisabled || isMarginTopDisabled ? 'top-0' : 'top-[3.438rem]'
+        } ${
+          isUnderLongerSlider ? 'right-[20.938rem]' : 'right-[calc(33.333%+0.063rem)]'
+        }`}
+      />
 
       <Separator isFullscreen={true} className='absolute bottom-[-0.313rem]' />
     </section>

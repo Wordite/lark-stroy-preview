@@ -16,14 +16,14 @@ const HeroProjectSliderControls = ({ slides, className }: IHeroProjectSliderCont
   if (!slide) return null
 
   return (
-    <div className={`h-[4.375rem] flex flex-col justify-between ${className}`}>
+    <div className={`h-[4.375rem] flex flex-col justify-between text-[var(--color-on-dark)] ${className}`}>
       <Separator isFullscreen={true} />
       <div className='flex justify-between items-center'>
         <span ref={yearRef}>Реализован в {slide.year} году</span>
 
         <div className='flex gap-[.938rem] items-center'>
           <p ref={counterRef} className='text-[1.125rem] font-medium'>
-            <span className='text-text-white'>{displaySlide}</span>
+            <span className='text-[var(--color-on-dark)]'>{displaySlide}</span>
             {' '}
             <span className='text-light-gray'>/ {totalSlides}</span>
           </p>

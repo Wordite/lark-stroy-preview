@@ -39,11 +39,20 @@ const Slider = ({
     if (cardWidth !== 'container') return
     const el = sectionRef.current
     if (!el) return
-    const update = () => setMeasuredWidth(el.clientWidth)
+    const update = () => {
+      // On narrow viewports each slide should span the full window so the
+      // user doesn't see a peek of the next/previous slide on either side.
+      const isMobile = window.innerWidth < 768
+      setMeasuredWidth(isMobile ? window.innerWidth : el.clientWidth)
+    }
     update()
     const ro = new ResizeObserver(update)
     ro.observe(el)
-    return () => ro.disconnect()
+    window.addEventListener('resize', update)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', update)
+    }
   }, [cardWidth, sectionRef])
 
   const leftBoundaryIdx = index
@@ -74,7 +83,7 @@ const Slider = ({
 
         <div
           ref={trackRef}
-          className='flex will-change-transform pl-(--container-offset) touch-pan-y select-none cursor-grab active:cursor-grabbing'
+          className='flex will-change-transform pl-(--container-offset) max-md:pl-0 touch-pan-y select-none cursor-grab active:cursor-grabbing'
         >
           {slides.map((slide, i) => {
             const isLeft = i === leftBoundaryIdx

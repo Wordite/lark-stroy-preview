@@ -35,7 +35,7 @@ const Activity = ({ className, activity, projects = [] }: IActivityProps) => {
           ) : (
             <StorageIcon className='w-[2.063rem] h-[1.625rem]' />
           )}
-          <h4 className='w-[43.75rem] text-[2.25rem] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em]'>
+          <h4 className='w-[43.75rem] max-md:w-full max-md:text-[1.5rem] text-[2.25rem] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em]'>
             {title}
           </h4>
         </div>
@@ -44,22 +44,25 @@ const Activity = ({ className, activity, projects = [] }: IActivityProps) => {
       </Link>
       <Separator isFullscreen={true} className='relative z-[1000]' />
 
-      <div ref={cardsRef} className='grid grid-cols-3'>
+      <div ref={cardsRef} className='grid grid-cols-3 max-md:flex max-md:flex-col'>
         {Array.from({ length: 3 }).map((_, i) => {
           const c = cards[i]
           const isFirst = i === 0
           const isLast = i === 2
           const nextHasCard = Boolean(cards[i + 1])
           const hasRight = Boolean(c) && nextHasCard && i < 2
-          const cellCls = `relative ${hasRight ? 'border-r border-light-gray-tranpsparent-40' : ''}`
-          if (!c) return <div key={`empty-${i}`} className={cellCls} />
+          const cellCls = `relative ${hasRight ? 'border-r max-md:border-r-0 border-light-gray-tranpsparent-40' : ''}`
+          if (!c) return <div key={`empty-${i}`} className={`${cellCls} max-md:hidden`} />
           return (
-            <div key={c.id} className={cellCls}>
-              <ProjectCard
-                data={c}
-                isOnBoundary={isFirst || isLast}
-                boundaryDirection={isFirst ? 'left' : isLast ? 'right' : undefined}
-              />
+            <div key={c.id} className='max-md:contents'>
+              {i > 0 && <Separator isFullscreen={true} className='hidden max-md:block' />}
+              <div className={cellCls}>
+                <ProjectCard
+                  data={c}
+                  isOnBoundary={isFirst || isLast}
+                  boundaryDirection={isFirst ? 'left' : isLast ? 'right' : undefined}
+                />
+              </div>
             </div>
           )
         })}

@@ -69,7 +69,7 @@ const ProjectFilters = ({
   const set = (next: Partial<ProjectFiltersUrlState>) => update({ ...value, ...next })
 
   return (
-    <div className={`flex items-center gap-[.938rem] ${className}`}>
+    <div className={`flex items-center gap-[.938rem] max-md:flex-wrap max-md:gap-[.5rem] ${className}`}>
       <SelectDropdown
         compact
         options={yearOptions}

@@ -115,17 +115,34 @@ const ActivitiesGrid = ({ items }: ActivitiesGridProps) => {
     <>
       <Separator className='mt-[2.5rem]' isFullscreen={true} />
       <div ref={gridRef}>
-        <div className='grid grid-cols-2 relative'>
-          {slots[0] && <ActivityTab data={slots[0]} isHaveRightBorder={true} boundaryDirection='left' />}
-          {slots[1] && <ActivityTab data={slots[1]} isHaveLeftOffset={true} boundaryDirection='right' />}
+        {/* Mobile (<md): plain stacked list with a full-width Separator between
+            every card. Desktop: 2x2 grid with vertical sep inside row + full-
+            width sep between row 1 and row 2. */}
+
+        {/* Mobile layout */}
+        <div className='md:hidden flex flex-col'>
+          {slots.map((s, i) => (
+            <div key={`m-${s.id}`}>
+              {i > 0 && <Separator isFullscreen={true} />}
+              <ActivityTab data={s} />
+            </div>
+          ))}
         </div>
-        {slots.length > 2 && <Separator isFullscreen={true} />}
-        {(slots[2] || slots[3]) && (
+
+        {/* Desktop layout */}
+        <div className='max-md:hidden'>
           <div className='grid grid-cols-2 relative'>
-            {slots[2] && <ActivityTab data={slots[2]} isHaveRightBorder={true} boundaryDirection='left' />}
-            {slots[3] && <ActivityTab data={slots[3]} isHaveLeftOffset={true} boundaryDirection='right' />}
+            {slots[0] && <ActivityTab data={slots[0]} isHaveRightBorder={true} boundaryDirection='left' />}
+            {slots[1] && <ActivityTab data={slots[1]} isHaveLeftOffset={true} boundaryDirection='right' />}
           </div>
-        )}
+          {slots.length > 2 && <Separator isFullscreen={true} />}
+          {(slots[2] || slots[3]) && (
+            <div className='grid grid-cols-2 relative'>
+              {slots[2] && <ActivityTab data={slots[2]} isHaveRightBorder={true} boundaryDirection='left' />}
+              {slots[3] && <ActivityTab data={slots[3]} isHaveLeftOffset={true} boundaryDirection='right' />}
+            </div>
+          )}
+        </div>
       </div>
       <Separator className='' isFullscreen={true} />
     </>
