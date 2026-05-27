@@ -1,7 +1,8 @@
 'use client'
 
 import { NewsCard, type INewsCardData } from '@/entities/NewsCard'
-import { ProjectCard, type IProjectCardData, projectToCardData } from '@/entities/ProjectCard'
+import { ProjectCard, type IProjectCardData } from '@/entities/ProjectCard'
+import { projectToCardData } from '@/entities/ProjectCard/toCardData'
 import { Slider, useSliderSlide } from '@/features/Slider'
 import { useRem } from '@/shared/hooks/useRem'
 import { useIsMobile } from '@/shared/hooks/useMediaQuery'

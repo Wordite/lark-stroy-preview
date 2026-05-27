@@ -1,8 +1,11 @@
+'use client'
+
 import Link from 'next/link'
 import placeHolderImage from '@/assets/images/test_photo.png'
 import Image, { type StaticImageData } from 'next/image'
 import { Button, STYLES } from '@/shared/Button'
 import { Separator } from '@/shared/Separator'
+import { useExternalTarget } from '@/shared/hooks/useExternalTarget'
 
 export interface INewsCardData {
   id: string
@@ -38,12 +41,13 @@ const NewsCard = ({
 }: INewsCardProps) => {
   const image = data.image ?? placeHolderImage
   const isExternalImage = typeof image === 'string'
+  const target = useExternalTarget()
 
   return (
     <Link
       href={data.href}
-      target='_blank'
-      rel='noopener noreferrer'
+      target={target}
+      rel={target ? 'noopener noreferrer' : undefined}
       className={`w-[27.875rem] h-[28.5rem] max-md:w-full max-md:h-auto max-md:py-[1.5rem] shrink-0 relative cursor-pointer group py-[1.688rem] block ${!isOnBoundary ? 'hover:bg-black-light' : ''} transition-colors duration-300 ${className}`}
     >
       {isOnBoundary && boundaryDirection === 'left' && (

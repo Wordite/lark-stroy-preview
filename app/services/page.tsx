@@ -4,7 +4,7 @@ import { Activities } from '@/widgets/Activities'
 import { Contact } from '@/widgets/Contact'
 import { fetchActivities } from '@/services/entities/activities'
 import { fetchProjects } from '@/services/entities/projects.server'
-import { projectToCardData } from '@/entities/ProjectCard'
+import { projectToCardData } from '@/entities/ProjectCard/toCardData'
 import { buildMeta } from '@/services/seo'
 
 export const revalidate = 15

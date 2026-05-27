@@ -1,6 +1,7 @@
 'use client'
 
-import { ProjectCard, projectToCardData } from '@/entities/ProjectCard'
+import { ProjectCard } from '@/entities/ProjectCard'
+import { projectToCardData } from '@/entities/ProjectCard/toCardData'
 import { RealizationRoad } from '@/features/RealizationRoad'
 import { Separator } from '@/shared/Separator'
 import { useRealizationAnimation } from './model/useRealizationAnimation'

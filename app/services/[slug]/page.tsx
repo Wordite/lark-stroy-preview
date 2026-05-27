@@ -6,7 +6,7 @@ import { ActivityHead } from '@/widgets/ActivityHead'
 import { Contact } from '@/widgets/Contact'
 import { WhatWeBuildActivity } from '@/widgets/WhatWeBuildActivity'
 import { fetchActivityBySlug, fetchActivityPage } from '@/services/entities/activities'
-import { projectToCardData } from '@/entities/ProjectCard'
+import { projectToCardData } from '@/entities/ProjectCard/toCardData'
 import { buildMeta } from '@/services/seo'
 
 export const revalidate = 15

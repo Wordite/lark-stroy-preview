@@ -13,6 +13,7 @@ import { SelectDropdown, type ISelectOption } from '@/shared/SelectDropdown'
 import StorageIcon from '@/assets/icons/storage.svg'
 import LivingIcon from '@/assets/icons/living.svg'
 import CommercialIcon from '@/assets/icons/commercial.svg'
+import { useExternalTarget } from '@/shared/hooks/useExternalTarget'
 import ManufactureIcon from '@/assets/icons/manufacture.svg'
 import { contactFormSchema, type IContactFormValues } from './model/contactFormSchema'
 import { useContactFormAnimation } from './model/useContactFormAnimation'
@@ -69,6 +70,7 @@ const ContactForm = () => {
     sideSeparatorRef,
     workTimeRef,
   } = useContactFormAnimation()
+  const privacyTarget = useExternalTarget()
 
   const searchParams = useSearchParams()
   const prefillMessage = searchParams.get('message') ?? ''
@@ -176,8 +178,8 @@ const ContactForm = () => {
                     Я ознакомлен(а) и согласен(а) с{' '}
                     <a
                       href='/privacy'
-                      target='_blank'
-                      rel='noopener noreferrer'
+                      target={privacyTarget}
+                      rel={privacyTarget ? 'noopener noreferrer' : undefined}
                       className='text-accent underline underline-offset-2'
                     >
                       политикой конфиденциальности

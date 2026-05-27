@@ -1,36 +1,15 @@
+'use client'
+
 import placeHolderImage from '@/assets/images/test_photo.png'
 import Image, { type StaticImageData } from 'next/image'
 import Link from 'next/link'
 import ArrowsLeftIcon from '@/assets/icons/arrows_left.svg'
 import { Tag } from '@/shared/Tag'
 import { Separator } from '@/shared/Separator'
-import type { Project } from '@/services/types'
-import { mediaUrl } from '@/services/mediaUrl'
+import { useExternalTarget } from '@/shared/hooks/useExternalTarget'
 
-export interface IProjectCardData {
-  id: string
-  activity: string
-  city: string
-  name: string
-  tags: string[]
-  image?: StaticImageData | string
-  href: string
-}
-
-export function projectToCardData(p: Project): IProjectCardData {
-  const completedYear = p.completedAt ? new Date(p.completedAt).getFullYear().toString() : null
-  const areaTag = p.area ? `${p.area.toLocaleString('ru-RU')} м²` : null
-  const tagList = [areaTag, p.city, completedYear].filter(Boolean) as string[]
-  return {
-    id: p.id,
-    activity: p.activity.title,
-    city: p.city ?? '',
-    name: p.title,
-    tags: tagList,
-    image: mediaUrl(p.mainImage),
-    href: `/projects/${p.activity.slug}/${p.slug}`,
-  }
-}
+import type { IProjectCardData } from './toCardData'
+export type { IProjectCardData } from './toCardData'
 
 interface IProjectCardProps {
   data: IProjectCardData
@@ -53,12 +32,13 @@ const ProjectCard = ({
 }: IProjectCardProps) => {
   const isExternalImage = typeof data.image === 'string'
   const image = data.image ?? placeHolderImage
+  const target = useExternalTarget()
 
   return (
     <Link
       href={data.href}
-      target='_blank'
-      rel='noopener noreferrer'
+      target={target}
+      rel={target ? 'noopener noreferrer' : undefined}
       className={`${isShort ? 'w-[20.938rem] h-[25.625rem]' : 'w-[27.875rem] h-[28.5rem]'} max-md:w-full max-md:h-auto max-md:py-[1.5rem] shrink-0 relative cursor-pointer group py-[1.688rem] flex flex-col ${!isOnBoundary ? 'md:hover:bg-black-light' : ''} transition-colors duration-300 ${className}`}
     >
       {isOnBoundary && boundaryDirection === 'left' && (

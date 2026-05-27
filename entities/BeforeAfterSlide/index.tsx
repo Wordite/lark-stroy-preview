@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react'
 import Image, { type StaticImageData } from 'next/image'
 import gsap from 'gsap'
 import { useSliderSlide } from '@/features/Slider'
+import { useExternalTarget } from '@/shared/hooks/useExternalTarget'
 
 export interface IBeforeAfterSlideData {
   id: string
@@ -22,6 +23,7 @@ const BeforeAfterSlide = ({ data }: IBeforeAfterSlideProps) => {
   const dividerRef = useRef<HTMLDivElement>(null)
   const beforeLabelRef = useRef<HTMLSpanElement>(null)
   const afterLabelRef = useRef<HTMLSpanElement>(null)
+  const target = useExternalTarget()
 
   useEffect(() => {
     if (!isVisible) return
@@ -47,8 +49,8 @@ const BeforeAfterSlide = ({ data }: IBeforeAfterSlideProps) => {
     data.href ? (
       <a
         href={data.href}
-        target='_blank'
-        rel='noopener noreferrer'
+        target={target}
+        rel={target ? 'noopener noreferrer' : undefined}
         className='absolute inset-0 z-20 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center'
       >
         <span className='px-[1.125rem] py-[.5rem] border border-accent text-accent text-[.813rem] font-medium uppercase tracking-wider translate-y-[.625rem] hover:translate-y-0 transition-transform duration-300 ease-out'>

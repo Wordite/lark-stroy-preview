@@ -6,7 +6,8 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
-import { ProjectCard, projectToCardData } from '@/entities/ProjectCard'
+import { ProjectCard } from '@/entities/ProjectCard'
+import { projectToCardData } from '@/entities/ProjectCard/toCardData'
 import { Separator } from '@/shared/Separator'
 import { EmptyState } from '@/shared/EmptyState'
 import { Pagination } from '@/features/Pagination'
