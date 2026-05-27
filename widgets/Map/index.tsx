@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { useYandexMap } from './model/useYandexMap'
 import { Separator } from '@/shared/Separator'
 import { SelectDropdown } from '@/shared/SelectDropdown'
@@ -27,12 +28,42 @@ const Map = ({ points }: MapProps = {}) => {
 
   const activityOptions = activities.map((a) => ({ value: a.slug, label: a.title }))
 
+  const [interactive, setInteractive] = useState(false)
+
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) setInteractive(false)
+      },
+      { threshold: 0 },
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [sectionRef])
+
   return (
     <section ref={sectionRef} className='w-screen -translate-x-(--container-offset) h-screen max-h-screen overflow-y-clip relative'>
       {/* Map. Скрипт ymaps грузится из useYandexMap руками, чтобы при возврате
           на главную страницу карта поднималась с нуля (next/script дедуплицирует
           и кешит window.ymaps, из-за чего на revisit ломалась смена категорий). */}
       <div ref={mapContainerRef} className={`absolute inset-0 ${styles.mapContainer}`} />
+
+      {/* Mobile-only "tap to activate" overlay: lets the page scroll past the map
+          until the user explicitly opts into map interaction. */}
+      {!interactive && (
+        <button
+          type='button'
+          onClick={() => setInteractive(true)}
+          aria-label='Активировать карту'
+          className='absolute inset-0 z-20 md:hidden flex items-end justify-center pb-[5rem] bg-transparent cursor-pointer'
+        >
+          <span className='px-[1rem] py-[.625rem] rounded-full bg-background/85 backdrop-blur-md border border-light-gray-tranpsparent-40 text-[.875rem] text-foreground font-medium pointer-events-none'>
+            Нажмите, чтобы взаимодействовать с картой
+          </span>
+        </button>
+      )}
 
       {/* Info overlay */}
       <div ref={infoRef} className='absolute top-[5rem] right-(--container-offset) z-10 flex flex-col items-end text-right max-md:top-[6rem]'>
