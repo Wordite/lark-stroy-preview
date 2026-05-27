@@ -1,4 +1,4 @@
-import { serverFetch } from '../api'
+import { serverFetch } from '../serverFetch'
 import type { Activity, ActivityPage, Service } from '../types'
 
 export function fetchActivities() {

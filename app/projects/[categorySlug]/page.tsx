@@ -4,7 +4,7 @@ import { CategoryHead } from '@/widgets/CategoryHead'
 import { CategoryProjects } from '@/widgets/CategoryProjects'
 import { Contact } from '@/widgets/Contact'
 import { fetchActivityBySlug } from '@/services/entities/activities'
-import { fetchProjects } from '@/services/entities/projects'
+import { fetchProjects } from '@/services/entities/projects.server'
 import { buildMeta } from '@/services/seo'
 
 export const revalidate = 15

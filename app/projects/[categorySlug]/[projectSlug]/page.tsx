@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 import { Contact } from '@/widgets/Contact'
 import { ProjectDescription } from '@/widgets/ProjectDescription'
 import { ProjectHead } from '@/widgets/ProjectHead'
-import { fetchProjectBySlug } from '@/services/entities/projects'
+import { fetchProjectBySlug } from '@/services/entities/projects.server'
 import { mediaUrl } from '@/services/mediaUrl'
 import { buildMeta } from '@/services/seo'
 

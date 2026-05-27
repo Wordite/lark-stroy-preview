@@ -1,0 +1,42 @@
+[
+  {
+    "id": "col-company",
+    "title": "Компания",
+    "order": 0,
+    "createdAt": "2026-05-10T09:56:03.402Z",
+    "updatedAt": "2026-05-10T09:56:03.402Z",
+    "links": [
+      { "id": "l-about", "columnId": "col-company", "label": "О компании", "href": "/about", "order": 0, "createdAt": "2026-05-10T09:56:15.144Z" },
+      { "id": "l-projects", "columnId": "col-company", "label": "Проекты", "href": "/projects", "order": 1, "createdAt": "2026-05-10T09:56:15.144Z" },
+      { "id": "l-services", "columnId": "col-company", "label": "Услуги", "href": "/services", "order": 2, "createdAt": "2026-05-10T09:56:15.144Z" },
+      { "id": "l-news", "columnId": "col-company", "label": "Новости", "href": "/news", "order": 3, "createdAt": "2026-05-10T09:56:15.144Z" },
+      { "id": "l-contacts", "columnId": "col-company", "label": "Контакты", "href": "/contacts", "order": 4, "createdAt": "2026-05-10T09:56:15.144Z" }
+    ]
+  },
+  {
+    "id": "col-directions",
+    "title": "Направления",
+    "order": 1,
+    "createdAt": "2026-05-10T09:56:03.402Z",
+    "updatedAt": "2026-05-10T09:56:03.402Z",
+    "links": [
+      { "id": "l-storage", "columnId": "col-directions", "label": "Складские комплексы", "href": "/services/storage", "order": 0, "createdAt": "2026-05-10T09:56:15.144Z" },
+      { "id": "l-manufacture", "columnId": "col-directions", "label": "Производственные здания", "href": "/services/manufacture", "order": 1, "createdAt": "2026-05-10T09:56:15.144Z" },
+      { "id": "l-commercial", "columnId": "col-directions", "label": "Коммерческая недвижимость", "href": "/services/commercial", "order": 2, "createdAt": "2026-05-10T09:56:15.144Z" },
+      { "id": "l-public", "columnId": "col-directions", "label": "Общественные объекты", "href": "/services/public", "order": 3, "createdAt": "2026-05-10T09:56:15.144Z" }
+    ]
+  },
+  {
+    "id": "col-clients",
+    "title": "Клиентам",
+    "order": 2,
+    "createdAt": "2026-05-10T09:56:03.402Z",
+    "updatedAt": "2026-05-10T09:56:03.402Z",
+    "links": [
+      { "id": "l-process", "columnId": "col-clients", "label": "Этапы работы", "href": "/about#process", "order": 0, "createdAt": "2026-05-10T09:56:15.144Z" },
+      { "id": "l-quote", "columnId": "col-clients", "label": "Запрос сметы", "href": "/contacts", "order": 1, "createdAt": "2026-05-10T09:56:15.144Z" },
+      { "id": "l-docs", "columnId": "col-clients", "label": "Документы и лицензии", "href": "/about#docs", "order": 2, "createdAt": "2026-05-10T09:56:15.144Z" },
+      { "id": "l-faq", "columnId": "col-clients", "label": "Частые вопросы", "href": "/about#faq", "order": 3, "createdAt": "2026-05-10T09:56:15.144Z" }
+    ]
+  }
+]

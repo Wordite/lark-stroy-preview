@@ -8,7 +8,7 @@ import { Separator } from '@/shared/Separator'
 import { EmptyState } from '@/shared/EmptyState'
 import { fetchActivities } from '@/services/entities/activities'
 import { fetchContacts } from '@/services/entities/contacts'
-import { fetchProjects, parseAreaRange } from '@/services/entities/projects'
+import { fetchProjects, parseAreaRange } from '@/services/entities/projects.server'
 import { buildMeta } from '@/services/seo'
 
 export const metadata: Metadata = buildMeta({

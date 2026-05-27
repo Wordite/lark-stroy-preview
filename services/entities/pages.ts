@@ -1,4 +1,4 @@
-import { serverFetch } from '../api'
+import { serverFetch } from '../serverFetch'
 
 export interface PagePublic {
   id: string

@@ -1,4 +1,4 @@
-import { serverFetch } from '../api'
+import { serverFetch } from '../serverFetch'
 import type { ContactsPublic, FooterColumn } from '../types'
 
 export function fetchContacts() {

@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { getSiteUrl } from '@/services/seo'
 import { fetchActivities } from '@/services/entities/activities'
-import { fetchProjects } from '@/services/entities/projects'
+import { fetchProjects } from '@/services/entities/projects.server'
 import { fetchNews } from '@/services/entities/news'
 import { fetchPages } from '@/services/entities/pages'
 

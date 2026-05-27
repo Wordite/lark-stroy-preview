@@ -1,4 +1,4 @@
-import { serverFetch } from '../api'
+import { serverFetch } from '../serverFetch'
 import type { News, Paginated } from '../types'
 
 export function fetchNews(page = 1, limit = 12) {

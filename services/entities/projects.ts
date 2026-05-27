@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
-import { api, serverFetch } from '../api'
+import { api } from '../api'
 import type { MapPoint, Paginated, Project } from '../types'
 
 export interface ProjectQuery {
@@ -35,18 +35,6 @@ export function parseAreaRange(area: string | undefined | null): { areaMin?: num
     ...(Number.isFinite(min) ? { areaMin: min } : {}),
     ...(Number.isFinite(max) ? { areaMax: max } : {}),
   }
-}
-
-export function fetchProjects(params: ProjectQuery = {}) {
-  return serverFetch<Paginated<Project>>(`/projects?${qs(params)}`)
-}
-
-export function fetchProjectBySlug(slug: string) {
-  return serverFetch<Project>(`/projects/slug/${slug}`)
-}
-
-export function fetchMapPoints() {
-  return serverFetch<MapPoint[]>('/projects/map')
 }
 
 export function useProjects(params: ProjectQuery, options?: { enabled?: boolean }) {

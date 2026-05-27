@@ -3,7 +3,7 @@ import { LongerProjectSlider } from '@/features/LongerProjectSlider'
 import { Activities } from '@/widgets/Activities'
 import { Contact } from '@/widgets/Contact'
 import { fetchActivities } from '@/services/entities/activities'
-import { fetchProjects } from '@/services/entities/projects'
+import { fetchProjects } from '@/services/entities/projects.server'
 import { projectToCardData } from '@/entities/ProjectCard'
 import { buildMeta } from '@/services/seo'
 

@@ -10,7 +10,7 @@ import { Contact } from '@/widgets/Contact'
 import { fetchActivities } from '@/services/entities/activities'
 import { fetchContacts } from '@/services/entities/contacts'
 import { fetchHomeContent } from '@/services/entities/home'
-import { fetchMapPoints } from '@/services/entities/projects'
+import { fetchMapPoints } from '@/services/entities/projects.server'
 import { buildMeta } from '@/services/seo'
 
 export const revalidate = 15
