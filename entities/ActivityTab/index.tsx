@@ -40,15 +40,28 @@ const ActivityTab = ({
     <Link
       href={data.href}
       style={colorStyle}
-      className={`group block relative py-[1.5rem] transition-colors duration-300 hover:bg-black-light ${isHaveLeftOffset ? 'md:pl-[6.875rem]' : ''} ${isHaveTopBorder ? 'border-t-[.063rem] border-light-gray-tranpsparent-40' : ''} ${isHaveBottomBorder ? 'border-b-[.063rem] border-light-gray-tranpsparent-40' : ''} ${isHaveLeftBorder ? 'border-l-[.063rem] border-light-gray-tranpsparent-40' : ''} ${isHaveRightBorder ? 'max-md:border-r-0 border-r-[.063rem] border-light-gray-tranpsparent-40' : ''}`}
+      className={`group block relative py-[1.5rem] ${isHaveLeftOffset ? 'md:pl-[6.875rem]' : ''} ${isHaveTopBorder ? 'border-t-[.063rem] border-light-gray-tranpsparent-40' : ''} ${isHaveBottomBorder ? 'border-b-[.063rem] border-light-gray-tranpsparent-40' : ''} ${isHaveLeftBorder ? 'border-l-[.063rem] border-light-gray-tranpsparent-40' : ''} ${isHaveRightBorder ? 'max-md:border-r-0 border-r-[.063rem] border-light-gray-tranpsparent-40' : ''}`}
     >
+      <div
+        className='pointer-events-none absolute inset-0 -z-40 opacity-0 group-hover:opacity-10 transition-opacity duration-300'
+        style={{ backgroundColor: data.color }}
+      />
       {boundaryDirection === 'left' && (
-        <div className='h-full w-screen group-hover:bg-black-light transition-colors duration-300 -z-50 absolute top-0 right-full' />
+        <div
+          className='pointer-events-none h-full w-screen opacity-0 group-hover:opacity-10 transition-opacity duration-300 -z-50 absolute top-0 right-full'
+          style={{ backgroundColor: data.color }}
+        />
       )}
       {boundaryDirection === 'right' && (
-        <div className='h-full w-screen group-hover:bg-black-light transition-colors duration-300 -z-50 absolute top-0 left-full' />
+        <div
+          className='pointer-events-none h-full w-screen opacity-0 group-hover:opacity-10 transition-opacity duration-300 -z-50 absolute top-0 left-full'
+          style={{ backgroundColor: data.color }}
+        />
       )}
-      <div className='hidden max-md:block h-full w-screen group-hover:bg-black-light transition-colors duration-300 -z-50 absolute top-0 left-1/2 -translate-x-1/2' />
+      <div
+        className='hidden max-md:block pointer-events-none h-full w-screen opacity-0 group-hover:opacity-10 transition-opacity duration-300 -z-50 absolute top-0 left-1/2 -translate-x-1/2'
+        style={{ backgroundColor: data.color }}
+      />
       <div className='flex items-center gap-[.938rem]'>
         {data.iconSvg ? (
           <span

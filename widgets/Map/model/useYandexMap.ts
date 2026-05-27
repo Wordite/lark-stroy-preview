@@ -141,6 +141,7 @@ export const useYandexMap = (sourcePoints?: MapPoint[]) => {
   const selectedActivityRef = useRef(selectedActivity)
   selectedActivityRef.current = selectedActivity
   const renderPlacemarksRef = useRef<((slug: string) => void) | null>(null)
+  const [mapReady, setMapReady] = useState(false)
 
   const zoomIn = () => {
     const m = mapInstanceRef.current
@@ -151,10 +152,14 @@ export const useYandexMap = (sourcePoints?: MapPoint[]) => {
     if (m) m.setZoom(m.getZoom() - 1, { duration: 200 })
   }
 
-  // Перерисовываем точки при смене категории.
+  // Перерисовываем точки при смене категории. mapReady в deps нужен, чтобы
+  // первый рендер после revisit'а (когда useEffect выстреливает раньше, чем
+  // ymaps.ready) всё равно дотягивался — как только карта поднялась,
+  // setMapReady(true) триггерит этот эффект и применяет текущую категорию.
   useEffect(() => {
+    if (!mapReady) return
     renderPlacemarksRef.current?.(selectedActivity)
-  }, [selectedActivity])
+  }, [selectedActivity, mapReady])
 
   useEffect(() => {
     if (sectionRef.current && infoRef.current) {
@@ -300,6 +305,7 @@ export const useYandexMap = (sourcePoints?: MapPoint[]) => {
         }
         renderPlacemarksRef.current = renderPlacemarks
         renderPlacemarks(selectedActivityRef.current)
+        setMapReady(true)
       })
     }
 
@@ -327,6 +333,7 @@ export const useYandexMap = (sourcePoints?: MapPoint[]) => {
         mapInstanceRef.current = null
       }
       renderPlacemarksRef.current = null
+      setMapReady(false)
     }
   }, [points])
 

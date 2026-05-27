@@ -106,7 +106,7 @@ const SelectDropdown = ({
           }`}
         >
           {selected?.Icon && (
-            <selected.Icon className={selected.iconClassName ?? 'w-[1.375rem] h-[1.375rem]'} />
+            <selected.Icon className={`[&_path]:fill-current ${selected.iconClassName ?? 'w-[1.375rem] h-[1.375rem]'}`} />
           )}
           <span>{selected?.label ?? placeholder}</span>
         </span>
@@ -136,7 +136,7 @@ const SelectDropdown = ({
                   }`}
                 >
                   {option.Icon && (
-                    <option.Icon className={option.iconClassName ?? 'w-[1.375rem] h-[1.375rem]'} />
+                    <option.Icon className={`[&_path]:fill-current ${option.iconClassName ?? 'w-[1.375rem] h-[1.375rem]'}`} />
                   )}
                   <span>{option.label}</span>
                 </button>
