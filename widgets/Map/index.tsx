@@ -44,44 +44,14 @@ const Map = ({ points }: MapProps = {}) => {
   }, [sectionRef])
 
   return (
-    <section ref={sectionRef} className='w-screen -translate-x-(--container-offset) h-screen max-h-screen overflow-y-clip relative'>
+    <section ref={sectionRef} className='w-screen -translate-x-(--container-offset) h-screen max-h-screen max-md:h-[60vh] max-md:max-h-[60vh] overflow-y-clip relative'>
       {/* Map. Скрипт ymaps грузится из useYandexMap руками, чтобы при возврате
           на главную страницу карта поднималась с нуля (next/script дедуплицирует
           и кешит window.ymaps, из-за чего на revisit ломалась смена категорий). */}
       <div ref={mapContainerRef} className={`absolute inset-0 ${styles.mapContainer}`} />
 
-      {/* Mobile-only "tap to activate" overlay: lets the page scroll past the map
-          until the user explicitly opts into map interaction. */}
-      {!interactive && (
-        <button
-          type='button'
-          onClick={() => setInteractive(true)}
-          aria-label='Активировать карту'
-          className='absolute inset-0 z-20 md:hidden flex items-end justify-center pb-[5rem] bg-transparent cursor-pointer'
-        >
-          <span className='px-[1rem] py-[.625rem] rounded-full bg-background/85 backdrop-blur-md border border-light-gray-tranpsparent-40 text-[.875rem] text-foreground font-medium pointer-events-none'>
-            Нажмите, чтобы взаимодействовать с картой
-          </span>
-        </button>
-      )}
-
-      {/* Release button shown after activation so user can resume page scroll.
-          Fixed-positioned so it stays visible even if user pans the map; pulsing
-          border draws attention so the exit is obvious. */}
-      {interactive && (
-        <button
-          type='button'
-          onClick={() => setInteractive(false)}
-          aria-label='Закрыть карту'
-          className={`md:hidden fixed bottom-[1.25rem] left-[1rem] z-[9999] px-[.875rem] py-[.5rem] rounded-full bg-background/90 backdrop-blur-md border-[.094rem] text-[.875rem] text-foreground font-medium cursor-pointer flex items-center gap-[.375rem] shadow-lg ${styles.exitPulse}`}
-        >
-          <span aria-hidden>✕</span>
-          Выйти из карты
-        </button>
-      )}
-
       {/* Info overlay */}
-      <div ref={infoRef} className='absolute top-[5rem] right-(--container-offset) z-10 flex flex-col items-end text-right max-md:top-[6rem]'>
+      <div ref={infoRef} className='absolute top-[5rem] right-(--container-offset) z-10 flex flex-col items-end text-right max-md:top-[1.25rem]'>
         <h3 className='text-[2.75rem] max-md:text-[1.875rem] font-black text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em] whitespace-nowrap max-md:whitespace-normal'>
           География объектов
         </h3>
@@ -140,7 +110,7 @@ const Map = ({ points }: MapProps = {}) => {
       )}
 
       {/* Zoom controls */}
-      <div className='absolute bottom-[3.75rem] right-(--container-offset) z-10 flex flex-col gap-[.5rem]'>
+      <div className='absolute bottom-[3.75rem] right-(--container-offset) z-10 flex flex-col gap-[.5rem] max-md:bottom-[1.25rem]'>
         <button
           type='button'
           onClick={zoomIn}
