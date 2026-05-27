@@ -69,17 +69,17 @@
 
 .exitPulse {
   border-color: var(--accent);
-  animation: exitPulseBorder 1.6s ease-in-out infinite;
+  animation: exitPulseBorder 2.2s ease-in-out infinite;
 }
 
 @keyframes exitPulseBorder {
   0%,
   100% {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 0 rgba(243, 188, 24, 0.6);
+    border-color: rgba(243, 188, 24, 0.55);
+    box-shadow: 0 0 0 0 rgba(243, 188, 24, 0.25);
   }
   50% {
-    border-color: #ffffff;
-    box-shadow: 0 0 0 8px rgba(243, 188, 24, 0);
+    border-color: rgba(243, 188, 24, 1);
+    box-shadow: 0 0 0 4px rgba(243, 188, 24, 0);
   }
 }

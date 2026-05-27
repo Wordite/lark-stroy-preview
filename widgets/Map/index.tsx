@@ -73,7 +73,7 @@ const Map = ({ points }: MapProps = {}) => {
           type='button'
           onClick={() => setInteractive(false)}
           aria-label='Закрыть карту'
-          className={`md:hidden fixed top-[1rem] left-[1rem] z-[9999] px-[.875rem] py-[.5rem] rounded-full bg-background/90 backdrop-blur-md border-[.125rem] text-[.875rem] text-foreground font-medium cursor-pointer flex items-center gap-[.375rem] shadow-lg ${styles.exitPulse}`}
+          className={`md:hidden fixed bottom-[1.25rem] left-[1rem] z-[9999] px-[.875rem] py-[.5rem] rounded-full bg-background/90 backdrop-blur-md border-[.094rem] text-[.875rem] text-foreground font-medium cursor-pointer flex items-center gap-[.375rem] shadow-lg ${styles.exitPulse}`}
         >
           <span aria-hidden>✕</span>
           Выйти из карты

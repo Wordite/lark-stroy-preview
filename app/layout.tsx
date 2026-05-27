@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { Montserrat } from 'next/font/google'
-import { cookies } from 'next/headers'
 import './globals.css'
 import { Header } from '@/widgets/Header'
 import { Footer } from '@/widgets/Footer'
@@ -62,9 +61,6 @@ export default async function RootLayout({
   const settings = contacts?.settings ?? {}
   const socials = contacts?.socials ?? []
   const siteUrl = getSiteUrl()
-  const cookieStore = await cookies()
-  const themeCookie = cookieStore.get('theme')?.value
-  const theme = themeCookie === 'light' ? 'light' : 'dark'
   const orgName = settings.site_title || 'Ларк Строй'
   const orgDescription = settings.site_tagline || 'Строительная компания Ларк Строй'
   const logo = mediaUrl(settings.site_favicon_url) || mediaUrl(settings.site_og_image_url)
@@ -98,10 +94,15 @@ export default async function RootLayout({
   return (
     <html
       lang='ru'
-      data-theme={theme === 'dark' ? 'dark' : undefined}
       className={`${montserrat.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'){document.documentElement.setAttribute('data-theme','dark')}}catch(e){document.documentElement.setAttribute('data-theme','dark')}})();`,
+          }}
+        />
         <script
           type='application/ld+json'
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

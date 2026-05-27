@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 type Theme = 'light' | 'dark'
 
-const COOKIE_KEY = 'theme'
+const STORAGE_KEY = 'theme'
 
 const applyTheme = (theme: Theme) => {
   const root = document.documentElement
@@ -13,7 +13,9 @@ const applyTheme = (theme: Theme) => {
 }
 
 const persistTheme = (theme: Theme) => {
-  document.cookie = `${COOKIE_KEY}=${theme}; path=/; max-age=31536000; samesite=lax`
+  try {
+    localStorage.setItem(STORAGE_KEY, theme)
+  } catch {}
 }
 
 interface IThemeToggleProps {
