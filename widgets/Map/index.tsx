@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useYandexMap } from './model/useYandexMap'
 import { Separator } from '@/shared/Separator'
 import { SelectDropdown } from '@/shared/SelectDropdown'
@@ -28,20 +28,21 @@ const Map = ({ points }: MapProps = {}) => {
 
   const activityOptions = activities.map((a) => ({ value: a.slug, label: a.title }))
 
-  const [interactive, setInteractive] = useState(false)
+  const tooltipRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const el = sectionRef.current
-    if (!el) return
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) setInteractive(false)
-      },
-      { threshold: 0 },
-    )
-    io.observe(el)
-    return () => io.disconnect()
-  }, [sectionRef])
+    if (!activePoint) return
+    const handler = (e: PointerEvent) => {
+      const t = e.target as Node | null
+      if (tooltipRef.current && t && tooltipRef.current.contains(t)) return
+      // Don't dismiss when the user is clicking another map placemark — Yandex
+      // will swap activePoint via the map's click handler anyway.
+      setActivePoint(null)
+    }
+    // Use capture so it fires before any internal map handlers that stopPropagation.
+    document.addEventListener('pointerdown', handler, true)
+    return () => document.removeEventListener('pointerdown', handler, true)
+  }, [activePoint, setActivePoint])
 
   return (
     <section ref={sectionRef} className='w-screen -translate-x-(--container-offset) h-screen max-h-screen max-md:h-[60vh] max-md:max-h-[60vh] overflow-y-clip relative'>
@@ -74,6 +75,7 @@ const Map = ({ points }: MapProps = {}) => {
       {/* Active point tooltip */}
       {activePoint && (
         <div
+          ref={tooltipRef}
           className={`absolute bottom-[3.75rem] left-(--container-offset) z-6000 w-[20rem] bg-background/95 backdrop-blur-xl border border-light-gray-tranpsparent-40 rounded-xl overflow-hidden ${styles.tooltip}`}
         >
           <div className='h-[10rem] bg-black-light flex items-center justify-center'>
