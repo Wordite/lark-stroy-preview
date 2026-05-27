@@ -4,12 +4,16 @@ import { useEffect, useState } from 'react'
 
 type Theme = 'light' | 'dark'
 
-const STORAGE_KEY = 'theme'
+const COOKIE_KEY = 'theme'
 
 const applyTheme = (theme: Theme) => {
   const root = document.documentElement
   if (theme === 'dark') root.dataset.theme = 'dark'
   else delete root.dataset.theme
+}
+
+const persistTheme = (theme: Theme) => {
+  document.cookie = `${COOKIE_KEY}=${theme}; path=/; max-age=31536000; samesite=lax`
 }
 
 interface IThemeToggleProps {
@@ -18,7 +22,7 @@ interface IThemeToggleProps {
 }
 
 const ThemeToggle = ({ className, label }: IThemeToggleProps = {}) => {
-  const [theme, setTheme] = useState<Theme>('light')
+  const [theme, setTheme] = useState<Theme>('dark')
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -31,9 +35,7 @@ const ThemeToggle = ({ className, label }: IThemeToggleProps = {}) => {
     const next: Theme = theme === 'dark' ? 'light' : 'dark'
     setTheme(next)
     applyTheme(next)
-    try {
-      localStorage.setItem(STORAGE_KEY, next)
-    } catch {}
+    persistTheme(next)
   }
 
   const isDark = theme === 'dark'
