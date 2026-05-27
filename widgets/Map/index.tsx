@@ -65,6 +65,19 @@ const Map = ({ points }: MapProps = {}) => {
         </button>
       )}
 
+      {/* Release button shown after activation so user can resume page scroll. */}
+      {interactive && (
+        <button
+          type='button'
+          onClick={() => setInteractive(false)}
+          aria-label='Закрыть карту'
+          className='md:hidden absolute top-[1rem] left-[1rem] z-30 px-[.875rem] py-[.5rem] rounded-full bg-background/90 backdrop-blur-md border border-light-gray-tranpsparent-40 text-[.875rem] text-foreground font-medium cursor-pointer flex items-center gap-[.375rem]'
+        >
+          <span aria-hidden>✕</span>
+          Выйти из карты
+        </button>
+      )}
+
       {/* Info overlay */}
       <div ref={infoRef} className='absolute top-[5rem] right-(--container-offset) z-10 flex flex-col items-end text-right max-md:top-[6rem]'>
         <h3 className='text-[2.75rem] max-md:text-[1.875rem] font-black text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em] whitespace-nowrap max-md:whitespace-normal'>
