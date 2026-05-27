@@ -65,13 +65,15 @@ const Map = ({ points }: MapProps = {}) => {
         </button>
       )}
 
-      {/* Release button shown after activation so user can resume page scroll. */}
+      {/* Release button shown after activation so user can resume page scroll.
+          Fixed-positioned so it stays visible even if user pans the map; pulsing
+          border draws attention so the exit is obvious. */}
       {interactive && (
         <button
           type='button'
           onClick={() => setInteractive(false)}
           aria-label='Закрыть карту'
-          className='md:hidden absolute top-[1rem] left-[1rem] z-30 px-[.875rem] py-[.5rem] rounded-full bg-background/90 backdrop-blur-md border border-light-gray-tranpsparent-40 text-[.875rem] text-foreground font-medium cursor-pointer flex items-center gap-[.375rem]'
+          className={`md:hidden fixed top-[1rem] left-[1rem] z-[9999] px-[.875rem] py-[.5rem] rounded-full bg-background/90 backdrop-blur-md border-[.125rem] text-[.875rem] text-foreground font-medium cursor-pointer flex items-center gap-[.375rem] shadow-lg ${styles.exitPulse}`}
         >
           <span aria-hidden>✕</span>
           Выйти из карты
