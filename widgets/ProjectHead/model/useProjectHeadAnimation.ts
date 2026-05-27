@@ -16,13 +16,7 @@ export const useProjectHeadAnimation = () => {
     if (!rootRef.current) return
     const ctx = gsap.context(() => {
       const tl = gsap.timeline()
-      if (backRef.current) {
-        tl.fromTo(
-          backRef.current,
-          { opacity: 0, x: -20 },
-          { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out', clearProps: 'transform' },
-        )
-      }
+      // Кнопка «назад» отображается сразу, без opacity-0 / slide-in.
       if (titleRef.current) {
         tl.fromTo(
           titleRef.current,

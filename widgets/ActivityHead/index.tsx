@@ -52,7 +52,7 @@ const ActivityHead = ({ activity }: IActivityHeadProps) => {
           ) : (
             <StorageIcon className='w-[2.063rem] h-[1.75rem] shrink-0' />
           )}
-          <span className='text-[2.25rem] max-md:text-[1.75rem] leading-[1.1em] font-semibold text-foreground break-words'>{title}</span>
+          <h1 className='text-[2.25rem] max-md:text-[1.75rem] leading-[1.1em] font-semibold text-foreground break-words'>{title}</h1>
         </div>
 
         <p

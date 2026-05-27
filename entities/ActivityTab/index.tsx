@@ -43,7 +43,7 @@ const ActivityTab = ({
       className={`group block relative py-[1.5rem] ${isHaveLeftOffset ? 'md:pl-[6.875rem]' : ''} ${isHaveTopBorder ? 'border-t-[.063rem] border-light-gray-tranpsparent-40' : ''} ${isHaveBottomBorder ? 'border-b-[.063rem] border-light-gray-tranpsparent-40' : ''} ${isHaveLeftBorder ? 'border-l-[.063rem] border-light-gray-tranpsparent-40' : ''} ${isHaveRightBorder ? 'max-md:border-r-0 border-r-[.063rem] border-light-gray-tranpsparent-40' : ''}`}
     >
       <div
-        className='pointer-events-none absolute inset-0 -z-40 opacity-0 group-hover:opacity-10 transition-opacity duration-300'
+        className='pointer-events-none absolute inset-0 -z-40 opacity-0 group-hover:opacity-10 transition-opacity duration-300 max-md:hidden'
         style={{ backgroundColor: data.color }}
       />
       {boundaryDirection === 'left' && (

@@ -1,11 +1,20 @@
+import type { Metadata } from 'next'
 import { LongerProjectSlider } from '@/features/LongerProjectSlider'
 import { Activities } from '@/widgets/Activities'
 import { Contact } from '@/widgets/Contact'
 import { fetchActivities } from '@/services/entities/activities'
 import { fetchProjects } from '@/services/entities/projects'
 import { projectToCardData } from '@/entities/ProjectCard'
+import { buildMeta } from '@/services/seo'
 
 export const revalidate = 15
+
+export const metadata: Metadata = buildMeta({
+  title: 'Услуги — направления деятельности',
+  description:
+    'Строительство складских комплексов, жилых домов, производственных и коммерческих объектов под ключ.',
+  path: '/services',
+})
 
 export default async function ServicesPage() {
   const [activities, projectsPage] = await Promise.all([
@@ -17,6 +26,7 @@ export default async function ServicesPage() {
 
   return (
     <div className='pt-[6.875rem]'>
+      <h1 className='sr-only'>Направления деятельности — услуги строительства</h1>
       <Activities activities={activities ?? []} />
 
       <LongerProjectSlider

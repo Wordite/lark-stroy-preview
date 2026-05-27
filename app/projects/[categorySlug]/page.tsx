@@ -1,11 +1,28 @@
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
 import { CategoryHead } from '@/widgets/CategoryHead'
 import { CategoryProjects } from '@/widgets/CategoryProjects'
 import { Contact } from '@/widgets/Contact'
 import { fetchActivityBySlug } from '@/services/entities/activities'
 import { fetchProjects } from '@/services/entities/projects'
+import { buildMeta } from '@/services/seo'
 
 export const revalidate = 15
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ categorySlug: string }>
+}): Promise<Metadata> {
+  const { categorySlug } = await params
+  const activity = await fetchActivityBySlug(categorySlug).catch(() => null)
+  if (!activity) return {}
+  return buildMeta({
+    title: `Проекты — ${activity.title}`,
+    description: activity.description,
+    path: `/projects/${activity.slug}`,
+  })
+}
 
 export default async function ActivityPage({
   params,

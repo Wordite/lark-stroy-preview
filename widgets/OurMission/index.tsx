@@ -47,7 +47,9 @@ const OurMission = ({ block }: IOurMissionProps) => {
   const subtitle = cfg.subtitle || FALLBACK.subtitle
   const missionTitle = cfg.missionTitle || FALLBACK.missionTitle
   const missionText = cfg.missionText || FALLBACK.missionText
-  const stats = (cfg.metrics && cfg.metrics.length ? cfg.metrics : FALLBACK.metrics).map((m) => ({
+  const rawMetrics: OurMissionConfig['metrics'] =
+    cfg.metrics && cfg.metrics.length ? cfg.metrics : FALLBACK.metrics
+  const stats = (rawMetrics ?? []).map((m) => ({
     value: typeof m.value === 'number' ? `${m.value}${m.suffix ?? ''}` : (m.value ?? ''),
     label: m.label ?? '',
   }))
@@ -108,7 +110,7 @@ const OurMission = ({ block }: IOurMissionProps) => {
 
         <Separator className='ml-[2.188rem] translate-y-px max-md:hidden' height='20.688rem' isVertical={true} onDark={true} />
 
-        <div ref={statsRef} className='ml-[3.75rem] max-md:ml-0 grid grid-cols-2 gap-y-[1.5rem] gap-x-[4.625rem] max-md:gap-x-[1.5rem]'>
+        <div ref={statsRef} className='ml-[3.75rem] max-md:ml-0 flex-1 min-w-0 grid grid-cols-2 gap-y-[1.5rem] gap-x-[4.625rem] max-md:gap-x-[1.5rem]'>
           {stats.map((stat, i) => (
             <StatBlock key={i} value={stat.value} label={stat.label} />
           ))}

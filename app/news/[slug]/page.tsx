@@ -1,13 +1,33 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import ArrowIcon from '@/assets/icons/arrow.svg'
 import { Contact } from '@/widgets/Contact'
 import { Separator } from '@/shared/Separator'
 import { Markdown } from '@/shared/Markdown'
 import { fetchNewsBySlug } from '@/services/entities/news'
 import { mediaUrl } from '@/services/mediaUrl'
+import { buildMeta } from '@/services/seo'
 
 export const revalidate = 15
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const news = await fetchNewsBySlug(slug).catch(() => null)
+  if (!news) return {}
+  return buildMeta({
+    title: news.title,
+    description: news.excerpt || news.title,
+    path: `/news/${news.slug}`,
+    image: mediaUrl(news.image?.url) || undefined,
+    type: 'article',
+    publishedTime: news.publishedAt || undefined,
+  })
+}
 
 export default async function NewsDetailPage({
   params,
@@ -20,7 +40,7 @@ export default async function NewsDetailPage({
 
   return (
     <article className='mt-[10.625rem]'>
-      <div className='flex items-start gap-[1.563rem]'>
+      <div className='flex items-start gap-[1.563rem] max-md:flex-col max-md:gap-[1rem]'>
         <Link
           href='/news'
           aria-label='Все новости'

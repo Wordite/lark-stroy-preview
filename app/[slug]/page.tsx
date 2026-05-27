@@ -4,8 +4,21 @@ import { Contact } from '@/widgets/Contact'
 import { Separator } from '@/shared/Separator'
 import { Markdown } from '@/shared/Markdown'
 import { fetchPageBySlug } from '@/services/entities/pages'
+import { buildMeta } from '@/services/seo'
 
 export const revalidate = 15
+
+function excerpt(md: string, max = 160): string {
+  const plain = md
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/`[^`]*`/g, ' ')
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/[#>*_~\-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+  return plain.length > max ? `${plain.slice(0, max - 1)}…` : plain
+}
 
 export async function generateMetadata({
   params,
@@ -15,7 +28,11 @@ export async function generateMetadata({
   const { slug } = await params
   const page = await fetchPageBySlug(slug).catch(() => null)
   if (!page) return {}
-  return { title: page.title }
+  return buildMeta({
+    title: page.title,
+    description: excerpt(page.content),
+    path: `/${page.slug}`,
+  })
 }
 
 export default async function DynamicPage({

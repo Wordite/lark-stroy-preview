@@ -8,9 +8,9 @@ interface ActivitiesProps {
 const Activities = ({ activities }: ActivitiesProps) => {
   return (
     <section className='mt-[4.375rem]'>
-      <h4 className='w-[18.75rem] text-[2.25rem] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em]'>
+      <h2 className='w-[18.75rem] text-[2.25rem] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em]'>
         Направления деятельности
-      </h4>
+      </h2>
 
       <ActivitiesGrid items={activities} />
     </section>

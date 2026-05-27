@@ -1,12 +1,20 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import { Contact } from '@/widgets/Contact'
 import { Separator } from '@/shared/Separator'
 import { EmptyState } from '@/shared/EmptyState'
 import { NewsPagination } from '@/features/NewsPagination'
 import { fetchNews } from '@/services/entities/news'
 import { mediaUrl } from '@/services/mediaUrl'
+import { buildMeta } from '@/services/seo'
 
 export const revalidate = 15
+
+export const metadata: Metadata = buildMeta({
+  title: 'Новости',
+  description: 'Новости и события компании Ларк Строй, обзоры строительных объектов.',
+  path: '/news',
+})
 
 const PAGE_SIZE = 12
 

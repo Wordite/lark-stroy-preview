@@ -1,13 +1,30 @@
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
 import { LongerProjectSlider } from '@/features/LongerProjectSlider'
 import { RealizationRoad } from '@/features/RealizationRoad'
 import { ActivityHead } from '@/widgets/ActivityHead'
 import { Contact } from '@/widgets/Contact'
 import { WhatWeBuildActivity } from '@/widgets/WhatWeBuildActivity'
-import { fetchActivityPage } from '@/services/entities/activities'
+import { fetchActivityBySlug, fetchActivityPage } from '@/services/entities/activities'
 import { projectToCardData } from '@/entities/ProjectCard'
+import { buildMeta } from '@/services/seo'
 
 export const revalidate = 15
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const activity = await fetchActivityBySlug(slug).catch(() => null)
+  if (!activity) return {}
+  return buildMeta({
+    title: activity.title,
+    description: activity.description,
+    path: `/services/${activity.slug}`,
+  })
+}
 
 export default async function ServiceDetailPage({
   params,

@@ -27,9 +27,9 @@ const CategoryHead = ({ className, activity, cities = [] }: ICategoryHeadProps) 
         ) : (
           <StorageIcon className='w-[33px] h-[26px] shrink-0' />
         )}
-        <h4 className='w-[700px] max-md:w-full text-[36px] max-md:text-[1.75rem] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em] break-words'>
+        <h1 className='w-[700px] max-md:w-full text-[36px] max-md:text-[1.75rem] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em] break-words'>
           {title}
-        </h4>
+        </h1>
       </div>
 
       <div ref={filtersRef}>

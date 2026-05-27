@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import ArrowDownIcon from '@/assets/icons/arrow_down.svg'
 import { BurgerButton } from '@/shared/BurgerButton'
+import { ThemeToggle } from '@/shared/ThemeToggle'
 import type { HeaderLink } from '@/widgets/Header/config'
 import { useMobileMenuAnimation } from './model/useMobileMenuAnimation'
 
@@ -91,6 +92,11 @@ const MobileMenu = ({ links }: IMobileMenuProps) => {
           })}
 
           <div className='flex-1 min-h-[4rem]' />
+
+          <ThemeToggle
+            label='Переключить тему'
+            className='mb-[1rem] w-full px-[1.563rem] py-[1.25rem] gap-[.75rem] text-[1rem] font-semibold uppercase border-[.063rem] border-light-gray-tranpsparent-40 bg-background text-text-white hover:border-accent'
+          />
 
           <Link
             href='/contacts'

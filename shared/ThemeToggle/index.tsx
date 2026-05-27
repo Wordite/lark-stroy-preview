@@ -12,7 +12,12 @@ const applyTheme = (theme: Theme) => {
   else delete root.dataset.theme
 }
 
-const ThemeToggle = () => {
+interface IThemeToggleProps {
+  className?: string
+  label?: string
+}
+
+const ThemeToggle = ({ className, label }: IThemeToggleProps = {}) => {
   const [theme, setTheme] = useState<Theme>('light')
   const [mounted, setMounted] = useState(false)
 
@@ -39,9 +44,12 @@ const ThemeToggle = () => {
       onClick={toggle}
       aria-label={isDark ? 'Включить светлую тему' : 'Включить тёмную тему'}
       aria-pressed={isDark}
-      className='group flex w-[4.5rem] self-stretch shrink-0 cursor-pointer items-center justify-center overflow-hidden border-[.063rem] border-light-gray-tranpsparent-40 bg-background text-foreground transition duration-300 ease-out will-change-transform hover:scale-105 hover:border-accent active:scale-95'
+      className={`group flex shrink-0 cursor-pointer items-center justify-center overflow-hidden transition duration-300 ease-out will-change-transform active:scale-95 ${
+        className ??
+        'w-[4.5rem] self-stretch border-[.063rem] border-light-gray-tranpsparent-40 bg-background text-foreground hover:scale-105 hover:border-accent'
+      }`}
     >
-      <span className='relative block h-[1.5rem] w-[1.5rem]'>
+      <span className='relative block h-[1.5rem] w-[1.5rem] shrink-0'>
         {/* Солнце */}
         <svg
           viewBox='0 0 24 24'
@@ -76,6 +84,7 @@ const ThemeToggle = () => {
           <path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z' />
         </svg>
       </span>
+      {label && <span>{label}</span>}
     </button>
   )
 }

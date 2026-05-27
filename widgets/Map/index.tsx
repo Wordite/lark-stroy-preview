@@ -1,6 +1,5 @@
 'use client'
 
-import Script from 'next/script'
 import Link from 'next/link'
 import { useYandexMap } from './model/useYandexMap'
 import { Separator } from '@/shared/Separator'
@@ -30,19 +29,14 @@ const Map = ({ points }: MapProps = {}) => {
 
   return (
     <section ref={sectionRef} className='w-screen -translate-x-(--container-offset) h-screen max-h-screen overflow-y-clip relative'>
-      {/* Yandex Maps API loads only when the Map widget is on the page.
-          next/script dedupes by src, so navigation back to the home page
-          reuses the already-loaded script. */}
-      <Script src='https://api-maps.yandex.ru/2.1/?lang=ru_RU' strategy='afterInteractive' />
-
-      {/* <Separator className='translate-x-(--container-offset)' isFullscreen={true} /> */}
-
-      {/* Map */}
+      {/* Map. Скрипт ymaps грузится из useYandexMap руками, чтобы при возврате
+          на главную страницу карта поднималась с нуля (next/script дедуплицирует
+          и кешит window.ymaps, из-за чего на revisit ломалась смена категорий). */}
       <div ref={mapContainerRef} className={`absolute inset-0 ${styles.mapContainer}`} />
 
       {/* Info overlay */}
-      <div ref={infoRef} className='absolute top-[5rem] right-(--container-offset) z-10 flex flex-col items-end text-right max-md:left-0 max-md:right-0 max-md:items-center max-md:text-center'>
-        <h3 className='text-[2.75rem] font-black text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em] whitespace-nowrap max-md:whitespace-normal'>
+      <div ref={infoRef} className='absolute top-[5rem] right-(--container-offset) z-10 flex flex-col items-end text-right max-md:top-[6rem]'>
+        <h3 className='text-[2.75rem] max-md:text-[1.875rem] font-black text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em] whitespace-nowrap max-md:whitespace-normal'>
           География объектов
         </h3>
         <p className='text-[1.125rem] mt-[.5rem] text-subtext'>

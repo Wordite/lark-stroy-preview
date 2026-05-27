@@ -72,8 +72,15 @@ const computeFitZoom = (w: number, h: number): number => {
 declare global {
   interface Window {
     ymaps: any
+    [key: string]: any
   }
 }
+
+// Уникальное имя namespace на каждую загрузку, чтобы ymaps не ругался
+// «api is already enabled on this page with same namespace» при возврате
+// на страницу с картой.
+let ymapsNsCounter = 0
+const nextYmapsNs = () => `ymaps_${Date.now()}_${++ymapsNsCounter}`
 
 interface IMapPoint {
   id: string
@@ -138,10 +145,12 @@ export const useYandexMap = (sourcePoints?: MapPoint[]) => {
     }
   }, [activities, selectedActivity])
 
+  const placemarksRef = useRef<any>(null)
   const selectedActivityRef = useRef(selectedActivity)
   selectedActivityRef.current = selectedActivity
-  const renderPlacemarksRef = useRef<((slug: string) => void) | null>(null)
-  const [mapReady, setMapReady] = useState(false)
+  const pointsRef = useRef(points)
+  pointsRef.current = points
+  const [renderTick, setRenderTick] = useState(0)
 
   const zoomIn = () => {
     const m = mapInstanceRef.current
@@ -152,14 +161,25 @@ export const useYandexMap = (sourcePoints?: MapPoint[]) => {
     if (m) m.setZoom(m.getZoom() - 1, { duration: 200 })
   }
 
-  // Перерисовываем точки при смене категории. mapReady в deps нужен, чтобы
-  // первый рендер после revisit'а (когда useEffect выстреливает раньше, чем
-  // ymaps.ready) всё равно дотягивался — как только карта поднялась,
-  // setMapReady(true) триггерит этот эффект и применяет текущую категорию.
+  // Чистая функция рендера — берёт всё нужное из ref'ов, чтобы быть
+  // независимой от React-замыканий. Вызывается и из ymaps.ready (initial),
+  // и из эффекта при смене selectedActivity / points.
+  const renderPlacemarks = () => {
+    const placemarks = placemarksRef.current
+    if (!placemarks || !window.ymaps) return
+    placemarks.removeAll()
+    const slug = selectedActivityRef.current
+    pointsRef.current
+      .filter((p) => !slug || p.activitySlug === slug)
+      .forEach((p) => placemarks.add(buildPlacemark(p, setActivePoint)))
+  }
+
+  // Перерисовка при смене категории / появлении карты / смене points.
   useEffect(() => {
-    if (!mapReady) return
-    renderPlacemarksRef.current?.(selectedActivity)
-  }, [selectedActivity, mapReady])
+    if (!placemarksRef.current) return
+    setActivePoint(null)
+    renderPlacemarks()
+  }, [selectedActivity, points, renderTick])
 
   useEffect(() => {
     if (sectionRef.current && infoRef.current) {
@@ -250,78 +270,47 @@ export const useYandexMap = (sourcePoints?: MapPoint[]) => {
 
         mapInstanceRef.current = map
 
-        // Отдельная коллекция для меток — её очищаем/заполняем при смене фильтра.
+        // Отдельная коллекция для меток. Делаем первичный рендер сразу
+        // (через ref'ы — независимо от свежести React-замыкания), а
+        // последующие смены категории прокидываются через renderTick.
         const placemarks = new window.ymaps.GeoObjectCollection()
         map.geoObjects.add(placemarks)
-
-        const buildPlacemark = (point: IMapPoint) => {
-          const inner = point.iconSvg
-            ? (() => {
-                const { content, viewBox } = parseSvg(point.iconSvg)
-                return `<svg x="8" y="8" width="16" height="16" viewBox="${viewBox}" fill="rgba(17,21,23,1)" stroke="rgba(17,21,23,1)" preserveAspectRatio="xMidYMid meet">${content}</svg>`
-              })()
-            : `<circle cx="16" cy="16" r="5" fill="rgba(17,21,23,1)"/>`
-          const placemark = new window.ymaps.Placemark(
-            point.coords,
-            {
-              hintContent: point.title,
-            },
-            {
-              iconLayout: 'default#image',
-              iconImageHref: 'data:image/svg+xml,' + encodeURIComponent(`
-                <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="16" cy="16" r="12" fill="${point.color}" stroke="rgba(17,21,23,1)" stroke-width="3"/>
-                  ${inner}
-                </svg>
-              `),
-              iconImageSize: [32, 32],
-              iconImageOffset: [-16, -16],
-            }
-          )
-
-          placemark.events.add('click', () => {
-            setActivePoint(point)
-          })
-
-          placemark.events.add('mouseenter', () => {
-            placemark.options.set('iconImageSize', [40, 40])
-            placemark.options.set('iconImageOffset', [-20, -20])
-          })
-
-          placemark.events.add('mouseleave', () => {
-            placemark.options.set('iconImageSize', [32, 32])
-            placemark.options.set('iconImageOffset', [-16, -16])
-          })
-
-          return placemark
-        }
-
-        const renderPlacemarks = (slug: string) => {
-          placemarks.removeAll()
-          setActivePoint(null)
-          points
-            .filter((p) => !slug || p.activitySlug === slug)
-            .forEach((p) => placemarks.add(buildPlacemark(p)))
-        }
-        renderPlacemarksRef.current = renderPlacemarks
-        renderPlacemarks(selectedActivityRef.current)
-        setMapReady(true)
+        placemarksRef.current = placemarks
+        renderPlacemarks()
+        setRenderTick((t) => t + 1)
       })
     }
 
-    if (window.ymaps) {
-      initMap()
-    } else {
-      const interval = setInterval(() => {
-        if (window.ymaps) {
-          clearInterval(interval)
-          initMap()
-        }
-      }, 200)
-      return () => clearInterval(interval)
-    }
+    // Грузим скрипт ymaps руками с уникальным namespace, чтобы ymaps не
+    // ругался «api is already enabled on this page with same namespace» при
+    // повторных монтированиях (StrictMode dev, возврат на главную и т.д.).
+    // После загрузки алиасим под window.ymaps — остальной код работает с ним.
+    const ns = nextYmapsNs()
+    const YMAPS_SRC = `https://api-maps.yandex.ru/2.1/?lang=ru_RU&ns=${ns}`
+    let scriptEl: HTMLScriptElement | null = null
+    let cancelled = false
+
+    const loadScript = () =>
+      new Promise<void>((resolve, reject) => {
+        scriptEl = document.createElement('script')
+        scriptEl.src = YMAPS_SRC
+        scriptEl.async = true
+        scriptEl.dataset.ymapsLoader = ns
+        scriptEl.onload = () => resolve()
+        scriptEl.onerror = () => reject(new Error('ymaps script load failed'))
+        document.head.appendChild(scriptEl)
+      })
+
+    loadScript()
+      .then(() => {
+        if (cancelled) return
+        window.ymaps = window[ns]
+        initMap()
+      })
+      .catch((err) => console.error(err))
 
     return () => {
+      cancelled = true
       if (mapInstanceRef.current) {
         if (mapInstanceRef.current.__resizeHandler) {
           window.removeEventListener('resize', mapInstanceRef.current.__resizeHandler)
@@ -329,11 +318,23 @@ export const useYandexMap = (sourcePoints?: MapPoint[]) => {
         if (mapInstanceRef.current.__themeObserver) {
           mapInstanceRef.current.__themeObserver.disconnect()
         }
-        mapInstanceRef.current.destroy()
+        try {
+          mapInstanceRef.current.destroy()
+        } catch {}
         mapInstanceRef.current = null
       }
-      renderPlacemarksRef.current = null
-      setMapReady(false)
+      placemarksRef.current = null
+      if (scriptEl && scriptEl.parentNode) scriptEl.parentNode.removeChild(scriptEl)
+      document
+        .querySelectorAll('script[src*="api-maps.yandex.ru"], script[src*="yastatic.net/s3/mapsapi"]')
+        .forEach((s) => s.parentNode?.removeChild(s))
+      try {
+        delete (window as any).ymaps
+        delete (window as any)[ns]
+      } catch {
+        ;(window as any).ymaps = undefined
+        ;(window as any)[ns] = undefined
+      }
     }
   }, [points])
 
@@ -350,6 +351,44 @@ export const useYandexMap = (sourcePoints?: MapPoint[]) => {
     zoomIn,
     zoomOut,
   }
+}
+
+function buildPlacemark(point: IMapPoint, onSelect: (p: IMapPoint) => void) {
+  const inner = point.iconSvg
+    ? (() => {
+        const { content, viewBox } = parseSvg(point.iconSvg!)
+        return `<svg x="8" y="8" width="16" height="16" viewBox="${viewBox}" fill="rgba(17,21,23,1)" stroke="rgba(17,21,23,1)" preserveAspectRatio="xMidYMid meet">${content}</svg>`
+      })()
+    : `<circle cx="16" cy="16" r="5" fill="rgba(17,21,23,1)"/>`
+  const placemark = new window.ymaps.Placemark(
+    point.coords,
+    { hintContent: point.title },
+    {
+      iconLayout: 'default#image',
+      iconImageHref:
+        'data:image/svg+xml,' +
+        encodeURIComponent(`
+          <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="12" fill="${point.color}" stroke="rgba(17,21,23,1)" stroke-width="3"/>
+            ${inner}
+          </svg>
+        `),
+      iconImageSize: [32, 32],
+      iconImageOffset: [-16, -16],
+    },
+  )
+
+  placemark.events.add('click', () => onSelect(point))
+  placemark.events.add('mouseenter', () => {
+    placemark.options.set('iconImageSize', [40, 40])
+    placemark.options.set('iconImageOffset', [-20, -20])
+  })
+  placemark.events.add('mouseleave', () => {
+    placemark.options.set('iconImageSize', [32, 32])
+    placemark.options.set('iconImageOffset', [-16, -16])
+  })
+
+  return placemark
 }
 
 function stripSvgWrapper(svg: string): string {

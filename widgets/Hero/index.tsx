@@ -36,12 +36,12 @@ const Hero = ({ block }: HeroProps = {}) => {
         <span className='text-[1.125rem] font-medium text-accent'>{slide.area}</span>
         <span className='text-[1.125rem] font-medium text-accent'>{slide.city}</span>
       </div>
-      <h3
+      <h1
         ref={titleRef}
         className='w-[56.25rem] max-md:w-full leading-[1.2em] text-[4rem] max-md:text-[2.5rem] font-black text-transparent bg-clip-text bg-(image:--color-gradient-on-dark) break-words text-wrap max-md:hyphens-auto'
       >
         {slide.title}
-      </h3>
+      </h1>
 
       <p
         ref={descRef}

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { Contact } from '@/widgets/Contact'
 import { Activity } from '@/widgets/Activity'
 import { CategoryProjects } from '@/widgets/CategoryProjects'
@@ -8,6 +9,13 @@ import { EmptyState } from '@/shared/EmptyState'
 import { fetchActivities } from '@/services/entities/activities'
 import { fetchContacts } from '@/services/entities/contacts'
 import { fetchProjects, parseAreaRange } from '@/services/entities/projects'
+import { buildMeta } from '@/services/seo'
+
+export const metadata: Metadata = buildMeta({
+  title: 'Проекты',
+  description: 'Реализованные объекты: склады, жилые комплексы, производственные и торговые здания.',
+  path: '/projects',
+})
 
 interface AreaBucket { min: number; max: number | null; label: string }
 function parseAreaBuckets(json: string | undefined): AreaBucket[] {

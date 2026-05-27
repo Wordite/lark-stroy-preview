@@ -16,7 +16,7 @@ const WhatWeBuildActivity = ({ services, points }: IWhatWeBuildActivityProps) =>
     <section ref={sectionRef}>
       <h4
         ref={titleRef}
-        className='w-[31.25rem] max-md:w-full mt-[3.438rem] max-md:mt-[2.5rem] text-[2.25rem] max-md:text-[2rem] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em]'
+        className='w-[31.25rem] max-md:w-full mt-[3.438rem] max-md:mt-[2.125rem] text-[2.25rem] max-md:text-[1.7rem] font-semibold text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em]'
       >
         Что мы строим
       </h4>
