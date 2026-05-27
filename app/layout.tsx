@@ -7,6 +7,7 @@ import { QueryProvider } from '@/services/QueryProvider'
 import { fetchContacts } from '@/services/entities/contacts'
 import { mediaUrl } from '@/services/mediaUrl'
 import { getSiteUrl } from '@/services/seo'
+import { NavigationTracker } from './NavigationTracker'
 
 const montserrat = Montserrat({
   variable: '--font-montserrat',
@@ -109,6 +110,7 @@ export default async function RootLayout({
         />
       </head>
       <body className='min-h-full flex flex-col'>
+        <NavigationTracker />
         <QueryProvider>
           <Header />
           <main className='px-(--container-offset)'>{children}</main>
