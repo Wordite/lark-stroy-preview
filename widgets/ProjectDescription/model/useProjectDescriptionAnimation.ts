@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
+import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -16,7 +17,7 @@ export const useProjectDescriptionAnimation = () => {
   const moreButtonRef = useRef<HTMLButtonElement>(null)
   const specsRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!sectionRef.current) return
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({

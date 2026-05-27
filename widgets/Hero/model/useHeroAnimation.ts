@@ -1,4 +1,5 @@
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useState } from 'react'
+import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect'
 import { useHeroSliderStore, type IHeroSlide } from '@/core/store/heroSliderStore'
 import gsap from 'gsap'
 
@@ -14,7 +15,7 @@ export const useHeroAnimation = (slides: IHeroSlide[]) => {
   const tlRef = useRef<gsap.core.Timeline | null>(null)
   const isFirstRender = useRef(true)
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const els = [tagsRef.current, titleRef.current, descRef.current, buttonsRef.current].filter(Boolean)
 
     if (isFirstRender.current) {

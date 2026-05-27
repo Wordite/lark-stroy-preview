@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
+import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect'
 import gsap from 'gsap'
 
 interface UseMobileMenuAnimationResult {
@@ -53,7 +54,7 @@ export function useMobileMenuAnimation(): UseMobileMenuAnimationResult {
   }
 
   // Open / close panel animation.
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const panel = panelRef.current
     const items = itemsRef.current
     if (!panel) return

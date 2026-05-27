@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
+import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect'
 import gsap from 'gsap'
 
 // Footer lives in the root layout and persists across client-side
@@ -12,7 +13,7 @@ export const useFooterAnimation = () => {
   const footerRef = useRef<HTMLElement>(null)
   const playedRef = useRef(false)
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const el = footerRef.current
     if (!el) return
     const columns = el.querySelectorAll(':scope > *')

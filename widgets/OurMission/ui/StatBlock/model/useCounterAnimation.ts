@@ -1,4 +1,5 @@
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
+import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -8,7 +9,7 @@ export const useCounterAnimation = (value: number, suffix: string) => {
   const valueRef = useRef<HTMLParagraphElement>(null)
   const counter = useRef({ val: 0 })
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const el = valueRef.current
     if (!el) return
 

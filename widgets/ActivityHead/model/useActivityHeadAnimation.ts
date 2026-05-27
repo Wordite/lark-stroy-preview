@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
+import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect'
 import gsap from 'gsap'
 
 // Mounted-on-load: back-arrow slides in from the left, title fades up,
@@ -12,7 +13,7 @@ export const useActivityHeadAnimation = () => {
   const titleRef = useRef<HTMLDivElement>(null)
   const descRef = useRef<HTMLParagraphElement>(null)
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!rootRef.current) return
     const ctx = gsap.context(() => {
       const tl = gsap.timeline()

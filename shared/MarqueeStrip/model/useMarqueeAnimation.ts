@@ -1,10 +1,11 @@
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
+import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect'
 import gsap from 'gsap'
 
 export const useMarqueeAnimation = () => {
   const trackRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const track = trackRef.current
     if (!track) return
 

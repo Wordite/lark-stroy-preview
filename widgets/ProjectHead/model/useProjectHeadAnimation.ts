@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
+import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect'
 import gsap from 'gsap'
 
 // Page-top hero block: back button slides in from the left, title fades up,
@@ -12,7 +13,7 @@ export const useProjectHeadAnimation = () => {
   const tagsRef = useRef<HTMLDivElement>(null)
   const imageRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!rootRef.current) return
     const ctx = gsap.context(() => {
       const tl = gsap.timeline()

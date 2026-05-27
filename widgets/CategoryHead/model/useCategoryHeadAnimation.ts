@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
+import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect'
 import gsap from 'gsap'
 
 // Page-top header on the category page: title block fades up on mount,
@@ -10,7 +11,7 @@ export const useCategoryHeadAnimation = () => {
   const titleRef = useRef<HTMLDivElement>(null)
   const filtersRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!rootRef.current) return
     const ctx = gsap.context(() => {
       const tl = gsap.timeline()
