@@ -11,6 +11,7 @@ interface IActivityHeadProps {
     title: string
     description: string
     iconSvg: string | null
+    color?: string | null
   }
 }
 
@@ -24,7 +25,7 @@ const ActivityHead = ({ activity }: IActivityHeadProps) => {
     'Проектирование и строительство современных складов класса А и В. Логистические центры с автоматизированными системами управления.'
 
   return (
-    <div ref={rootRef} className='mt-[10.563rem] max-md:mt-[7rem] min-h-[8rem] py-[.938rem] flex max-md:flex-wrap items-start gap-[1.563rem] max-md:gap-x-[16px] max-md:gap-y-[16px] relative'>
+    <div ref={rootRef} className='mt-[10.563rem] max-md:mt-[7rem] min-h-[8rem] py-[.938rem] flex max-md:flex-wrap items-start max-md:items-center gap-[1.563rem] max-md:gap-x-[16px] max-md:gap-y-[16px] relative'>
       <Image
         alt='bg'
         src={activityHeadBgImage}
@@ -46,11 +47,15 @@ const ActivityHead = ({ activity }: IActivityHeadProps) => {
         <div ref={titleRef} className='flex items-center gap-[.938rem] max-md:gap-[.75rem]'>
           {activity?.iconSvg ? (
             <span
-              className='w-[2.063rem] h-[1.75rem] inline-block [&>svg]:w-full [&>svg]:h-full text-accent shrink-0'
+              className='w-[2.063rem] h-[1.75rem] inline-block [&>svg]:w-full [&>svg]:h-full shrink-0'
+              style={{ color: activity.color ?? undefined }}
               dangerouslySetInnerHTML={{ __html: activity.iconSvg }}
             />
           ) : (
-            <StorageIcon className='w-[2.063rem] h-[1.75rem] shrink-0' />
+            <StorageIcon
+              className='w-[2.063rem] h-[1.75rem] shrink-0'
+              style={{ color: activity?.color ?? undefined }}
+            />
           )}
           <h1 className='text-[2.25rem] max-md:text-[1.75rem] leading-[1.1em] font-semibold text-foreground break-words'>{title}</h1>
         </div>
