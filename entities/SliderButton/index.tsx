@@ -33,7 +33,9 @@ const SliderButton = ({ className, direction = 'left', variant = 'default', disa
       className={`w-[4.313rem] h-[4.313rem] border-[.063rem] relative cursor-pointer transition-colors duration-300 ease-out ${variantStyles[variant]} ${disabled ? 'opacity-30 pointer-events-none' : ''} ${className ?? ''}`}
     >
       <ArrowIcon
-        className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${direction === 'right' ? 'rotate-180' : ''} ${iconVariantStyles[variant]}`}
+        width={32}
+        height={24}
+        className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-6 shrink-0 ${direction === 'right' ? 'rotate-180' : ''} ${iconVariantStyles[variant]}`}
       />
     </button>
   )
