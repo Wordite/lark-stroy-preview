@@ -1,18 +1,18 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import ArrowIcon from '@/assets/icons/arrow.svg'
 import { useProjectHeadAnimation } from './model/useProjectHeadAnimation'
 import { Separator } from '@/shared/Separator'
 import type { Project } from '@/services/types'
 import { mediaUrl } from '@/services/mediaUrl'
+import { useBackOrFallback } from '@/hooks/useBackOrFallback'
 
 interface IProjectHeadProps {
   project: Project
 }
 
 const ProjectHead = ({ project }: IProjectHeadProps) => {
-  const router = useRouter()
+  const handleBack = useBackOrFallback(`/projects/${project.activity.slug}`)
   const { rootRef, backRef, titleRef, tagsRef, imageRef } = useProjectHeadAnimation()
 
   const title = project.title
@@ -34,7 +34,7 @@ const ProjectHead = ({ project }: IProjectHeadProps) => {
         <button
           ref={backRef}
           type='button'
-          onClick={() => router.back()}
+          onClick={handleBack}
           aria-label='Назад'
           className='group w-[3.375rem] h-[3.375rem] max-md:w-[3rem] max-md:h-[3rem] bg-accent flex justify-center items-center cursor-pointer transition duration-300 ease-out hover:brightness-110 hover:-translate-x-[.25rem] shrink-0'
         >

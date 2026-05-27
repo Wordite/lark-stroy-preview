@@ -1,11 +1,11 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import ArrowIcon from '@/assets/icons/arrow.svg'
 import activityHeadBgImage from '@/assets/images/activity_head_bg.webp'
 import Image from 'next/image'
 import StorageIcon from '@/assets/icons/storage.svg'
 import { useActivityHeadAnimation } from './model/useActivityHeadAnimation'
+import { useBackOrFallback } from '@/hooks/useBackOrFallback'
 interface IActivityHeadProps {
   activity?: {
     title: string
@@ -15,7 +15,7 @@ interface IActivityHeadProps {
 }
 
 const ActivityHead = ({ activity }: IActivityHeadProps) => {
-  const router = useRouter()
+  const handleBack = useBackOrFallback('/')
   const { rootRef, backRef, titleRef, descRef } = useActivityHeadAnimation()
 
   const title = activity?.title ?? 'Складские комплексы'
@@ -35,7 +35,7 @@ const ActivityHead = ({ activity }: IActivityHeadProps) => {
       <button
         ref={backRef}
         type='button'
-        onClick={() => router.back()}
+        onClick={handleBack}
         aria-label='Назад'
         className='group w-[3.375rem] h-[3.375rem] max-md:w-[3rem] max-md:h-[3rem] shrink-0 bg-accent flex justify-center items-center cursor-pointer transition duration-300 ease-out hover:brightness-110 hover:-translate-x-[.25rem]'
       >
