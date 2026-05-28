@@ -17,7 +17,7 @@ const CategoryHead = ({ className, activity, cities = [] }: ICategoryHeadProps) 
 
   return (
     <div ref={rootRef} className={`flex justify-between items-center my-[36px] max-md:flex-col max-md:items-start max-md:gap-[1.25rem] max-md:my-[1.5rem] ${className}`}>
-      <div ref={titleRef} className='flex items-center gap-[19px] max-md:gap-[.75rem] max-md:w-full'>
+      <div ref={titleRef} className='opacity-0 flex items-center gap-[19px] max-md:gap-[.75rem] max-md:w-full'>
         {activity?.iconSvg ? (
           <span
             className='w-[33px] h-[26px] inline-block [&>svg]:w-full [&>svg]:h-full shrink-0'
@@ -32,7 +32,7 @@ const CategoryHead = ({ className, activity, cities = [] }: ICategoryHeadProps) 
         </h1>
       </div>
 
-      <div ref={filtersRef}>
+      <div ref={filtersRef} className='opacity-0'>
         <ProjectFilters cities={cities} />
       </div>
     </div>

@@ -36,14 +36,14 @@ const ProjectHead = ({ project }: IProjectHeadProps) => {
           type='button'
           onClick={handleBack}
           aria-label='Назад'
-          className='group w-[3.375rem] h-[3.375rem] max-md:w-[3rem] max-md:h-[3rem] bg-accent flex justify-center items-center cursor-pointer transition duration-300 ease-out hover:brightness-110 hover:-translate-x-[.25rem] shrink-0'
+          className='group w-[3.375rem] h-[3.375rem] max-md:w-[3rem] max-md:h-[3rem] bg-accent flex justify-center items-center cursor-pointer transition duration-300 ease-out hover:brightness-110 shrink-0'
         >
           <ArrowIcon className='w-[1.5rem] h-[1.5rem] [&>path]:stroke-on-accent transition-transform duration-300 ease-out group-hover:-translate-x-[.188rem]' />
         </button>
 
         <h1
           ref={titleRef}
-          className='w-[37.5rem] max-md:w-full max-md:text-[1.75rem] pt-[.063rem] text-[2.813rem] leading-[1.1em] font-semibold text-foreground break-words'
+          className='opacity-0 w-[37.5rem] max-md:w-full max-md:text-[1.75rem] pt-[.063rem] text-[2.813rem] leading-[1.1em] font-semibold text-foreground break-words'
         >
           {title}
         </h1>
@@ -56,14 +56,14 @@ const ProjectHead = ({ project }: IProjectHeadProps) => {
         className='mt-[1.313rem] flex items-center gap-[1.875rem] flex-wrap max-md:gap-x-[1.25rem] max-md:gap-y-[.5rem]'
       >
         {tags.map((tag) => (
-          <span key={tag} className='text-[1.125rem] font-medium text-accent'>
+          <span key={tag} className='opacity-0 text-[1.125rem] font-medium text-accent'>
             {tag}
           </span>
         ))}
       </div>
 
       {heroImage && (
-        <div ref={imageRef} className='mt-[.938rem] mb-[1.375rem] w-screen -translate-x-(--container-offset) overflow-hidden'>
+        <div ref={imageRef} className='opacity-0 mt-[.938rem] mb-[1.375rem] w-screen -translate-x-(--container-offset) overflow-hidden'>
           <img src={heroImage} alt={title} className='w-full h-[11.625rem] object-cover' />
         </div>
       )}
