@@ -16,23 +16,23 @@ const HeroProjectSliderControls = ({ slides, className }: IHeroProjectSliderCont
   if (!slide) return null
 
   return (
-    <div className={`h-[4.375rem] flex flex-col justify-between text-[var(--color-on-dark)] ${className}`}>
-      <Separator isFullscreen={true} onDark={true} />
+    <div className={`h-[4.375rem] flex flex-col justify-between text-[var(--hero-text)] ${className}`}>
+      <Separator isFullscreen={true} className='!bg-[var(--hero-line)]' />
       <div className='flex justify-between items-center'>
         <span ref={yearRef}>Реализован в {slide.year} году</span>
 
         <div className='flex gap-[.938rem] items-center'>
           <p ref={counterRef} className='text-[1.125rem] font-medium'>
-            <span className='text-[var(--color-on-dark)]'>{displaySlide}</span>
+            <span className='text-[var(--hero-text)]'>{displaySlide}</span>
             {' '}
-            <span className='text-[var(--color-on-dark-muted)]'>/ {totalSlides}</span>
+            <span className='text-[var(--hero-text-muted)]'>/ {totalSlides}</span>
           </p>
           <SliderButton variant='onDark' onClick={prev} disabled={activeSlide <= 1} />
           <SliderButton direction='right' variant='accent' onClick={next} disabled={activeSlide >= totalSlides} />
         </div>
       </div>
 
-      <Separator isFullscreen={true} onDark={true} />
+      <Separator isFullscreen={true} className='!bg-[var(--hero-line)]' />
     </div>
   )
 }

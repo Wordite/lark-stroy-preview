@@ -11,8 +11,8 @@ interface ISliderButtonProps {
 const variantStyles = {
   default: 'border-text-white hover:bg-text-white group',
   accent: 'border-accent bg-accent hover:brightness-110 group',
-  // всегда поверх тёмного фона (hero) — светлая обводка/стрелка независимо от темы
-  onDark: 'border-on-dark hover:bg-on-dark group',
+  // поверх hero-изображения — тема-зависимая обводка/стрелка (hero-токены)
+  onDark: 'border-hero-text hover:bg-hero-text group',
 }
 
 const iconVariantStyles = {
@@ -22,7 +22,7 @@ const iconVariantStyles = {
   accent:
     '[&>path]:stroke-on-accent [&>path]:transition [&>path]:duration-300',
   onDark:
-    '[&>path]:stroke-on-dark group-hover:[&>path]:stroke-on-accent [&>path]:transition [&>path]:duration-300',
+    '[&>path]:stroke-hero-text group-hover:[&>path]:stroke-on-accent [&>path]:transition [&>path]:duration-300',
 }
 
 const SliderButton = ({ className, direction = 'left', variant = 'default', disabled = false, onClick }: ISliderButtonProps) => {

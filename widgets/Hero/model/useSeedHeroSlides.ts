@@ -19,6 +19,8 @@ export function projectsToSlides(projects: Project[]): IHeroSlide[] {
   return projects.map((p, i) => ({
     id: i + 1,
     activity: p.activity.title,
+    activityColor: p.activity.color,
+    activitySlug: p.activity.slug,
     area: p.area ? `${p.area.toLocaleString('ru-RU')} м²` : '',
     city: p.city ?? '',
     title: p.title,

@@ -14,6 +14,7 @@ interface IContactProps {
   isBorderTopDisabled?: boolean
   isMarginTopDisabled?: boolean
   prefillMessage?: string
+  prefillObjectType?: string
 }
 
 const Contact = ({
@@ -22,8 +23,14 @@ const Contact = ({
   isBorderTopDisabled = false,
   isMarginTopDisabled = false,
   prefillMessage,
+  prefillObjectType,
 }: IContactProps) => {
   const { sectionRef, labelRef, titleRef, subtitleRef, buttonsRef, arrowRef, linksRef } = useContactAnimation()
+
+  const contactParams = new URLSearchParams()
+  if (prefillMessage) contactParams.set('message', prefillMessage)
+  if (prefillObjectType) contactParams.set('objectType', prefillObjectType)
+  const contactHref = contactParams.toString() ? `/contacts?${contactParams}` : '/contacts'
 
   return (
     <section
@@ -49,11 +56,7 @@ const Contact = ({
           <div ref={buttonsRef} className='flex max-md:flex-col gap-[.938rem] mt-[1.75rem]'>
             <Button
               style='accent'
-              href={
-                prefillMessage
-                  ? `/contacts?message=${encodeURIComponent(prefillMessage)}`
-                  : '/contacts'
-              }
+              href={contactHref}
             >
               {isSimilarProject ? 'Обсудить похожий проект' : 'Обсудить проект'}
             </Button>

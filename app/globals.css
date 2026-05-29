@@ -70,6 +70,30 @@ input:focus {
   /* инверсия тёмного баннера хеда категории в светлой теме (светлый фон,
      цвета сохраняются за счёт hue-rotate) */
   --activity-head-filter: invert(1) hue-rotate(180deg);
+
+  /* текст/градиент/маска поверх hero-изображений. В светлой теме маска
+     инвертируется в белую засветку, текст становится тёмным. */
+  --hero-text: rgba(17, 21, 23, 1);
+  --hero-text-muted: rgba(60, 62, 72, 1);
+  --hero-gradient: linear-gradient(
+    90deg,
+    rgba(17, 21, 23, 1) 0%,
+    rgba(17, 21, 23, 1) 100%
+  );
+  /* маска/засветка поверх изображений (hero + OurMission). В светлой теме
+     маска инвертируется в белую засветку. */
+  --hero-mask-filter: invert(1);
+  --hero-mobile-overlay: rgba(246, 246, 246, 0.6);
+  --hero-line: rgba(58, 60, 63, 0.4);
+
+  /* текст/градиент поверх изображений (OurMission) — тёмный в светлой теме */
+  --on-dark: rgba(17, 21, 23, 1);
+  --on-dark-muted: rgba(60, 62, 72, 1);
+  --gradient-on-dark: linear-gradient(
+    90deg,
+    rgba(17, 21, 23, 1) 0%,
+    rgba(17, 21, 23, 1) 100%
+  );
 }
 
 :root[data-theme='dark'] {
@@ -109,6 +133,25 @@ input:focus {
   --map-chrome-filter: invert(0.88) hue-rotate(180deg) saturate(0.4)
     brightness(0.95);
   --activity-head-filter: none;
+
+  --hero-text: rgba(246, 246, 246, 1);
+  --hero-text-muted: rgba(192, 194, 204, 1);
+  --hero-gradient: linear-gradient(
+    90deg,
+    rgba(246, 246, 246, 1) 0%,
+    rgba(246, 246, 246, 1) 100%
+  );
+  --hero-mask-filter: none;
+  --hero-mobile-overlay: rgba(17, 21, 23, 0.6);
+  --hero-line: rgba(197, 199, 202, 0.4);
+
+  --on-dark: rgba(246, 246, 246, 1);
+  --on-dark-muted: rgba(192, 194, 204, 1);
+  --gradient-on-dark: linear-gradient(
+    90deg,
+    rgba(246, 246, 246, 1) 0%,
+    rgba(246, 246, 246, 1) 100%
+  );
 }
 
 @theme inline {
@@ -132,20 +175,14 @@ input:focus {
 
   --color-gradient-white-gray-horizontal: var(--gradient-white-gray-horizontal);
 
-  /* для текста/обводок поверх тёмных hero-изображений: остаётся светлым */
-  --color-on-dark: rgba(246, 246, 246, 1);
-  --color-on-dark-muted: rgba(192, 194, 204, 1);
-  /* градиент тайтлов поверх тёмных изображений — временно сплошной белый
-  --color-gradient-on-dark: linear-gradient(
-    90deg,
-    rgba(246, 246, 246, 1) 0%,
-    rgba(144, 144, 144, 1) 100%
-  ); */
-  --color-gradient-on-dark: linear-gradient(
-    90deg,
-    rgba(246, 246, 246, 1) 0%,
-    rgba(246, 246, 246, 1) 100%
-  );
+  /* hero — тема-зависимый текст/обводки поверх изображения слайдера */
+  --color-hero-text: var(--hero-text);
+  --color-hero-text-muted: var(--hero-text-muted);
+
+  /* текст/обводки/градиент поверх изображений (OurMission) — тема-зависимы */
+  --color-on-dark: var(--on-dark);
+  --color-on-dark-muted: var(--on-dark-muted);
+  --color-gradient-on-dark: var(--gradient-on-dark);
 
   --color-on-accent: var(--on-accent);
   --color-contact-arrow: var(--contact-arrow);

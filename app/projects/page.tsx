@@ -73,6 +73,7 @@ export default async function ProjectsPage(props: {
     })
     const items = flat?.items ?? []
     const totalPages = flat?.pagination.totalPages ?? 1
+    const filterType = filterTypeSlug ? categories.find((c) => c.slug === filterTypeSlug) : undefined
 
     return (
       <div>
@@ -84,7 +85,15 @@ export default async function ProjectsPage(props: {
           activitySlug={filterTypeSlug}
           pageSize={PAGE_SIZE}
         />
-        <Contact isBorderTopDisabled={true} />
+        <Contact
+          isBorderTopDisabled={true}
+          prefillObjectType={filterType?.slug}
+          prefillMessage={
+            filterType
+              ? `Здравствуйте! Меня заинтересовало направление «${filterType.title}». Хотелось бы обсудить проект.`
+              : undefined
+          }
+        />
       </div>
     )
   }

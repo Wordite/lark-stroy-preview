@@ -64,6 +64,7 @@ export default async function ActivityPage({
         isBorderTopDisabled={true}
         isSimilarProject={true}
         prefillMessage={`Здравствуйте! Меня заинтересовало направление «${activity.title}». Хотелось бы обсудить проект.`}
+        prefillObjectType={activity.slug}
       />
     </div>
   )

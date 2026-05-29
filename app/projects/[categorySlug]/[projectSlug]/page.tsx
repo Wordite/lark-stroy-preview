@@ -48,7 +48,12 @@ export default async function ProjectPage({
     <div>
       <ProjectHead project={project} />
       <ProjectDescription project={project} />
-      <Contact isSimilarProject={true} isMarginTopDisabled={true} prefillMessage={prefillMessage} />
+      <Contact
+        isSimilarProject={true}
+        isMarginTopDisabled={true}
+        prefillMessage={prefillMessage}
+        prefillObjectType={project.activity.slug}
+      />
     </div>
   )
 }

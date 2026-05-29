@@ -66,7 +66,7 @@ const OurMission = ({ block }: IOurMissionProps) => {
 
   return (
     <section ref={sectionRef} className='min-h-screen max-h-screen overflow-y-clip flex flex-col max-md:min-h-0 max-md:max-h-none max-md:overflow-visible'>
-      <Separator isFullscreen={true} onDark={true} />
+      <Separator isFullscreen={true} />
 
       <Image
         src={ourMissionPlacaholderImage}
@@ -76,10 +76,11 @@ const OurMission = ({ block }: IOurMissionProps) => {
       <Image
         src={ourMissonMaskImage}
         alt='bg mask'
-        className='absolute left-0 w-screen h-screen -z-40 object-cover max-md:hidden'
+        className='absolute left-0 w-screen h-screen -z-40 object-cover max-md:hidden [filter:var(--hero-mask-filter)]'
       />
-      {/* На мобильных вместо картинки-маски — простое затемнение фоновой картинки */}
-      <div className='hidden max-md:block absolute left-0 w-screen h-screen -z-[45] bg-[rgba(17,21,23,0.6)]' />
+      {/* На мобильных вместо картинки-маски — засветка фоновой картинки (тёмная
+          в тёмной теме, светлая в светлой) */}
+      <div className='hidden max-md:block absolute left-0 w-screen h-screen -z-[45] bg-[var(--hero-mobile-overlay)]' />
 
       <h3
         ref={titleRef}
@@ -93,7 +94,7 @@ const OurMission = ({ block }: IOurMissionProps) => {
       </p>
 
       <div ref={missionBlockRef} className='h-[20.688rem] mt-auto flex items-center relative max-md:flex-col max-md:items-stretch max-md:h-auto max-md:mt-[3rem] max-md:py-[2rem] max-md:gap-[2rem]'>
-        <div className='w-screen border-t-[.063rem] border-[rgba(197,199,202,0.4)] h-[20.688rem] backdrop-blur-[.625rem] -z-20 bg-[rgba(22,27,31,0.7)] absolute top-0 -left-(--container-offset) max-md:h-full' />
+        <div className='w-screen border-t-[.063rem] border-light-gray-tranpsparent-40 h-[20.688rem] backdrop-blur-[.625rem] -z-20 bg-black-transparent absolute top-0 -left-(--container-offset) max-md:h-full' />
 
         <div className='w-[43.125rem] max-md:w-full'>
           <h3
@@ -108,7 +109,7 @@ const OurMission = ({ block }: IOurMissionProps) => {
           </p>
         </div>
 
-        <Separator className='ml-[2.188rem] translate-y-px max-md:hidden' height='20.688rem' isVertical={true} onDark={true} />
+        <Separator className='ml-[2.188rem] translate-y-px max-md:hidden' height='20.688rem' isVertical={true} />
 
         <div ref={statsRef} className='ml-[3.75rem] max-md:ml-0 flex-1 min-w-0 grid grid-cols-2 gap-y-[1.5rem] gap-x-[4.625rem] max-md:gap-x-[1.5rem]'>
           {stats.map((stat, i) => (

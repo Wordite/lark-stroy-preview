@@ -74,6 +74,10 @@ const ContactForm = () => {
 
   const searchParams = useSearchParams()
   const prefillMessage = searchParams.get('message') ?? ''
+  const rawObjectType = searchParams.get('objectType') ?? ''
+  const prefillObjectType = OBJECT_TYPE_OPTIONS.some((o) => o.value === rawObjectType)
+    ? rawObjectType
+    : ''
 
   const {
     register,
@@ -84,7 +88,7 @@ const ContactForm = () => {
     formState: { errors, isSubmitting },
   } = useForm<IContactFormValues>({
     resolver: yupResolver(contactFormSchema),
-    defaultValues: { ...DEFAULT_VALUES, message: prefillMessage },
+    defaultValues: { ...DEFAULT_VALUES, message: prefillMessage, objectType: prefillObjectType },
     mode: 'onSubmit',
     reValidateMode: 'onChange',
   })
@@ -92,6 +96,10 @@ const ContactForm = () => {
   useEffect(() => {
     if (prefillMessage) setValue('message', prefillMessage)
   }, [prefillMessage, setValue])
+
+  useEffect(() => {
+    if (prefillObjectType) setValue('objectType', prefillObjectType)
+  }, [prefillObjectType, setValue])
 
   const { state: submitState, submit } = useContactFormSubmit(() => reset(DEFAULT_VALUES))
 

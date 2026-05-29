@@ -51,7 +51,12 @@ export default async function ServiceDetailPage({
         }
         slides={slides}
       />
-      <Contact isUnderLongerSlider={true} isBorderTopDisabled={true} />
+      <Contact
+        isUnderLongerSlider={true}
+        isBorderTopDisabled={true}
+        prefillMessage={`Здравствуйте! Меня заинтересовало направление «${page.title}». Хотелось бы обсудить проект.`}
+        prefillObjectType={page.slug}
+      />
     </div>
   )
 }
