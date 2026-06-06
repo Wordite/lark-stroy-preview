@@ -96,7 +96,7 @@ const Map = ({ points }: MapProps = {}) => {
                 href={activePoint.href}
                 className='mt-[1rem] inline-flex items-center gap-[.5rem] text-[.875rem] font-medium text-accent hover:text-text-white transition-colors duration-300 cursor-pointer'
               >
-                Посмотреть
+                Посмотреть проект
                 <DiagonalArrowIcon className='w-[.875rem] h-[.875rem] [&_path]:fill-accent [&_rect]:fill-accent' />
               </Link>
             )}
