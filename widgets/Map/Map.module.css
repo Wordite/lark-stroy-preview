@@ -30,29 +30,32 @@
 }
 
 .landmarkDot {
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: var(--journey-pin-shadow);
-}
-
-.landmarkDot::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 42%;
-  height: 42%;
-  border-radius: 9999px;
   background: #5b8def;
-  opacity: 0.5;
-  transition: opacity 0.2s ease;
+  box-shadow: 0 0 0 0.16rem rgba(255, 255, 255, 0.95), 0 0.15rem 0.5rem rgba(0, 0, 0, 0.4);
 }
 
-.landmark:hover .landmarkDot::after {
-  opacity: 1;
+.landmark:hover .landmarkDot {
+  background: #3f73e0;
 }
 
 .landmarkTip {
   box-shadow: var(--journey-pin-shadow);
+}
+
+/* Быстрый дискретный fade карточки при смене города (не scrub) */
+@keyframes cardSwapIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cardSwap {
+  animation: cardSwapIn 0.3s ease-out;
 }
 
 .titleWrap {

@@ -77,8 +77,23 @@ export const JOURNEY: IJourneyCity[] = [
   },
 ]
 
-// Дополнительные города — второстепенные точки без карточки. Не входят в
-// маршрут, показывают только название во всплывающей подсказке при наведении.
+// Главные города-метки (стиль City-пилюли), но НЕ кликабельные и без карточки.
+// Появляются после завершения скролл-анимации маршрута.
+export interface IMapPin {
+  id: string
+  name: string
+  x: number
+  y: number
+}
+
+export const MAIN_CITIES: IMapPin[] = [
+  { id: 'bahchisaray', name: 'Бахчисарай', x: 35, y: 76 },
+  { id: 'feodosiya', name: 'Феодосия', x: 72, y: 61 },
+  { id: 'dzhankoy', name: 'Джанкой', x: 50, y: 28 },
+]
+
+// Дополнительные точки без карточки. Не входят в маршрут, показывают только
+// название во всплывающей подсказке при наведении.
 export interface ILandmark {
   id: string
   name: string
@@ -90,7 +105,6 @@ export const LANDMARKS: ILandmark[] = [
   { id: 'artek', name: 'Артек', x: 44, y: 91 },
   { id: 'alushta', name: 'Алушта', x: 50, y: 80 },
   { id: 'saki', name: 'Саки', x: 29, y: 62 },
-  { id: 'bahchisaray', name: 'Бахчисарай', x: 35, y: 76 },
   { id: 'trudovoe', name: 'Трудовое', x: 43, y: 63 },
   { id: 'znamenka', name: 'Знаменка', x: 49, y: 36 },
 ]

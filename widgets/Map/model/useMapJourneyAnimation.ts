@@ -30,9 +30,14 @@ const panTo = (i: number) => ({
   force3D: true,
 })
 
-export const useMapJourneyAnimation = () => {
+// onActive — единственный источник правды о видимой карточке. Таймлайн зовёт его
+// по ходу скролла (показать карточку i / скрыть = null); клики по городам зовут
+// его же. Поэтому карточка всегда максимум одна.
+export const useMapJourneyAnimation = (onActive: (index: number | null) => void) => {
   const sectionRef = useRef<HTMLElement>(null)
   const pinRef = useRef<HTMLDivElement>(null)
+  const onActiveRef = useRef(onActive)
+  onActiveRef.current = onActive
 
   useIsomorphicLayoutEffect(() => {
     if (!sectionRef.current) return
@@ -44,7 +49,7 @@ export const useMapJourneyAnimation = () => {
       const box = q('[data-map-box]')[0]
       const pins = q('[data-city-pin]')
       const pills = q('[data-city-pill]')
-      const cards = q('[data-project-card]')
+      const mainPins = q('[data-main-city]')
 
       const len = mask ? mask.getTotalLength() : TOTAL_LEN
       const offsetAt = (frac: number) => len * (1 - frac)
@@ -54,8 +59,10 @@ export const useMapJourneyAnimation = () => {
       // дополнительно гарантируем через gsap.set
       if (routeVisible) gsap.set(routeVisible, { opacity: 0 })
 
-      // Все карточки: невидимые + pointer-events выключены
-      gsap.set(cards, { opacity: 0, yPercent: 12, pointerEvents: 'none' })
+      // Главные города-метки скрыты до конца анимации
+      gsap.set(mainPins, { opacity: 0 })
+
+      const setCard = (index: number | null) => onActiveRef.current(index)
 
       const build = (withPan: boolean) => {
         const drawDur  = 3
@@ -64,42 +71,24 @@ export const useMapJourneyAnimation = () => {
         const fadeIn   = 0.6
         const hold     = 0.8
         const fadeOut  = 0.6
-        const cycleDur = panDur + fadeIn + hold + fadeOut
-
-        const totalDur = drawDur + gap + JOURNEY.length * cycleDur
-
-        const snapPoints: number[] = [0]
-        let cursor = drawDur + gap
-
-        for (let i = 0; i < JOURNEY.length; i++) {
-          snapPoints.push(cursor / totalDur)
-          cursor += panDur
-          snapPoints.push((cursor + fadeIn) / totalDur)
-          snapPoints.push((cursor + fadeIn + hold) / totalDur)
-          snapPoints.push((cursor + fadeIn + hold + fadeOut) / totalDur)
-          cursor += fadeIn + hold + fadeOut
-        }
-        snapPoints.push(1)
+        const mainFade = 0.6
+        const endHold  = 3 // «пустое» пространство в конце: всё показано, можно кликать
 
         const tl = gsap.timeline({
           defaults: { ease: 'none' },
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top top',
-            end: '+=620%',
+            end: '+=760%',
             pin: pinRef.current,
             scrub: 0.4,
             anticipatePin: 1,
             invalidateOnRefresh: true,
-            snap: {
-              snapTo: snapPoints,
-              inertia: false,
-              duration: { min: 0.15, max: 0.4 },
-              delay: 0.08,
-              ease: 'power2.inOut',
-            },
           },
         })
+
+        // Карточка скрыта до первого города
+        tl.call(() => setCard(null))
 
         // Фаза 1 — первый пин появляется (чёткий fade без scale), и одновременно
         // показываем пунктир
@@ -118,18 +107,21 @@ export const useMapJourneyAnimation = () => {
         for (let i = 0; i < JOURNEY.length; i++) {
           if (withPan) tl.to(box, { ...panTo(i), duration: panDur })
 
-          tl.to(
-            cards[i],
-            { opacity: 1, yPercent: 0, duration: fadeIn, ease: 'power2.out', pointerEvents: 'auto' },
-            withPan ? '<' : '>',
-          )
+          // Дискретное переключение карточки в точке (без «пустых» промежутков):
+          // карточка i держится, пока скролл не дойдёт до следующего города.
+          tl.call(() => setCard(i), [], withPan ? '<' : '>')
           tl.to(pills[i], { boxShadow: PILL_SHADOW_ACTIVE, duration: fadeIn }, '<')
 
           tl.to({}, { duration: hold })
 
-          tl.to(cards[i], { opacity: 0, yPercent: -12, duration: fadeOut, ease: 'power2.in', pointerEvents: 'none' })
-          tl.to(pills[i], { boxShadow: PILL_SHADOW, duration: fadeOut }, '<')
+          // Снимаем подсветку пилюли (карточку НЕ прячем — сменится на следующую)
+          tl.to(pills[i], { boxShadow: PILL_SHADOW, duration: fadeOut })
         }
+
+        // После завершения маршрута проявляем главные города-метки
+        if (mainPins.length) tl.to(mainPins, { opacity: 1, duration: mainFade, ease: 'power2.out' })
+        // Пустой хвост — карта стоит, всё показано, можно покликать по городам
+        tl.to({}, { duration: endHold })
       }
 
       const mm = gsap.matchMedia()

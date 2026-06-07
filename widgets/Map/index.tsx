@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { Separator } from '@/shared/Separator'
 import MapImage from '@/assets/images/map.webp'
 import CrimeaShape from '@/assets/images/crimea.svg'
@@ -7,11 +8,20 @@ import { useMapJourneyAnimation } from './model/useMapJourneyAnimation'
 import { City } from './ui/City'
 import { Landmark } from './ui/Landmark'
 import { ProjectCard } from './ui/ProjectCard'
-import { JOURNEY, LANDMARKS, ROUTE_PATH, MAP_IMG_W, MAP_IMG_H } from './model/journey'
+import { JOURNEY, LANDMARKS, MAIN_CITIES, ROUTE_PATH, MAP_IMG_W, MAP_IMG_H } from './model/journey'
 import styles from './Map.module.css'
 
 const Map = () => {
-  const { sectionRef, pinRef } = useMapJourneyAnimation()
+  // active — единственная видимая карточка (null = скрыта). Её двигают и
+  // скролл-анимация (через хук), и клики по городам.
+  const [active, setActive] = useState<number | null>(null)
+  // display держит контент карточки во время fade-out, пока active = null.
+  const [display, setDisplay] = useState(0)
+  const { sectionRef, pinRef } = useMapJourneyAnimation(setActive)
+
+  useEffect(() => {
+    if (active !== null) setDisplay(active)
+  }, [active])
 
   return (
     <section
@@ -79,23 +89,25 @@ const Map = () => {
               <Landmark key={landmark.id} landmark={landmark} />
             ))}
 
-            {JOURNEY.map((city) => (
-              <City key={city.id} city={city} />
+            {JOURNEY.map((city, i) => (
+              <City key={city.id} city={city} onSelect={() => setActive(i)} />
+            ))}
+
+            {MAIN_CITIES.map((city) => (
+              <City key={city.id} city={city} main />
             ))}
           </div>
         </div>
 
-        {/* Враппер карточек — абсолютно на всю ширину секции */}
-        <div className='absolute z-50 bottom-[3.5rem] pointer-events-none left-(--container-offset) w-[21rem] max-md:inset-x-0 max-md:bottom-[2.75rem] max-md:w-auto'>
-          {JOURNEY.map((city) => (
-            <div
-              key={city.id}
-              data-project-card
-              className='absolute bottom-0 left-0 w-full opacity-0 max-md:px-(--container-offset)'
-            >
-              <ProjectCard city={city} />
+        {/* Единственная карточка — её контент определяет display, видимость — active */}
+        <div className='absolute z-50 bottom-[3.5rem] left-(--container-offset) w-[21rem] max-md:inset-x-0 max-md:bottom-[2.75rem] max-md:w-auto max-md:px-(--container-offset)'>
+          <div
+            className={`transition-opacity duration-300 ${active !== null ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+          >
+            <div key={display} className={styles.cardSwap}>
+              <ProjectCard city={JOURNEY[display]} />
             </div>
-          ))}
+          </div>
         </div>
       </div>
 
