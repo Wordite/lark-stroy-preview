@@ -1,134 +1,97 @@
 'use client'
 
-import Link from 'next/link'
-import { useEffect, useRef } from 'react'
-import { useYandexMap } from './model/useYandexMap'
 import { Separator } from '@/shared/Separator'
-import { SelectDropdown } from '@/shared/SelectDropdown'
-import DiagonalArrowIcon from '@/assets/icons/arrow_diagonal.svg'
+import MapImage from '@/assets/images/map.webp'
+import CrimeaShape from '@/assets/images/crimea.svg'
+import { useMapJourneyAnimation } from './model/useMapJourneyAnimation'
+import { City } from './ui/City'
+import { ProjectCard } from './ui/ProjectCard'
+import { JOURNEY, ROUTE_PATH, MAP_IMG_W, MAP_IMG_H } from './model/journey'
 import styles from './Map.module.css'
 
-interface MapProps {
-  points?: import('@/services/types').MapPoint[]
-}
-
-const Map = ({ points }: MapProps = {}) => {
-  const {
-    mapContainerRef,
-    sectionRef,
-    infoRef,
-    activePoint,
-    setActivePoint,
-    activities,
-    selectedActivity,
-    setSelectedActivity,
-    zoomIn,
-    zoomOut,
-  } = useYandexMap(points)
-
-  const activityOptions = activities.map((a) => ({ value: a.slug, label: a.title }))
-
-  const tooltipRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (!activePoint) return
-    const handler = (e: PointerEvent) => {
-      const t = e.target as Node | null
-      if (tooltipRef.current && t && tooltipRef.current.contains(t)) return
-      // Don't dismiss when the user is clicking another map placemark — Yandex
-      // will swap activePoint via the map's click handler anyway.
-      setActivePoint(null)
-    }
-    // Use capture so it fires before any internal map handlers that stopPropagation.
-    document.addEventListener('pointerdown', handler, true)
-    return () => document.removeEventListener('pointerdown', handler, true)
-  }, [activePoint, setActivePoint])
+const Map = () => {
+  const { sectionRef, pinRef } = useMapJourneyAnimation()
 
   return (
-    <section ref={sectionRef} className='w-screen -translate-x-(--container-offset) h-screen max-h-screen max-md:h-[60vh] max-md:max-h-[60vh] overflow-y-clip relative'>
-      {/* Map. Скрипт ymaps грузится из useYandexMap руками, чтобы при возврате
-          на главную страницу карта поднималась с нуля (next/script дедуплицирует
-          и кешит window.ymaps, из-за чего на revisit ломалась смена категорий). */}
-      <div ref={mapContainerRef} className={`absolute inset-0 ${styles.mapContainer}`} />
-
-      {/* Info overlay */}
-      <div ref={infoRef} className='absolute top-[5rem] right-(--container-offset) z-10 flex flex-col items-end text-right max-md:top-[1.25rem]'>
-        <h3 className='text-[2.75rem] max-md:text-[1.875rem] font-black text-transparent bg-clip-text bg-(image:--color-gradient-white-gray-horizontal) leading-[1.2em] whitespace-nowrap max-md:whitespace-normal'>
-          География объектов
-        </h3>
-        <p className='text-[1.125rem] mt-[.5rem] text-subtext'>
-          Наши объекты
-          <br />в Республике Крым
-        </p>
-
-        {activityOptions.length > 0 && (
-          <SelectDropdown
-            compact
-            options={activityOptions}
-            value={selectedActivity}
-            onChange={setSelectedActivity}
-            className='mt-[1.25rem] bg-background/90 backdrop-blur-md'
-          />
-        )}
-      </div>
-
-      {/* Active point tooltip */}
-      {activePoint && (
-        <div
-          ref={tooltipRef}
-          className={`absolute bottom-[3.75rem] left-(--container-offset) z-6000 w-[20rem] bg-background/95 backdrop-blur-xl border border-light-gray-tranpsparent-40 rounded-xl overflow-hidden ${styles.tooltip}`}
-        >
-          <div className='h-[10rem] bg-black-light flex items-center justify-center'>
-            {activePoint.imageUrl ? (
-              <img src={activePoint.imageUrl} alt={activePoint.title} className='w-full h-full object-cover' />
-            ) : (
-              <span className='text-subtext text-[.875rem]'>Фото объекта</span>
-            )}
-          </div>
-
-          <div className='p-[1.25rem]'>
-            <p className='text-[.75rem] uppercase text-accent font-medium tracking-wider'>{activePoint.activity}</p>
-            <h4 className='text-[1.25rem] font-bold text-text-white mt-[.375rem] leading-[1.3em]'>{activePoint.title}</h4>
-            <p className='text-[.875rem] text-subtext mt-[.25rem]'>{activePoint.description}</p>
-
-            {activePoint.href && (
-              <Link
-                href={activePoint.href}
-                className='mt-[1rem] inline-flex items-center gap-[.5rem] text-[.875rem] font-medium text-accent hover:text-text-white transition-colors duration-300 cursor-pointer'
-              >
-                Посмотреть проект
-                <DiagonalArrowIcon className='w-[.875rem] h-[.875rem] [&_path]:fill-accent [&_rect]:fill-accent' />
-              </Link>
-            )}
-          </div>
-
-          <button
-            onClick={() => setActivePoint(null)}
-            className='absolute top-[.625rem] right-[.625rem] w-[1.75rem] h-[1.75rem] flex items-center justify-center rounded-full bg-foreground/10 text-foreground/60 hover:text-foreground transition-colors cursor-pointer'
+    <section
+      ref={sectionRef}
+      className={`${styles.section} w-screen ml-[calc(var(--container-offset)*-1)] relative overflow-clip`}
+    >
+      <div
+        ref={pinRef}
+        className='relative w-full h-screen flex items-center justify-center px-(--container-offset) pt-[7.75rem] pb-[1.5rem] max-md:flex-col max-md:px-0 max-md:pt-0 max-md:pb-[1rem]'
+      >
+        <div className={styles.titleWrap}>
+          <h3
+            className='text-[2.5rem] max-md:text-[2.15625rem] font-black leading-[1.15em] whitespace-nowrap'
+            style={{ color: 'var(--foreground)' }}
           >
-            ✕
-          </button>
+            Путь строителя
+          </h3>
+          <p className='text-[1.125rem] max-md:text-[1.29375rem] mt-[0.5rem] text-subtext'>
+            Республика Крым · 2005–2026
+          </p>
         </div>
-      )}
 
-      {/* Zoom controls */}
-      <div className='absolute bottom-[3.75rem] right-(--container-offset) z-10 flex flex-col gap-[.5rem] max-md:bottom-[1.25rem]'>
-        <button
-          type='button'
-          onClick={zoomIn}
-          aria-label='Приблизить'
-          className='w-[3rem] h-[3rem] flex items-center justify-center border-[.063rem] border-light-gray-tranpsparent-40 bg-background/90 backdrop-blur-md text-foreground text-[1.5rem] leading-none transition-colors duration-200 hover:border-accent hover:text-accent cursor-pointer'
-        >
-          +
-        </button>
-        <button
-          type='button'
-          onClick={zoomOut}
-          aria-label='Отдалить'
-          className='w-[3rem] h-[3rem] flex items-center justify-center border-[.063rem] border-light-gray-tranpsparent-40 bg-background/90 backdrop-blur-md text-foreground text-[1.5rem] leading-none transition-colors duration-200 hover:border-accent hover:text-accent cursor-pointer'
-        >
-          −
-        </button>
+        <div className='relative w-full max-w-[65rem] aspect-[1496/882] flex items-center justify-center max-md:max-w-none max-md:aspect-auto max-md:flex-1 max-md:overflow-hidden'>
+          <div data-map-box className='relative w-full aspect-[1496/882] max-md:will-change-transform'>
+            <CrimeaShape className={styles.mapShape} aria-hidden preserveAspectRatio='xMidYMid meet' />
+            <img
+              className={`${styles.mapImage} w-full h-full object-contain pointer-events-none select-none`}
+              src={MapImage.src}
+              alt='Карта объектов в Крыму'
+            />
+
+            <svg
+              viewBox={`0 0 ${MAP_IMG_W} ${MAP_IMG_H}`}
+              className='absolute inset-0 z-[2] w-full h-full pointer-events-none overflow-visible'
+            >
+              <defs>
+                <mask id='routeReveal' maskUnits='userSpaceOnUse' x='0' y='0' width={MAP_IMG_W} height={MAP_IMG_H}>
+                  <path
+                    data-route-mask
+                    d={ROUTE_PATH}
+                    fill='none'
+                    stroke='#fff'
+                    strokeWidth={28}
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    style={{ strokeDasharray: 100000, strokeDashoffset: 100000 }}
+                  />
+                </mask>
+              </defs>
+              <path
+                data-route-visible
+                d={ROUTE_PATH}
+                fill='none'
+                stroke='#5b8def'
+                strokeWidth={5}
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeDasharray='2 20'
+                mask='url(#routeReveal)'
+                style={{ opacity: 0 }}
+              />
+            </svg>
+
+            {JOURNEY.map((city) => (
+              <City key={city.id} city={city} />
+            ))}
+          </div>
+        </div>
+
+        {/* Враппер карточек — абсолютно на всю ширину секции */}
+        <div className='absolute z-50 bottom-[3.5rem] pointer-events-none left-(--container-offset) w-[21rem] max-md:inset-x-0 max-md:bottom-[2rem] max-md:w-auto'>
+          {JOURNEY.map((city) => (
+            <div
+              key={city.id}
+              data-project-card
+              className='absolute bottom-0 left-0 w-full opacity-0 max-md:px-(--container-offset)'
+            >
+              <ProjectCard city={city} />
+            </div>
+          ))}
+        </div>
       </div>
 
       <Separator className='absolute bottom-0 left-0 translate-x-0' isFullscreen={true} />

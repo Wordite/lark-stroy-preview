@@ -1,85 +1,66 @@
-/* Фильтр тайлов задаётся темой через --map-tiles-filter: в тёмной теме
-   инверсия превращает светлые тайлы Яндекса в тёмные, в светлой —
-   лёгкая коррекция без инверсии, чтобы карта оставалась светлой. */
-.mapContainer :global([class*="ground-pane"]) {
-  filter: var(--map-tiles-filter);
+.section {
+  background: var(--journey-section-bg);
 }
 
-/* Yandex chrome (©, ToS, "Яндекс.Карты", "Открыть в Яндекс.Картах",
-   "Создать свою карту") — pin everything to the bottom-right corner and
-   tint with an inverted/desaturated filter so the white badges stop
-   fighting with the dark site palette. */
-.mapContainer :global([class*="copyrights-pane"]),
-.mapContainer :global([class*="copyrights-promo"]),
-.mapContainer :global([class*="map-copyrights-promo"]) {
-  right: auto !important;
-  left: 8px !important;
-  filter: var(--map-chrome-filter);
-  opacity: 0.55;
-  pointer-events: auto;
-  transition: opacity 0.2s ease;
+.mapShape {
+  position: absolute;
+  left: 50%;
+  top: -5%;
+  z-index: 0;
+  width: 110%;
+  height: 110%;
+  transform: translateX(-50%);
+  color: var(--journey-map-shape-bg);
+  pointer-events: none;
 }
 
-/* Stack vertically: promo block above the copyright row. */
-.mapContainer :global([class*="copyrights-pane"]) {
-  bottom: 6px !important;
-  transform: scale(0.8);
-  transform-origin: bottom left;
+.mapImage {
+  position: relative;
+  z-index: 1;
+  filter: var(--journey-map-filter);
 }
 
-.mapContainer :global([class*="copyrights-promo"]),
-.mapContainer :global([class*="map-copyrights-promo"]) {
-  bottom: 28px !important;
-  transform: scale(0.8);
-  transform-origin: bottom left;
+.cityPin {
+  box-shadow: var(--journey-pin-shadow);
 }
 
-.mapContainer :global([class*="copyrights-pane"]) *,
-.mapContainer :global([class*="copyrights-promo"]) *,
-.mapContainer :global([class*="map-copyrights-promo"]) * {
-  font-size: 10px !important;
-  line-height: 1.2 !important;
+.titleWrap {
+  position: absolute;
+  top: 7.5rem;
+  right: var(--container-offset);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
 }
 
-.mapContainer :global([class*="copyrights-pane"]):hover,
-.mapContainer :global([class*="copyrights-promo"]):hover,
-.mapContainer :global([class*="map-copyrights-promo"]):hover {
-  opacity: 0.95;
-}
-
-/* Hide only the scale line — purely decorative, doesn't affect ToS compliance. */
-.mapContainer :global([class*="scaleline"]) {
-  display: none !important;
-}
-
-.tooltip {
-  animation: tooltipIn 0.3s ease-out;
-}
-
-@keyframes tooltipIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+@media (max-width: 767px) {
+  .titleWrap {
+    left: 0;
+    right: 0;
+    top: 0;
+    align-items: center;
+    text-align: center;
+    padding: 8rem var(--container-offset) 1.5rem;
+    background: none;
+    position: absolute;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-.exitPulse {
-  border-color: var(--accent);
-  animation: exitPulseBorder 2.2s ease-in-out infinite;
-}
-
-@keyframes exitPulseBorder {
-  0%,
-  100% {
-    border-color: rgba(243, 188, 24, 0.55);
-    box-shadow: 0 0 0 0 rgba(243, 188, 24, 0.25);
-  }
-  50% {
-    border-color: rgba(243, 188, 24, 1);
-    box-shadow: 0 0 0 4px rgba(243, 188, 24, 0);
+  .titleWrap::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 17rem;
+    background: linear-gradient(
+      to bottom,
+      var(--journey-section-bg-solid) 0%,
+      var(--journey-section-bg-solid) 38%,
+      var(--journey-title-fade) 100%
+    );
+    z-index: -1;
+    pointer-events: none;
   }
 }
