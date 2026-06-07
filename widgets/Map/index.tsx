@@ -5,8 +5,9 @@ import MapImage from '@/assets/images/map.webp'
 import CrimeaShape from '@/assets/images/crimea.svg'
 import { useMapJourneyAnimation } from './model/useMapJourneyAnimation'
 import { City } from './ui/City'
+import { Landmark } from './ui/Landmark'
 import { ProjectCard } from './ui/ProjectCard'
-import { JOURNEY, ROUTE_PATH, MAP_IMG_W, MAP_IMG_H } from './model/journey'
+import { JOURNEY, LANDMARKS, ROUTE_PATH, MAP_IMG_W, MAP_IMG_H } from './model/journey'
 import styles from './Map.module.css'
 
 const Map = () => {
@@ -73,6 +74,10 @@ const Map = () => {
                 style={{ opacity: 0 }}
               />
             </svg>
+
+            {LANDMARKS.map((landmark) => (
+              <Landmark key={landmark.id} landmark={landmark} />
+            ))}
 
             {JOURNEY.map((city) => (
               <City key={city.id} city={city} />

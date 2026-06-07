@@ -24,7 +24,8 @@ export const JOURNEY: IJourneyCity[] = [
     name: 'Партенит',
     period: '2005–2006',
     description: 'Санаторий Минобороны и генеральские корпуса у Медведь-горы',
-    href: '/projects',
+    href: '/projects/public/kurortnyy-kompleks-partenit-public-01',
+    image: '/projects/kurortnyy-kompleks-partenit-public-01-1-1200x800.jpg',
     x: 48,
     y: 88,
   },
@@ -33,7 +34,7 @@ export const JOURNEY: IJourneyCity[] = [
     name: 'Симферополь',
     period: '2010',
     description: 'Капитальный ремонт здания МРЭО ГАИ, ул. Узловая 12',
-    href: '/projects',
+    href: '/projects/public/mreo-gai-simferopol-public-01',
     x: 40,
     y: 68,
   },
@@ -41,8 +42,9 @@ export const JOURNEY: IJourneyCity[] = [
     id: 'evpatoria',
     name: 'Евпатория',
     period: '2011–2014',
-    description: 'Гостиница «Украина» и спорткомплекс «Арена Крым»',
-    href: '/projects',
+    description: 'Гостиница «Украина» и спорткомплекс «Арена Крым» (футбольные поля)',
+    href: '/projects/public/sportivnyy-kompleks-arena-krym-public-01',
+    image: '/projects/sportivnyy-kompleks-arena-krym-public-01-1-1200x800.jpg',
     x: 21,
     y: 56,
   },
@@ -51,7 +53,7 @@ export const JOURNEY: IJourneyCity[] = [
     name: 'Ялта',
     period: '2015–2018',
     description: 'Два элитных коттеджа на улице Щорса',
-    href: '/projects',
+    href: '/projects/commercial/kottedzhi-shchorsa-yalta-commercial-01',
     x: 40,
     y: 92,
   },
@@ -60,7 +62,7 @@ export const JOURNEY: IJourneyCity[] = [
     name: 'Судак',
     period: '2020–2021',
     description: 'Производственный цех винзавода «Солнечная долина»',
-    href: '/projects',
+    href: '/projects/manufacture/vinzavod-solnechnaya-dolina-manufacture-01',
     x: 63,
     y: 73,
   },
@@ -69,10 +71,28 @@ export const JOURNEY: IJourneyCity[] = [
     name: 'Керчь',
     period: '2026',
     description: 'Реконструкция здания службы безопасности РЖД',
-    href: '/projects',
+    href: '/projects/public/zdanie-rzhd-kerch-public-01',
     x: 93,
     y: 45,
   },
+]
+
+// Дополнительные города — второстепенные точки без карточки. Не входят в
+// маршрут, показывают только название во всплывающей подсказке при наведении.
+export interface ILandmark {
+  id: string
+  name: string
+  x: number
+  y: number
+}
+
+export const LANDMARKS: ILandmark[] = [
+  { id: 'artek', name: 'Артек', x: 44, y: 91 },
+  { id: 'alushta', name: 'Алушта', x: 50, y: 80 },
+  { id: 'saki', name: 'Саки', x: 29, y: 62 },
+  { id: 'bahchisaray', name: 'Бахчисарай', x: 35, y: 76 },
+  { id: 'trudovoe', name: 'Трудовое', x: 43, y: 63 },
+  { id: 'znamenka', name: 'Знаменка', x: 49, y: 36 },
 ]
 
 export const ROUTE_POINTS = JOURNEY.map((c) => ({

@@ -33,6 +33,19 @@ const ThemeToggle = ({ className, label }: IThemeToggleProps = {}) => {
     setMounted(true)
   }, [])
 
+  // Синхронизация темы между вкладками: ловим изменение localStorage из других
+  // вкладок и применяем тему здесь.
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key !== STORAGE_KEY || !e.newValue) return
+      const next: Theme = e.newValue === 'dark' ? 'dark' : 'light'
+      setTheme(next)
+      applyTheme(next)
+    }
+    window.addEventListener('storage', onStorage)
+    return () => window.removeEventListener('storage', onStorage)
+  }, [])
+
   const toggle = () => {
     const next: Theme = theme === 'dark' ? 'light' : 'dark'
     setTheme(next)

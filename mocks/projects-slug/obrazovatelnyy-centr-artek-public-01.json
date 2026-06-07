@@ -10,7 +10,7 @@
   "address": "Республика Крым, Гурзуф",
   "latitude": 44.5529,
   "longitude": 34.2878,
-  "completedAt": "2024-11-20T00:00:00.000Z",
+  "completedAt": "2008-09-01T00:00:00.000Z",
   "characteristics": [
     {
       "key": "Назначение",
@@ -34,7 +34,7 @@
     },
     {
       "key": "Год сдачи",
-      "value": "2024"
+      "value": "2008"
     }
   ],
   "published": true,
