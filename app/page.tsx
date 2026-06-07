@@ -28,17 +28,16 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const [activities, home, mapPoints] = await Promise.all([
+  const [activities, home] = await Promise.all([
     fetchActivities(),
     fetchHomeContent(),
-    fetchMapPoints(),
   ])
 
   return (
     <div>
       <Hero block={home?.hero} />
       <OurMission block={home?.our_mission} />
-      <Map points={mapPoints ?? []} />
+      <Map />
       <Activities activities={activities ?? []} />
       <WhatWeBuild block={home?.what_we_build} />
       <BeforeAfter block={home?.before_after} />
