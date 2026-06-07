@@ -20,7 +20,7 @@ const Map = () => {
     >
       <div
         ref={pinRef}
-        className='relative w-full h-screen flex items-center justify-center px-(--container-offset) pt-[7.75rem] pb-[1.5rem] max-md:flex-col max-md:px-0 max-md:pt-0 max-md:pb-[1rem]'
+        className='relative w-full h-dvh flex items-center justify-center px-(--container-offset) pt-[7.75rem] pb-[1.5rem] max-md:flex-col max-md:px-0 max-md:pt-0 max-md:pb-[1rem]'
       >
         <div className={styles.titleWrap}>
           <h3
@@ -35,7 +35,7 @@ const Map = () => {
         </div>
 
         <div className='relative w-full max-w-[65rem] aspect-[1496/882] flex items-center justify-center max-md:max-w-none max-md:aspect-auto max-md:flex-1 max-md:overflow-hidden'>
-          <div data-map-box className='relative w-full aspect-[1496/882] max-md:will-change-transform'>
+          <div data-map-box className='relative w-full aspect-[1496/882] max-md:w-[230%] max-md:shrink-0 max-md:will-change-transform'>
             <CrimeaShape className={styles.mapShape} aria-hidden preserveAspectRatio='xMidYMid meet' />
             <img
               className={`${styles.mapImage} w-full h-full object-contain pointer-events-none select-none`}
@@ -69,7 +69,7 @@ const Map = () => {
                 strokeWidth={5}
                 strokeLinecap='round'
                 strokeLinejoin='round'
-                strokeDasharray='2 20'
+                strokeDasharray='2 12'
                 mask='url(#routeReveal)'
                 style={{ opacity: 0 }}
               />
@@ -86,7 +86,7 @@ const Map = () => {
         </div>
 
         {/* Враппер карточек — абсолютно на всю ширину секции */}
-        <div className='absolute z-50 bottom-[3.5rem] pointer-events-none left-(--container-offset) w-[21rem] max-md:inset-x-0 max-md:bottom-[2rem] max-md:w-auto'>
+        <div className='absolute z-50 bottom-[3.5rem] pointer-events-none left-(--container-offset) w-[21rem] max-md:inset-x-0 max-md:bottom-[2.75rem] max-md:w-auto'>
           {JOURNEY.map((city) => (
             <div
               key={city.id}

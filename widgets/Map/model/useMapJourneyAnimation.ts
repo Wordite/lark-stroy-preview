@@ -19,11 +19,14 @@ const CUM_LEN = ROUTE_POINTS.map((_, i) => SEGMENTS.slice(0, i).reduce((a, b) =>
 const PILL_SHADOW = '0 0.25rem 1rem rgba(0,0,0,0.35)'
 const PILL_SHADOW_ACTIVE = '0 0 0 0.25rem rgba(91,141,239,0.5), 0 0.5rem 1.5rem rgba(0,0,0,0.45)'
 
-const MOBILE_SCALE = 2.3
+// На мобиле карта крупнее (ширина задаётся в CSS: max-md:w-[230%]) и при скролле
+// панорамируется через translate к нужному городу — без transform: scale, чтобы
+// картинка и пины оставались чёткими. panTo считает смещение как долю уже
+// увеличенного бокса. MOBILE_VERT_BIAS дополнительно опускает карту вниз.
 const MOBILE_VERT_BIAS = 10
 const panTo = (i: number) => ({
-  xPercent: -(JOURNEY[i].x / 100 - 0.5) * MOBILE_SCALE * 100,
-  yPercent: -(JOURNEY[i].y / 100 - 0.5) * MOBILE_SCALE * 100 + MOBILE_VERT_BIAS,
+  xPercent: (0.5 - JOURNEY[i].x / 100) * 100,
+  yPercent: (0.5 - JOURNEY[i].y / 100) * 100 + MOBILE_VERT_BIAS,
   force3D: true,
 })
 
@@ -98,15 +101,16 @@ export const useMapJourneyAnimation = () => {
           },
         })
 
-        // Фаза 1 — первый пин появляется, и одновременно показываем пунктир
-        tl.fromTo(pins[0], { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(1.7)' })
+        // Фаза 1 — первый пин появляется (чёткий fade без scale), и одновременно
+        // показываем пунктир
+        tl.fromTo(pins[0], { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power2.out' })
         if (routeVisible) tl.to(routeVisible, { opacity: 1, duration: 0.01 }, '<')
 
         for (let i = 1; i < ROUTE_POINTS.length; i++) {
           const dur = (SEGMENTS[i - 1] / TOTAL_LEN) * drawDur
           tl.to(mask ?? {}, { strokeDashoffset: offsetAt(CUM_LEN[i] / TOTAL_LEN), duration: dur })
           if (withPan) tl.to(box, { ...panTo(i), duration: dur }, '<')
-          tl.fromTo(pins[i], { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(1.7)' }, '>-0.05')
+          tl.fromTo(pins[i], { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power2.out' }, '>-0.05')
         }
 
         tl.to({}, { duration: gap })
@@ -119,19 +123,21 @@ export const useMapJourneyAnimation = () => {
             { opacity: 1, yPercent: 0, duration: fadeIn, ease: 'power2.out', pointerEvents: 'auto' },
             withPan ? '<' : '>',
           )
-          tl.to(pills[i], { scale: 1.08, boxShadow: PILL_SHADOW_ACTIVE, duration: fadeIn }, '<')
+          tl.to(pills[i], { boxShadow: PILL_SHADOW_ACTIVE, duration: fadeIn }, '<')
 
           tl.to({}, { duration: hold })
 
           tl.to(cards[i], { opacity: 0, yPercent: -12, duration: fadeOut, ease: 'power2.in', pointerEvents: 'none' })
-          tl.to(pills[i], { scale: 1, boxShadow: PILL_SHADOW, duration: fadeOut }, '<')
+          tl.to(pills[i], { boxShadow: PILL_SHADOW, duration: fadeOut }, '<')
         }
       }
 
       const mm = gsap.matchMedia()
+      // Десктоп — карта целиком, без панорамирования.
       mm.add('(min-width: 768px)', () => build(false))
+      // Мобила — карта крупнее (CSS max-md:w-[230%]) и едет к каждому городу.
       mm.add('(max-width: 767px)', () => {
-        gsap.set(box, { transformOrigin: 'center center', scale: MOBILE_SCALE, ...panTo(0) })
+        gsap.set(box, { ...panTo(0) })
         build(true)
       })
     }, sectionRef)
