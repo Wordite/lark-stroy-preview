@@ -84,7 +84,36 @@
     "createdAt": "2026-05-11T23:31:04.154Z",
     "updatedAt": "2026-05-12T06:30:07.861Z"
   },
-  "images": [],
+  "images": [
+    {
+      "id": "map-project-mreo-gai-simferopol-image-0",
+      "mediaId": "map-project-mreo-gai-simferopol-media-0",
+      "order": 0,
+      "isMain": true,
+      "url": "/projects/mfc-briz-public-01-1-1200x800.jpg"
+    },
+    {
+      "id": "map-project-mreo-gai-simferopol-image-1",
+      "mediaId": "map-project-mreo-gai-simferopol-media-1",
+      "order": 1,
+      "isMain": false,
+      "url": "/projects/mfc-briz-public-01-2-1200x800.jpg"
+    },
+    {
+      "id": "map-project-mreo-gai-simferopol-image-2",
+      "mediaId": "map-project-mreo-gai-simferopol-media-2",
+      "order": 2,
+      "isMain": false,
+      "url": "/projects/mfc-briz-public-01-3-1200x800.jpg"
+    },
+    {
+      "id": "map-project-mreo-gai-simferopol-image-3",
+      "mediaId": "map-project-mreo-gai-simferopol-media-3",
+      "order": 3,
+      "isMain": false,
+      "url": "/projects/mfc-briz-public-01-4-1200x800.jpg"
+    }
+  ],
   "previousImage": null,
-  "mainImage": null
+  "mainImage": "/projects/mfc-briz-public-01-1-1200x800.jpg"
 }

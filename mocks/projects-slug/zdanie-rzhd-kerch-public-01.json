@@ -84,7 +84,43 @@
     "createdAt": "2026-05-11T23:31:04.154Z",
     "updatedAt": "2026-05-12T06:30:07.861Z"
   },
-  "images": [],
+  "images": [
+    {
+      "id": "map-project-zdanie-rzhd-kerch-image-0",
+      "mediaId": "map-project-zdanie-rzhd-kerch-media-0",
+      "order": 0,
+      "isMain": true,
+      "url": "/projects/poliklinika-gorizont-public-07-1-1200x800.jpg"
+    },
+    {
+      "id": "map-project-zdanie-rzhd-kerch-image-1",
+      "mediaId": "map-project-zdanie-rzhd-kerch-media-1",
+      "order": 1,
+      "isMain": false,
+      "url": "/projects/poliklinika-gorizont-public-07-2-1200x800.jpg"
+    },
+    {
+      "id": "map-project-zdanie-rzhd-kerch-image-2",
+      "mediaId": "map-project-zdanie-rzhd-kerch-media-2",
+      "order": 2,
+      "isMain": false,
+      "url": "/projects/poliklinika-gorizont-public-07-3-1200x800.jpg"
+    },
+    {
+      "id": "map-project-zdanie-rzhd-kerch-image-3",
+      "mediaId": "map-project-zdanie-rzhd-kerch-media-3",
+      "order": 3,
+      "isMain": false,
+      "url": "/projects/poliklinika-gorizont-public-07-4-1200x800.jpg"
+    },
+    {
+      "id": "map-project-zdanie-rzhd-kerch-image-4",
+      "mediaId": "map-project-zdanie-rzhd-kerch-media-4",
+      "order": 4,
+      "isMain": false,
+      "url": "/projects/poliklinika-gorizont-public-07-5-1200x800.jpg"
+    }
+  ],
   "previousImage": null,
-  "mainImage": null
+  "mainImage": "/projects/poliklinika-gorizont-public-07-1-1200x800.jpg"
 }

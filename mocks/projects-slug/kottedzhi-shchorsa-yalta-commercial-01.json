@@ -84,7 +84,43 @@
     "createdAt": "2026-05-11T23:31:04.144Z",
     "updatedAt": "2026-05-12T06:30:00.835Z"
   },
-  "images": [],
+  "images": [
+    {
+      "id": "map-project-kottedzhi-shchorsa-yalta-image-0",
+      "mediaId": "map-project-kottedzhi-shchorsa-yalta-media-0",
+      "order": 0,
+      "isMain": true,
+      "url": "/projects/gipermarket-vershina-commercial-03-1-1200x800.jpg"
+    },
+    {
+      "id": "map-project-kottedzhi-shchorsa-yalta-image-1",
+      "mediaId": "map-project-kottedzhi-shchorsa-yalta-media-1",
+      "order": 1,
+      "isMain": false,
+      "url": "/projects/gipermarket-vershina-commercial-03-2-1200x800.jpg"
+    },
+    {
+      "id": "map-project-kottedzhi-shchorsa-yalta-image-2",
+      "mediaId": "map-project-kottedzhi-shchorsa-yalta-media-2",
+      "order": 2,
+      "isMain": false,
+      "url": "/projects/gipermarket-vershina-commercial-03-3-1200x800.jpg"
+    },
+    {
+      "id": "map-project-kottedzhi-shchorsa-yalta-image-3",
+      "mediaId": "map-project-kottedzhi-shchorsa-yalta-media-3",
+      "order": 3,
+      "isMain": false,
+      "url": "/projects/gipermarket-vershina-commercial-03-4-1200x800.jpg"
+    },
+    {
+      "id": "map-project-kottedzhi-shchorsa-yalta-image-4",
+      "mediaId": "map-project-kottedzhi-shchorsa-yalta-media-4",
+      "order": 4,
+      "isMain": false,
+      "url": "/projects/gipermarket-vershina-commercial-03-5-1200x800.jpg"
+    }
+  ],
   "previousImage": null,
-  "mainImage": null
+  "mainImage": "/projects/gipermarket-vershina-commercial-03-1-1200x800.jpg"
 }

@@ -84,7 +84,36 @@
     "createdAt": "2026-05-11T23:31:04.154Z",
     "updatedAt": "2026-05-12T06:30:07.861Z"
   },
-  "images": [],
+  "images": [
+    {
+      "id": "map-project-detskiy-sad-evpatoriya-image-0",
+      "mediaId": "map-project-detskiy-sad-evpatoriya-media-0",
+      "order": 0,
+      "isMain": true,
+      "url": "/projects/shkola-laspi-public-25-1-1200x800.jpg"
+    },
+    {
+      "id": "map-project-detskiy-sad-evpatoriya-image-1",
+      "mediaId": "map-project-detskiy-sad-evpatoriya-media-1",
+      "order": 1,
+      "isMain": false,
+      "url": "/projects/shkola-laspi-public-25-2-1200x800.jpg"
+    },
+    {
+      "id": "map-project-detskiy-sad-evpatoriya-image-2",
+      "mediaId": "map-project-detskiy-sad-evpatoriya-media-2",
+      "order": 2,
+      "isMain": false,
+      "url": "/projects/shkola-laspi-public-25-3-1200x800.jpg"
+    },
+    {
+      "id": "map-project-detskiy-sad-evpatoriya-image-3",
+      "mediaId": "map-project-detskiy-sad-evpatoriya-media-3",
+      "order": 3,
+      "isMain": false,
+      "url": "/projects/shkola-laspi-public-25-4-1200x800.jpg"
+    }
+  ],
   "previousImage": null,
-  "mainImage": null
+  "mainImage": "/projects/shkola-laspi-public-25-1-1200x800.jpg"
 }
