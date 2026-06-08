@@ -113,52 +113,53 @@ const Map = () => {
           </div>
         </div>
 
-        {/* Мобильный слайдер — кнопки вперёд/назад поверх карты */}
-        {isMobile && (
-          <>
-            <button
-              type='button'
-              onClick={slider.prev}
-              aria-label='Предыдущий объект'
-              className={`${styles.sliderBtn} absolute left-[1rem] top-1/2 -translate-y-1/2 z-50 flex items-center justify-center w-[4.125rem] h-[4.125rem] rounded-full bg-[rgba(255,255,255,0.9)] backdrop-blur-sm text-[#1B1F21] cursor-pointer active:scale-95 transition-transform`}
-            >
-              <svg
-                className='w-[1.8rem] h-[1.8rem] -translate-x-[1px]'
-                viewBox='0 0 24 24'
-                fill='none'
-                stroke='currentColor'
-                strokeWidth={2.5}
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                aria-hidden
-              >
-                <path d='M15 5l-7 7 7 7' />
-              </svg>
-            </button>
-            <button
-              type='button'
-              onClick={slider.next}
-              aria-label='Следующий объект'
-              className={`${styles.sliderBtn} absolute right-[1rem] top-1/2 -translate-y-1/2 z-50 flex items-center justify-center w-[4.125rem] h-[4.125rem] rounded-full bg-[rgba(255,255,255,0.9)] backdrop-blur-sm text-[#1B1F21] cursor-pointer active:scale-95 transition-transform`}
-            >
-              <svg
-                className='w-[1.8rem] h-[1.8rem] translate-x-[1px]'
-                viewBox='0 0 24 24'
-                fill='none'
-                stroke='currentColor'
-                strokeWidth={2.5}
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                aria-hidden
-              >
-                <path d='M9 5l7 7-7 7' />
-              </svg>
-            </button>
-          </>
-        )}
-
-        {/* Единственная карточка — её контент определяет display, видимость — cardActive */}
+        {/* Карточка проекта + (на мобиле) кнопки слайдера — единый стек, привязанный
+            к низу, с фиксированным отступом между кнопками и карточкой. При изменении
+            высоты вьюпорта (панель браузера) стек двигается целиком, поэтому кнопки и
+            карточка никогда не перекрываются. */}
         <div className='absolute z-50 bottom-[3.5rem] left-(--container-offset) w-[21rem] max-md:inset-x-0 max-md:bottom-[2.75rem] max-md:w-auto max-md:px-(--container-offset)'>
+          {isMobile && (
+            <div className='flex items-center justify-between mb-[1.25rem]'>
+              <button
+                type='button'
+                onClick={slider.prev}
+                aria-label='Предыдущий объект'
+                className={`${styles.sliderBtn} flex items-center justify-center w-[4.125rem] h-[4.125rem] rounded-full bg-[rgba(255,255,255,0.9)] backdrop-blur-sm text-[#1B1F21] cursor-pointer active:scale-95 transition-transform`}
+              >
+                <svg
+                  className='w-[1.8rem] h-[1.8rem] -translate-x-[1px]'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth={2.5}
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  aria-hidden
+                >
+                  <path d='M15 5l-7 7 7 7' />
+                </svg>
+              </button>
+              <button
+                type='button'
+                onClick={slider.next}
+                aria-label='Следующий объект'
+                className={`${styles.sliderBtn} flex items-center justify-center w-[4.125rem] h-[4.125rem] rounded-full bg-[rgba(255,255,255,0.9)] backdrop-blur-sm text-[#1B1F21] cursor-pointer active:scale-95 transition-transform`}
+              >
+                <svg
+                  className='w-[1.8rem] h-[1.8rem] translate-x-[1px]'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth={2.5}
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  aria-hidden
+                >
+                  <path d='M9 5l7 7-7 7' />
+                </svg>
+              </button>
+            </div>
+          )}
           <div
             className={`transition-opacity duration-300 ${cardActive !== null ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
           >
