@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Separator } from '@/shared/Separator'
 import { useIsMobile } from '@/shared/hooks/useMediaQuery'
+import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect'
 import MapImage from '@/assets/images/map.webp'
 import CrimeaShape from '@/assets/images/crimea.svg'
 import { useMapJourneyAnimation } from './model/useMapJourneyAnimation'
@@ -30,6 +31,42 @@ const Map = () => {
   useEffect(() => {
     if (cardActive !== null) setDisplay(cardActive)
   }, [cardActive])
+
+  // Позиция кнопок слайдера на мобиле: по умолчанию по центру по вертикали,
+  // но не ниже, чем верх карточки + отступ. Высота карточки разная (с фото /
+  // без), поэтому меряем её и пересчитываем при смене слайда и высоты вьюпорта
+  // (панель браузера).
+  const cardRef = useRef<HTMLDivElement>(null)
+  const [btnBottom, setBtnBottom] = useState<number | null>(null)
+
+  useIsomorphicLayoutEffect(() => {
+    if (!isMobile) {
+      setBtnBottom(null)
+      return
+    }
+    const container = pinRef.current
+    const card = cardRef.current
+    if (!container || !card) return
+
+    const compute = () => {
+      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16
+      const cardTop = 2.75 * rem + card.offsetHeight + 1.5 * rem // bottom-offset + высота + отступ
+      const centered = container.clientHeight / 2 - (4.125 * rem) / 2 // центр минус полкнопки
+      setBtnBottom(Math.max(centered, cardTop))
+    }
+    compute()
+
+    const ro = new ResizeObserver(compute)
+    ro.observe(container)
+    ro.observe(card)
+    window.visualViewport?.addEventListener('resize', compute)
+    window.addEventListener('resize', compute)
+    return () => {
+      ro.disconnect()
+      window.visualViewport?.removeEventListener('resize', compute)
+      window.removeEventListener('resize', compute)
+    }
+  }, [isMobile, display])
 
   const handleSelect = (i: number) => (isMobile ? slider.goTo(i) : setActive(i))
 
@@ -113,57 +150,61 @@ const Map = () => {
           </div>
         </div>
 
-        {/* Карточка проекта + (на мобиле) кнопки слайдера — единый стек, привязанный
-            к низу, с фиксированным отступом между кнопками и карточкой. При изменении
-            высоты вьюпорта (панель браузера) стек двигается целиком, поэтому кнопки и
-            карточка никогда не перекрываются. */}
-        <div className='absolute z-50 bottom-[3.5rem] left-(--container-offset) w-[21rem] max-md:inset-x-0 max-md:bottom-[2.75rem] max-md:w-auto max-md:px-(--container-offset)'>
-          {isMobile && (
-            <div className='flex items-center justify-between mb-[1.25rem]'>
-              <button
-                type='button'
-                onClick={slider.prev}
-                aria-label='Предыдущий объект'
-                className={`${styles.sliderBtn} flex items-center justify-center w-[4.125rem] h-[4.125rem] rounded-full bg-[rgba(255,255,255,0.9)] backdrop-blur-sm text-[#1B1F21] cursor-pointer active:scale-95 transition-transform`}
+        {/* Кнопки слайдера (мобила): по умолчанию по центру по вертикали; если центр
+            оказывается слишком близко к карточке — поднимаются над ней с отступом.
+            bottom считается в JS как max(центр, верх карточки + отступ). */}
+        {isMobile && (
+          <div
+            className='absolute inset-x-0 z-50 px-(--container-offset) flex items-center justify-between pointer-events-none transition-[bottom] duration-300'
+            style={{ bottom: btnBottom != null ? `${btnBottom}px` : '50%' }}
+          >
+            <button
+              type='button'
+              onClick={slider.prev}
+              aria-label='Предыдущий объект'
+              className={`${styles.sliderBtn} pointer-events-auto flex items-center justify-center w-[4.125rem] h-[4.125rem] rounded-full bg-[rgba(255,255,255,0.9)] backdrop-blur-sm text-[#1B1F21] cursor-pointer active:scale-95 transition-transform`}
+            >
+              <svg
+                className='w-[1.8rem] h-[1.8rem] -translate-x-[1px]'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth={2.5}
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                aria-hidden
               >
-                <svg
-                  className='w-[1.8rem] h-[1.8rem] -translate-x-[1px]'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth={2.5}
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  aria-hidden
-                >
-                  <path d='M15 5l-7 7 7 7' />
-                </svg>
-              </button>
-              <button
-                type='button'
-                onClick={slider.next}
-                aria-label='Следующий объект'
-                className={`${styles.sliderBtn} flex items-center justify-center w-[4.125rem] h-[4.125rem] rounded-full bg-[rgba(255,255,255,0.9)] backdrop-blur-sm text-[#1B1F21] cursor-pointer active:scale-95 transition-transform`}
+                <path d='M15 5l-7 7 7 7' />
+              </svg>
+            </button>
+            <button
+              type='button'
+              onClick={slider.next}
+              aria-label='Следующий объект'
+              className={`${styles.sliderBtn} pointer-events-auto flex items-center justify-center w-[4.125rem] h-[4.125rem] rounded-full bg-[rgba(255,255,255,0.9)] backdrop-blur-sm text-[#1B1F21] cursor-pointer active:scale-95 transition-transform`}
+            >
+              <svg
+                className='w-[1.8rem] h-[1.8rem] translate-x-[1px]'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth={2.5}
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                aria-hidden
               >
-                <svg
-                  className='w-[1.8rem] h-[1.8rem] translate-x-[1px]'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth={2.5}
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  aria-hidden
-                >
-                  <path d='M9 5l7 7-7 7' />
-                </svg>
-              </button>
-            </div>
-          )}
+                <path d='M9 5l7 7-7 7' />
+              </svg>
+            </button>
+          </div>
+        )}
+
+        {/* Карточка проекта — её контент определяет display, видимость — cardActive */}
+        <div className='absolute z-40 bottom-[3.5rem] left-(--container-offset) w-[21rem] max-md:inset-x-0 max-md:bottom-[2.75rem] max-md:w-auto max-md:px-(--container-offset)'>
           <div
             className={`transition-opacity duration-300 ${cardActive !== null ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
           >
-            <div key={display} className={styles.cardSwap}>
+            <div ref={cardRef} key={display} className={styles.cardSwap}>
               <ProjectCard city={JOURNEY[display]} />
             </div>
           </div>
