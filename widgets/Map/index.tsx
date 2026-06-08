@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { Separator } from '@/shared/Separator'
+import { useIsMobile } from '@/shared/hooks/useMediaQuery'
 import MapImage from '@/assets/images/map.webp'
 import CrimeaShape from '@/assets/images/crimea.svg'
 import { useMapJourneyAnimation } from './model/useMapJourneyAnimation'
+import { useMapMobileSlider } from './model/useMapMobileSlider'
 import { City } from './ui/City'
 import { Landmark } from './ui/Landmark'
 import { ProjectCard } from './ui/ProjectCard'
@@ -12,16 +14,24 @@ import { JOURNEY, LANDMARKS, MAIN_CITIES, ROUTE_PATH, MAP_IMG_W, MAP_IMG_H } fro
 import styles from './Map.module.css'
 
 const Map = () => {
-  // active — единственная видимая карточка (null = скрыта). Её двигают и
-  // скролл-анимация (через хук), и клики по городам.
+  const isMobile = useIsMobile()
+
+  // Десктоп: интро-анимация при появлении секции + клики по городам → active.
+  // Мобила: слайдер (автолистание + кнопки) сам ведёт текущий город.
   const [active, setActive] = useState<number | null>(null)
-  // display держит контент карточки во время fade-out, пока active = null.
-  const [display, setDisplay] = useState(0)
   const { sectionRef, pinRef } = useMapJourneyAnimation(setActive)
+  const slider = useMapMobileSlider(isMobile)
+
+  // Единый индекс видимой карточки: на мобиле им управляет слайдер.
+  const cardActive = isMobile ? slider.index : active
+  // display держит контент карточки во время fade-out (десктоп, active = null).
+  const [display, setDisplay] = useState(0)
 
   useEffect(() => {
-    if (active !== null) setDisplay(active)
-  }, [active])
+    if (cardActive !== null) setDisplay(cardActive)
+  }, [cardActive])
+
+  const handleSelect = (i: number) => (isMobile ? slider.goTo(i) : setActive(i))
 
   return (
     <section
@@ -45,7 +55,11 @@ const Map = () => {
         </div>
 
         <div className='relative w-full max-w-[65rem] aspect-[1496/882] flex items-center justify-center max-md:max-w-none max-md:aspect-auto max-md:flex-1 max-md:overflow-hidden'>
-          <div data-map-box className='relative w-full aspect-[1496/882] max-md:w-[230%] max-md:shrink-0 max-md:will-change-transform'>
+          <div
+            data-map-box
+            className={`${styles.mapBoxPan} relative w-full aspect-[1496/882] max-md:w-[230%] max-md:shrink-0 max-md:will-change-transform`}
+            style={slider.panStyle}
+          >
             <CrimeaShape className={styles.mapShape} aria-hidden preserveAspectRatio='xMidYMid meet' />
             <img
               className={`${styles.mapImage} w-full h-full object-contain pointer-events-none select-none`}
@@ -90,7 +104,7 @@ const Map = () => {
             ))}
 
             {JOURNEY.map((city, i) => (
-              <City key={city.id} city={city} onSelect={() => setActive(i)} />
+              <City key={city.id} city={city} onSelect={() => handleSelect(i)} active={isMobile && cardActive === i} />
             ))}
 
             {MAIN_CITIES.map((city) => (
@@ -99,10 +113,54 @@ const Map = () => {
           </div>
         </div>
 
-        {/* Единственная карточка — её контент определяет display, видимость — active */}
+        {/* Мобильный слайдер — кнопки вперёд/назад поверх карты */}
+        {isMobile && (
+          <>
+            <button
+              type='button'
+              onClick={slider.prev}
+              aria-label='Предыдущий объект'
+              className={`${styles.sliderBtn} absolute left-[1rem] top-1/2 -translate-y-1/2 z-50 flex items-center justify-center w-[4.125rem] h-[4.125rem] rounded-full bg-[rgba(255,255,255,0.9)] backdrop-blur-sm text-[#1B1F21] cursor-pointer active:scale-95 transition-transform`}
+            >
+              <svg
+                className='w-[1.8rem] h-[1.8rem] -translate-x-[1px]'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth={2.5}
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                aria-hidden
+              >
+                <path d='M15 5l-7 7 7 7' />
+              </svg>
+            </button>
+            <button
+              type='button'
+              onClick={slider.next}
+              aria-label='Следующий объект'
+              className={`${styles.sliderBtn} absolute right-[1rem] top-1/2 -translate-y-1/2 z-50 flex items-center justify-center w-[4.125rem] h-[4.125rem] rounded-full bg-[rgba(255,255,255,0.9)] backdrop-blur-sm text-[#1B1F21] cursor-pointer active:scale-95 transition-transform`}
+            >
+              <svg
+                className='w-[1.8rem] h-[1.8rem] translate-x-[1px]'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth={2.5}
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                aria-hidden
+              >
+                <path d='M9 5l7 7-7 7' />
+              </svg>
+            </button>
+          </>
+        )}
+
+        {/* Единственная карточка — её контент определяет display, видимость — cardActive */}
         <div className='absolute z-50 bottom-[3.5rem] left-(--container-offset) w-[21rem] max-md:inset-x-0 max-md:bottom-[2.75rem] max-md:w-auto max-md:px-(--container-offset)'>
           <div
-            className={`transition-opacity duration-300 ${active !== null ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+            className={`transition-opacity duration-300 ${cardActive !== null ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
           >
             <div key={display} className={styles.cardSwap}>
               <ProjectCard city={JOURNEY[display]} />

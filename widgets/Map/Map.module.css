@@ -24,6 +24,23 @@
   box-shadow: var(--journey-pin-shadow);
 }
 
+.cityPinActive {
+  box-shadow: 0 0 0 0.25rem rgba(91, 141, 239, 0.5), 0 0.5rem 1.5rem rgba(0, 0, 0, 0.45);
+}
+
+.sliderBtn {
+  box-shadow: var(--journey-pin-shadow);
+}
+
+/* Панорамирование карты к текущему городу — только на мобиле. На десктопе
+   media-query не срабатывает, transform не применяется (карта целиком). */
+@media (max-width: 767px) {
+  .mapBoxPan {
+    transform: translate(var(--pan-x, 0), var(--pan-y, 0));
+    transition: transform 0.6s ease;
+  }
+}
+
 .landmark {
   pointer-events: auto;
   cursor: default;
