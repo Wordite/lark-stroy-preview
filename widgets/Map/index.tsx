@@ -1,36 +1,51 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import type { CSSProperties } from 'react'
 import { Separator } from '@/shared/Separator'
 import { useIsMobile } from '@/shared/hooks/useMediaQuery'
 import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect'
 import MapImage from '@/assets/images/map.webp'
 import CrimeaShape from '@/assets/images/crimea.svg'
-import { useMapJourneyAnimation } from './model/useMapJourneyAnimation'
-import { useMapMobileSlider } from './model/useMapMobileSlider'
+import { useBirdJourney, LIFT_PCT } from './model/useBirdJourney'
 import { City } from './ui/City'
 import { Landmark } from './ui/Landmark'
+import { SecondaryCity } from './ui/SecondaryCity'
 import { ProjectCard } from './ui/ProjectCard'
-import { JOURNEY, LANDMARKS, MAIN_CITIES, ROUTE_PATH, MAP_IMG_W, MAP_IMG_H } from './model/journey'
+import { Bird } from './ui/Bird'
+import {
+  JOURNEY,
+  SECONDARY_CITIES,
+  LANDMARKS,
+  TRAIL_SEGMENTS_D,
+  FLIGHT_SEGMENTS_D,
+  MAP_IMG_W,
+  MAP_IMG_H,
+} from './model/journey'
 import styles from './Map.module.css'
+
+// Смещение панорамы на мобиле: карта едет к текущей цели птицы.
+const MOBILE_VERT_BIAS = 10
+const FINAL_CITY = JOURNEY[JOURNEY.length - 1]
 
 const Map = () => {
   const isMobile = useIsMobile()
 
-  // Десктоп: интро-анимация при появлении секции + клики по городам → active.
-  // Мобила: слайдер (автолистание + кнопки) сам ведёт текущий город.
-  const [active, setActive] = useState<number | null>(null)
-  const { sectionRef, pinRef } = useMapJourneyAnimation(setActive)
-  const slider = useMapMobileSlider(isMobile)
+  // Птица — единственный источник правды: карточка и панорама следуют за ней.
+  const { sectionRef, pinRef, card, panCity, completed, onMapClick, onCityClick, onSecondaryClick, next, prev } =
+    useBirdJourney(isMobile)
 
-  // Единый индекс видимой карточки: на мобиле им управляет слайдер.
-  const cardActive = isMobile ? slider.index : active
-  // display держит контент карточки во время fade-out (десктоп, active = null).
-  const [display, setDisplay] = useState(0)
+  // display держит контент карточки во время fade-out (card = null в полёте).
+  const [display, setDisplay] = useState(JOURNEY[0])
 
   useEffect(() => {
-    if (cardActive !== null) setDisplay(cardActive)
-  }, [cardActive])
+    if (card) setDisplay(card)
+  }, [card])
+
+  const panStyle = {
+    '--pan-x': `${(0.5 - panCity.x / 100) * 100}%`,
+    '--pan-y': `${(0.5 - panCity.y / 100) * 100 + MOBILE_VERT_BIAS}%`,
+  } as CSSProperties
 
   // Позиция кнопок слайдера на мобиле: по умолчанию по центру по вертикали,
   // но не ниже, чем верх карточки + отступ. Высота карточки разная (с фото /
@@ -45,12 +60,12 @@ const Map = () => {
       return
     }
     const container = pinRef.current
-    const card = cardRef.current
-    if (!container || !card) return
+    const cardEl = cardRef.current
+    if (!container || !cardEl) return
 
     const compute = () => {
       const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16
-      const cardTop = 2.75 * rem + card.offsetHeight + 1.5 * rem // bottom-offset + высота + отступ
+      const cardTop = 2.75 * rem + cardEl.offsetHeight + 1.5 * rem // bottom-offset + высота + отступ
       const centered = container.clientHeight / 2 - (4.125 * rem) / 2 // центр минус полкнопки
       setBtnBottom(Math.max(centered, cardTop))
     }
@@ -58,7 +73,7 @@ const Map = () => {
 
     const ro = new ResizeObserver(compute)
     ro.observe(container)
-    ro.observe(card)
+    ro.observe(cardEl)
     window.visualViewport?.addEventListener('resize', compute)
     window.addEventListener('resize', compute)
     return () => {
@@ -67,8 +82,6 @@ const Map = () => {
       window.removeEventListener('resize', compute)
     }
   }, [isMobile, display])
-
-  const handleSelect = (i: number) => (isMobile ? slider.goTo(i) : setActive(i))
 
   return (
     <section
@@ -91,11 +104,14 @@ const Map = () => {
           </p>
         </div>
 
-        <div className='relative w-full max-w-[65rem] aspect-[1496/882] flex items-center justify-center max-md:max-w-none max-md:aspect-auto max-md:flex-1 max-md:overflow-hidden'>
+        <div
+          onClick={isMobile ? undefined : onMapClick}
+          className={`relative w-full max-w-[65rem] aspect-[1496/882] flex items-center justify-center max-md:max-w-none max-md:aspect-auto max-md:flex-1 max-md:overflow-hidden ${!isMobile && !completed ? 'cursor-pointer' : ''}`}
+        >
           <div
             data-map-box
             className={`${styles.mapBoxPan} relative w-full aspect-[1496/882] max-md:w-[230%] max-md:shrink-0 max-md:will-change-transform`}
-            style={slider.panStyle}
+            style={panStyle}
           >
             <CrimeaShape className={styles.mapShape} aria-hidden preserveAspectRatio='xMidYMid meet' />
             <img
@@ -104,36 +120,20 @@ const Map = () => {
               alt='Карта объектов в Крыму'
             />
 
+            {/* Золотой след: сегменты проявляются синхронно с полётом птицы.
+                [data-flight] — невидимые дуги повыше, по ним летит птица. */}
             <svg
               viewBox={`0 0 ${MAP_IMG_W} ${MAP_IMG_H}`}
               className='absolute inset-0 z-[2] w-full h-full pointer-events-none overflow-visible'
             >
-              <defs>
-                <mask id='routeReveal' maskUnits='userSpaceOnUse' x='0' y='0' width={MAP_IMG_W} height={MAP_IMG_H}>
-                  <path
-                    data-route-mask
-                    d={ROUTE_PATH}
-                    fill='none'
-                    stroke='#fff'
-                    strokeWidth={28}
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    style={{ strokeDasharray: 100000, strokeDashoffset: 100000 }}
-                  />
-                </mask>
-              </defs>
-              <path
-                data-route-visible
-                d={ROUTE_PATH}
-                fill='none'
-                stroke='#5b8def'
-                strokeWidth={5}
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeDasharray='2 12'
-                mask='url(#routeReveal)'
-                style={{ opacity: 0 }}
-              />
+              {TRAIL_SEGMENTS_D.map((d, i) => (
+                <path key={`t${i}`} data-trail d={d} className={styles.trail} style={{ opacity: 0 }} />
+              ))}
+              {FLIGHT_SEGMENTS_D.map((d, i) => (
+                <path key={`f${i}`} data-flight d={d} fill='none' stroke='none' />
+              ))}
+              <g data-dyn-trails />
+              <g data-feathers className={styles.feathers} />
             </svg>
 
             {LANDMARKS.map((landmark) => (
@@ -141,12 +141,30 @@ const Map = () => {
             ))}
 
             {JOURNEY.map((city, i) => (
-              <City key={city.id} city={city} onSelect={() => handleSelect(i)} active={isMobile && cardActive === i} />
+              <City key={city.id} city={city} onSelect={() => onCityClick(i)} active={isMobile && card?.id === city.id} />
             ))}
 
-            {MAIN_CITIES.map((city) => (
-              <City key={city.id} city={city} main />
+            {SECONDARY_CITIES.map((city, i) => (
+              <SecondaryCity key={city.id} city={city} onSelect={() => onSecondaryClick(i)} />
             ))}
+
+            <div
+              data-phrase
+              className={`${styles.phrase} absolute z-[25] pointer-events-none opacity-0`}
+              style={{ left: `${FINAL_CITY.x - 2}%`, top: `${FINAL_CITY.y - 12}%` }}
+            >
+              Куда летим дальше?
+            </div>
+
+            <div
+              data-bird
+              className={`${styles.bird} absolute z-30 w-[4.6rem] h-[4.4rem] -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-0 max-md:w-[5rem] max-md:h-[4.8rem]`}
+              style={{ left: `${JOURNEY[0].x}%`, top: `${JOURNEY[0].y - LIFT_PCT}%` }}
+            >
+              <div data-bird-fly className='w-full h-full'>
+                <Bird />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -160,7 +178,7 @@ const Map = () => {
           >
             <button
               type='button'
-              onClick={slider.prev}
+              onClick={prev}
               aria-label='Предыдущий объект'
               className={`${styles.sliderBtn} pointer-events-auto flex items-center justify-center w-[4.125rem] h-[4.125rem] rounded-full bg-[rgba(255,255,255,0.9)] backdrop-blur-sm text-[#1B1F21] cursor-pointer active:scale-95 transition-transform`}
             >
@@ -179,7 +197,7 @@ const Map = () => {
             </button>
             <button
               type='button'
-              onClick={slider.next}
+              onClick={next}
               aria-label='Следующий объект'
               className={`${styles.sliderBtn} pointer-events-auto flex items-center justify-center w-[4.125rem] h-[4.125rem] rounded-full bg-[rgba(255,255,255,0.9)] backdrop-blur-sm text-[#1B1F21] cursor-pointer active:scale-95 transition-transform`}
             >
@@ -199,13 +217,13 @@ const Map = () => {
           </div>
         )}
 
-        {/* Карточка проекта — её контент определяет display, видимость — cardActive */}
+        {/* Карточка проекта: появляется на привалах птицы, прячется в полёте */}
         <div className='absolute z-40 bottom-[3.5rem] left-(--container-offset) w-[21rem] max-md:inset-x-0 max-md:bottom-[2.75rem] max-md:w-auto max-md:px-(--container-offset)'>
           <div
-            className={`transition-opacity duration-300 ${cardActive !== null ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+            className={`transition-opacity duration-300 ${card !== null ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
           >
-            <div ref={cardRef} key={display} className={styles.cardSwap}>
-              <ProjectCard city={JOURNEY[display]} />
+            <div ref={cardRef} key={display.id} className={styles.cardSwap}>
+              <ProjectCard city={display} />
             </div>
           </div>
         </div>

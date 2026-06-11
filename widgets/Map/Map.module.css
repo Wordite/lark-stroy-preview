@@ -25,7 +25,7 @@
 }
 
 .cityPinActive {
-  box-shadow: 0 0 0 0.25rem rgba(91, 141, 239, 0.5), 0 0.5rem 1.5rem rgba(0, 0, 0, 0.45);
+  box-shadow: 0 0 0 0.25rem rgba(243, 188, 24, 0.55), 0 0.5rem 1.5rem rgba(0, 0, 0, 0.45);
 }
 
 .sliderBtn {
@@ -59,20 +59,82 @@
   box-shadow: var(--journey-pin-shadow);
 }
 
-/* Быстрый дискретный fade карточки при смене города (не scrub) */
+/* Карточка въезжает слева, когда птица садится в город */
 @keyframes cardSwapIn {
   from {
     opacity: 0;
-    transform: translateY(0.5rem);
+    transform: translateX(-1.5rem);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
 }
 
 .cardSwap {
-  animation: cardSwapIn 0.3s ease-out;
+  animation: cardSwapIn 0.45s cubic-bezier(0.22, 0.8, 0.3, 1);
+}
+
+/* Золотой след птицы: проявляется штрихом за полётом и остаётся навсегда */
+.trail {
+  fill: none;
+  stroke: #f3bc18;
+  stroke-width: 4;
+  stroke-linecap: round;
+  opacity: 0.95;
+  filter: drop-shadow(0 0 0.4rem rgba(243, 188, 24, 0.65));
+}
+
+.bird {
+  filter: drop-shadow(0 0.7rem 0.7rem rgba(0, 0, 0, 0.3));
+  will-change: transform;
+}
+
+/* Сонар-кольцо при посадке птицы; масштаб и прозрачность анимирует gsap */
+.pulseRing {
+  transform: translate(-50%, -50%);
+  border: 0.14rem solid rgba(243, 188, 24, 0.9);
+  border-radius: 9999px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Второстепенные города: мягкое золотое свечение-дыхание */
+@keyframes secBreathe {
+  0%,
+  100% {
+    box-shadow: 0 0 0.35rem 0.1rem rgba(243, 188, 24, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0.9rem 0.3rem rgba(243, 188, 24, 0.85);
+  }
+}
+
+.secondaryDot {
+  background: #f3bc18;
+  animation: secBreathe 2.6s ease-in-out infinite;
+}
+
+/* Слетающие пёрышки */
+.feathers {
+  filter: drop-shadow(0 0.15rem 0.25rem rgba(0, 0, 0, 0.35));
+}
+
+.phrase {
+  transform: translate(-100%, -50%);
+  font-size: 1.3rem;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--foreground);
+  text-shadow: 0 0 1.2rem rgba(243, 188, 24, 0.35);
+  white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  .phrase {
+    font-size: 1.45rem;
+  }
 }
 
 .titleWrap {

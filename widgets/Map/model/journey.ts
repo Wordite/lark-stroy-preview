@@ -16,8 +16,8 @@ export interface IJourneyCity {
   y: number
 }
 
-// Ключевые города в хронологическом порядке — по нему рисуется маршрут и
-// последовательно появляются карточки проектов.
+// Ключевые города в хронологическом порядке — по нему летит птица, рисуется
+// золотой след и последовательно появляются карточки проектов.
 export const JOURNEY: IJourneyCity[] = [
   {
     id: 'partenit',
@@ -77,19 +77,37 @@ export const JOURNEY: IJourneyCity[] = [
   },
 ]
 
-// Главные города-метки (стиль City-пилюли), но НЕ кликабельные и без карточки.
-// Появляются после завершения скролл-анимации маршрута.
-export interface IMapPin {
-  id: string
-  name: string
-  x: number
-  y: number
-}
-
-export const MAIN_CITIES: IMapPin[] = [
-  { id: 'bahchisaray', name: 'Бахчисарай', x: 35, y: 76 },
-  { id: 'feodosiya', name: 'Феодосия', x: 72, y: 61 },
-  { id: 'dzhankoy', name: 'Джанкой', x: 50, y: 28 },
+// Второстепенные города: появляются золотыми точками после завершения
+// основного маршрута. Клик — птица летит туда и показывает карточку.
+// TODO: заменить period/description/href на реальные проекты.
+export const SECONDARY_CITIES: IJourneyCity[] = [
+  {
+    id: 'bahchisaray',
+    name: 'Бахчисарай',
+    period: '2008–2009',
+    description: 'Отделочные и кровельные работы на объектах города',
+    href: '/projects',
+    x: 35,
+    y: 76,
+  },
+  {
+    id: 'dzhankoy',
+    name: 'Джанкой',
+    period: '2013',
+    description: 'Ремонт производственных и складских помещений',
+    href: '/projects',
+    x: 50,
+    y: 28,
+  },
+  {
+    id: 'feodosiya',
+    name: 'Феодосия',
+    period: '2022–2023',
+    description: 'Реконструкция коммерческих помещений в центре города',
+    href: '/projects',
+    x: 69.5,
+    y: 61,
+  },
 ]
 
 // Дополнительные точки без карточки. Не входят в маршрут, показывают только
@@ -109,9 +127,44 @@ export const LANDMARKS: ILandmark[] = [
   { id: 'znamenka', name: 'Знаменка', x: 49, y: 36 },
 ]
 
-export const ROUTE_POINTS = JOURNEY.map((c) => ({
+export interface IPoint {
+  x: number
+  y: number
+}
+
+export const toMapPoint = (c: { x: number; y: number }): IPoint => ({
   x: (c.x / 100) * MAP_IMG_W,
   y: (c.y / 100) * MAP_IMG_H,
-}))
+})
 
-export const ROUTE_PATH = `M ${ROUTE_POINTS.map((p) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' L ')}`
+export const ROUTE_POINTS = JOURNEY.map(toMapPoint)
+
+// Птица парит чуть выше точки города, чтобы не закрывать пилюлю с названием.
+export const BIRD_LIFT = 52
+
+// Дуга между двумя точками: квадратичная кривая с подъёмом перпендикулярно
+// отрезку — полёт выглядит живее прямой линии. Дуга всегда выгибается вверх.
+export const curveBetween = (a: IPoint, b: IPoint, bow = 0.18): string => {
+  const mx = (a.x + b.x) / 2
+  const my = (a.y + b.y) / 2
+  const dx = b.x - a.x
+  const dy = b.y - a.y
+  const len = Math.hypot(dx, dy) || 1
+  let px = -dy / len
+  let py = dx / len
+  if (py > 0) {
+    px = -px
+    py = -py
+  }
+  const lift = len * bow
+  return `M ${a.x.toFixed(1)} ${a.y.toFixed(1)} Q ${(mx + px * lift).toFixed(1)} ${(my + py * lift).toFixed(1)} ${b.x.toFixed(1)} ${b.y.toFixed(1)}`
+}
+
+const lifted = (p: IPoint): IPoint => ({ x: p.x, y: p.y - BIRD_LIFT })
+
+// След рисуется между точками городов, птица летит по параллельной дуге выше.
+export const TRAIL_SEGMENTS_D = ROUTE_POINTS.slice(1).map((p, i) => curveBetween(ROUTE_POINTS[i], p))
+export const FLIGHT_SEGMENTS_D = ROUTE_POINTS.slice(1).map((p, i) => curveBetween(lifted(ROUTE_POINTS[i]), lifted(p)))
+
+export const flightPathTo = (from: IPoint, to: { x: number; y: number }): string =>
+  curveBetween(from, lifted(toMapPoint(to)), 0.14)
